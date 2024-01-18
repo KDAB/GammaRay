@@ -26,16 +26,21 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_3dinspector.json
         SOURCES
         ${gammaray_3dinspector_srcs}
+        EXPORT
+        GammaRayTargets
     )
     target_link_libraries(
         gammaray_3dinspector
-        gammaray_core
-        gammaray_kitemmodels
-        Qt::3DInput
-        Qt::3DRender
+        PUBLIC gammaray_core
+        PRIVATE gammaray_kitemmodels
+    )
+    target_link_libraries(
+        gammaray_3dinspector
+        PUBLIC Qt::3DRender
+        PRIVATE Qt::3DInput
     )
     if(TARGET Qt::3DAnimation)
-        target_link_libraries(gammaray_3dinspector Qt::3DAnimation)
+        target_link_libraries(gammaray_3dinspector PRIVATE Qt::3DAnimation)
     endif()
 endif()
 

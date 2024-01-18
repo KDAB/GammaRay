@@ -28,8 +28,10 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_sysinfo.json
         SOURCES
         ${sysinfo_probe_srcs}
+        EXPORT
+        GammaRayTargets
     )
-    target_link_libraries(gammaray_sysinfo_plugin gammaray_core)
+    target_link_libraries(gammaray_sysinfo_plugin PUBLIC gammaray_core)
     set_target_properties(gammaray_sysinfo_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 endif()
 

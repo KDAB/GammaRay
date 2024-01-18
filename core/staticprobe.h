@@ -23,7 +23,9 @@
  * the better option anyway.
  */
 #ifdef QT_CORE_LIB
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 Q_IMPORT_PLUGIN(CodecBrowserFactory)
+#endif
 Q_IMPORT_PLUGIN(EventMonitorFactory)
 Q_IMPORT_PLUGIN(SignalMonitorFactory)
 Q_IMPORT_PLUGIN(StateMachineViewerFactory)

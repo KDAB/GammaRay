@@ -26,10 +26,12 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_timertop.json
         SOURCES
         ${gammaray_timertop_plugin_srcs}
+        EXPORT
+        GammaRayTargets
     )
     set_target_properties(gammaray_timertop_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
-
-    target_link_libraries(gammaray_timertop_plugin gammaray_core)
+    target_link_libraries(gammaray_timertop_plugin PUBLIC gammaray_core)
+    target_link_libraries(gammaray_timertop_plugin PUBLIC Qt::Core)
 endif()
 
 # ui part

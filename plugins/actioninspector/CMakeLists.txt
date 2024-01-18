@@ -24,9 +24,16 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_actioninspector.json
         SOURCES
         ${gammaray_actioninspector_plugin_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
-    target_link_libraries(gammaray_actioninspector_plugin Qt::Gui Qt::Widgets gammaray_core)
+    target_link_libraries(gammaray_actioninspector_plugin PUBLIC gammaray_core)
+    target_link_libraries(
+        gammaray_actioninspector_plugin
+        PUBLIC Qt::Gui
+        PRIVATE Qt::Widgets
+    )
 endif()
 
 # ui part

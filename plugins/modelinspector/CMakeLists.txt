@@ -30,10 +30,15 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_modelinspector.json
         SOURCES
         ${gammaray_models_srcs}
+        EXPORT
+        GammaRayTargets
     )
     set_target_properties(gammaray_modelinspector PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
-
-    target_link_libraries(gammaray_modelinspector gammaray_core gammaray_kitemmodels)
+    target_link_libraries(
+        gammaray_modelinspector
+        PUBLIC gammaray_core
+        PRIVATE gammaray_kitemmodels
+    )
 endif()
 
 # ui part

@@ -26,15 +26,16 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_sceneinspector.json
         SOURCES
         ${gammaray_sceneinspector_plugin_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
     target_link_libraries(
         gammaray_sceneinspector_plugin
-        Qt::Gui
-        Qt::Widgets
-        gammaray_kitemmodels
-        gammaray_core
+        PUBLIC gammaray_core
+        PRIVATE gammaray_kitemmodels
     )
+    target_link_libraries(gammaray_sceneinspector_plugin PUBLIC Qt::Gui Qt::Widgets)
 endif()
 
 # ui part

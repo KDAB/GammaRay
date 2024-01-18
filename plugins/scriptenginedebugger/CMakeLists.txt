@@ -17,9 +17,12 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_scriptenginedebugger.json
         SOURCES
         ${gammaray_scriptenginedebugger_plugin_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
-    target_link_libraries(gammaray_scriptenginedebugger_plugin Qt5::Script Qt5::ScriptTools gammaray_core)
+    target_link_libraries(gammaray_scriptenginedebugger_plugin PUBLIC gammaray_core)
+    target_link_libraries(gammaray_scriptenginedebugger_plugin PUBLIC Qt5::Script Qt5::ScriptTools)
     set_target_properties(gammaray_scriptenginedebugger_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 endif()
 

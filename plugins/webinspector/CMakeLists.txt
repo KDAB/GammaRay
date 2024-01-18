@@ -17,11 +17,12 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_webinspector.json
         SOURCES
         ${gammaray_webinspector_plugin_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
-    target_link_libraries(gammaray_webinspector_plugin gammaray_core)
-
     set_target_properties(gammaray_webinspector_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
+    target_link_libraries(gammaray_webinspector_plugin PUBLIC gammaray_core)
 endif()
 
 # ui part

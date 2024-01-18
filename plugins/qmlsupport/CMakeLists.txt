@@ -26,17 +26,14 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_qmlsupport.json
         SOURCES
         ${gammaray_qmlsupport_srcs}
+        EXPORT
+        GammaRayTargets
     )
-    target_link_libraries(
-        gammaray_qmlsupport
-        gammaray_core
-        Qt::Gui
-        Qt::Qml
-        Qt::QmlPrivate
-    )
+    target_link_libraries(gammaray_qmlsupport PUBLIC gammaray_core)
+    target_link_libraries(gammaray_qmlsupport PUBLIC Qt::Gui Qt::Qml Qt::QmlPrivate)
 
     if(TARGET Qt${QT_VERSION_MAJOR}::Qml)
-        target_sources(gammaray_qmlsupport PUBLIC qmlbindingprovider.cpp)
+        target_sources(gammaray_qmlsupport PRIVATE qmlbindingprovider.cpp)
     endif()
 
 endif()

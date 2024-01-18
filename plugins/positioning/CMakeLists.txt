@@ -29,8 +29,11 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_positioning.json
         SOURCES
         ${gammaray_positioning_srcs}
+        EXPORT
+        GammaRayTargets
     )
-    target_link_libraries(gammaray_positioning gammaray_core Qt::Positioning)
+    target_link_libraries(gammaray_positioning PUBLIC gammaray_core)
+    target_link_libraries(gammaray_positioning PUBLIC Qt::Positioning)
     set_target_properties(gammaray_positioning PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 
     # proxy geo position info source factory
@@ -42,11 +45,24 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         positioninginterface.cpp
         positioninginterface.h
     )
-
-    add_library(gammaray_geopositioninfosource MODULE ${gammaray_geopositioninfosource_srcs})
+    gammaray_add_plugin(
+        gammaray_geopositioninfosource
+        JSON
+        geopositioninfosourcefactory.json
+        SOURCES
+        ${gammaray_geopositioninfosource_srcs}
+        EXPORT
+        GammaRayTargets
+        INSTALL_DIR
+        position
+    )
     target_compile_features(gammaray_geopositioninfosource PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
-    target_link_libraries(gammaray_geopositioninfosource gammaray_common Qt::Positioning Qt::CorePrivate)
-    install(TARGETS gammaray_geopositioninfosource DESTINATION ${TARGET_PLUGIN_INSTALL_DIR}/position)
+    target_link_libraries(gammaray_geopositioninfosource PUBLIC gammaray_common)
+    target_link_libraries(
+        gammaray_geopositioninfosource
+        PUBLIC Qt::Positioning
+        PRIVATE Qt::CorePrivate
+    )
 endif()
 
 # ui plugin

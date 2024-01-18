@@ -29,13 +29,20 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             gammaray_qtivi.json
             SOURCES
             ${plugin_files}
+            EXPORT
+            GammaRayTargets
         )
-        target_link_libraries(gammaray_qtivi gammaray_core Qt::IviCore Qt::IviCorePrivate)
+        target_link_libraries(gammaray_qtivi PUBLIC gammaray_core)
+        target_link_libraries(
+            gammaray_qtivi
+            PUBLIC Qt::Core
+            PRIVATE Qt::IviCore Qt::IviCorePrivate
+        )
         if(TARGET Qt::IviVehicleFunctions)
-            target_link_libraries(gammaray_qtivi Qt::IviVehicleFunctions)
+            target_link_libraries(gammaray_qtivi PRIVATE Qt::IviVehicleFunctions)
         endif()
         if(TARGET QtIviMedia)
-            target_link_libraries(gammaray_qtivi Qt::IviMedia)
+            target_link_libraries(gammaray_qtivi PRIVATE Qt::IviMedia)
         endif()
     endif()
 endif()

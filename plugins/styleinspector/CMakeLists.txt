@@ -44,9 +44,12 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_styleinspector.json
         SOURCES
         ${gammaray_styleinspector_plugin_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
-    target_link_libraries(gammaray_styleinspector_plugin Qt::Gui Qt::Widgets gammaray_core)
+    target_link_libraries(gammaray_styleinspector_plugin PUBLIC gammaray_core)
+    target_link_libraries(gammaray_styleinspector_plugin PUBLIC Qt::Gui Qt::Widgets)
 endif()
 
 # ui part

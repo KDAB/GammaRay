@@ -18,14 +18,18 @@ set(gammaray_quickinspector_shared_srcs quickinspectorinterface.cpp quickitemgeo
 )
 
 add_library(
-    gammaray_quickinspector_shared STATIC
+    gammaray_quickinspector_shared OBJECT
     ${gammaray_quickinspector_shared_srcs}
 )
+target_link_libraries(gammaray_quickinspector_shared PUBLIC gammaray_common)
 target_link_libraries(
-    gammaray_quickinspector_shared gammaray_common Qt::Gui Qt::Quick
+    gammaray_quickinspector_shared
+    PUBLIC Qt::Gui Qt::Quick
 )
 
-set_target_properties(gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(
+    gammaray_quickinspector_shared PROPERTIES POSITION_INDEPENDENT_CODE $<IF:$<BOOL:GAMMARAY_STATIC_PROBE>,OFF,ON>
+)
 target_compile_features(gammaray_quickinspector_shared PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
@@ -71,21 +75,25 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_quickinspector.json
         SOURCES
         ${gammaray_quickinspector_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
     if(TARGET Qt${QT_MAJOR_VERSION}::Quick)
         target_sources(
-            gammaray_quickinspector PUBLIC ${CMAKE_CURRENT_LIST_DIR}/quickimplicitbindingdependencyprovider.cpp
+            gammaray_quickinspector PRIVATE ${CMAKE_CURRENT_LIST_DIR}/quickimplicitbindingdependencyprovider.cpp
         )
     endif()
 
     target_link_libraries(
         gammaray_quickinspector
-        gammaray_quickinspector_shared
-        gammaray_core
-        Qt::Quick
-        Qt::QuickPrivate
-        gammaray_kitemmodels
+        PUBLIC gammaray_core $<BUILD_INTERFACE:gammaray_quickinspector_shared>
+        PRIVATE gammaray_kitemmodels
+    )
+    target_link_libraries(
+        gammaray_quickinspector
+        PUBLIC Qt::Quick
+        PRIVATE Qt::QuickPrivate
     )
 
     if(TARGET Qt::Gui_GLESv2)
@@ -94,13 +102,13 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         check_cxx_source_compiles("int main() {return 0;}" CAN_LINK_GUI_GLESV2)
         if(CAN_LINK_GUI_GLESV2)
             set(HAVE_GLESv2 TRUE)
-            target_link_libraries(gammaray_quickinspector Qt::Gui_GLESv2)
+            target_link_libraries(gammaray_quickinspector PRIVATE Qt::Gui_GLESv2)
         endif()
     endif()
 
     #the Qt::Gui_GLESv2 target is not set on Android (up to qt5.13, at least)
     if(ANDROID AND NOT TARGET Qt::Gui_GLESv2)
-        target_link_libraries(gammaray_quickinspector GLESv2)
+        target_link_libraries(gammaray_quickinspector PRIVATE GLESv2)
     endif()
 endif()
 
@@ -155,6 +163,8 @@ if(GAMMARAY_BUILD_UI)
         ${gammaray_quickinspector_ui_srcs}
     )
 
-    target_link_libraries(gammaray_quickinspector_ui gammaray_quickinspector_shared gammaray_ui Qt::Quick)
+    target_link_libraries(
+        gammaray_quickinspector_ui $<BUILD_INTERFACE:gammaray_quickinspector_shared> gammaray_ui Qt::Quick
+    )
 
 endif()

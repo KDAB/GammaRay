@@ -16,8 +16,15 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_mimetypes.json
         SOURCES
         ${gammaray_mimetypes_srcs}
+        EXPORT
+        GammaRayTargets
     )
-    target_link_libraries(gammaray_mimetypes gammaray_core Qt::Gui gammaray_kitemmodels)
+    target_link_libraries(
+        gammaray_mimetypes
+        PUBLIC gammaray_core
+        PRIVATE gammaray_kitemmodels
+    )
+    target_link_libraries(gammaray_mimetypes PUBLIC Qt::Gui)
 endif()
 
 # ui plugin

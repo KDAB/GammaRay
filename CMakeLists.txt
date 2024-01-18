@@ -274,7 +274,7 @@ if(GAMMARAY_STATIC_PROBE)
     set(GAMMARAY_LIBRARY_TYPE STATIC)
     set(GAMMARAY_PLUGIN_TYPE STATIC)
 else()
-    set(GAMMARAY_LIBRARY_TYPE SHARED)
+    set(GAMMARAY_LIBRARY_TYPE STATIC)
     set(GAMMARAY_PLUGIN_TYPE MODULE)
 endif()
 
@@ -895,31 +895,30 @@ endif()
 #
 # CMake package config file generation
 #
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
-    include(CMakePackageConfigHelpers)
-    configure_package_config_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
-        INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-        PATH_VARS INCLUDE_INSTALL_DIR
-    )
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/GammaRayConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
+    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+    PATH_VARS INCLUDE_INSTALL_DIR
+)
 
-    write_basic_package_version_file(
-        ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
-        VERSION ${GAMMARAY_VERSION}
-        COMPATIBILITY SameMajorVersion
-    )
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
+    VERSION ${GAMMARAY_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
 
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake
-                  ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake DESTINATION ${CMAKECONFIG_INSTALL_DIR}
-    )
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/GammaRayConfigVersion.cmake
+    DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+)
 
-    install(
-        EXPORT GammaRayTargets
-        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-        FILE GammaRayTarget.cmake
-        #     NAMESPACE GammaRay::
-    )
-endif()
+install(
+    EXPORT GammaRayTargets
+    DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+    FILE GammaRayTarget.cmake
+    #     NAMESPACE GammaRay::
+)
 
 #CPACK: General Settings
 set(CPACK_GENERATOR "TBZ2")

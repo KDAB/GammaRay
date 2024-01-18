@@ -22,8 +22,15 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         translatorsmodel.h
         translatorwrapper.cpp
         translatorwrapper.h
+        EXPORT
+        GammaRayTargets
     )
-    target_link_libraries(gammaray_translatorinspector gammaray_core Qt::Core Qt::CorePrivate)
+    target_link_libraries(gammaray_translatorinspector PUBLIC gammaray_core)
+    target_link_libraries(
+        gammaray_translatorinspector
+        PUBLIC Qt::Core
+        PRIVATE Qt::CorePrivate
+    )
     set_target_properties(gammaray_translatorinspector PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 endif()
 

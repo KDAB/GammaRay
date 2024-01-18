@@ -12,14 +12,13 @@ set(gammaray_signalmonitor_shared_srcs signalmonitorcommon.cpp signalmonitorcomm
                                        signalmonitorinterface.h
 )
 add_library(
-    gammaray_signalmonitor_shared STATIC
+    gammaray_signalmonitor_shared OBJECT
     ${gammaray_signalmonitor_shared_srcs}
 )
-target_link_libraries(
-    gammaray_signalmonitor_shared
-    PRIVATE gammaray_common
+target_link_libraries(gammaray_signalmonitor_shared PUBLIC gammaray_core)
+set_target_properties(
+    gammaray_signalmonitor_shared PROPERTIES POSITION_INDEPENDENT_CODE $<IF:$<BOOL:GAMMARAY_STATIC_PROBE>,OFF,ON>
 )
-set_target_properties(gammaray_signalmonitor_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_compile_features(gammaray_signalmonitor_shared PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
 # probe plugin
@@ -39,10 +38,12 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_signalmonitor.json
         SOURCES
         ${gammaray_signalmonitor_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
-    target_link_libraries(gammaray_signalmonitor gammaray_core gammaray_signalmonitor_shared)
-    target_link_libraries(gammaray_signalmonitor Qt::Gui)
+    target_link_libraries(gammaray_signalmonitor PUBLIC $<BUILD_INTERFACE:gammaray_signalmonitor_shared>)
+    target_link_libraries(gammaray_signalmonitor PUBLIC Qt::Gui)
 endif()
 
 if(GAMMARAY_BUILD_UI)
@@ -66,5 +67,5 @@ if(GAMMARAY_BUILD_UI)
         ${gammaray_signalmonitor_ui_srcs}
     )
 
-    target_link_libraries(gammaray_signalmonitor_ui gammaray_ui gammaray_signalmonitor_shared)
+    target_link_libraries(gammaray_signalmonitor_ui gammaray_ui $<BUILD_INTERFACE:gammaray_signalmonitor_shared>)
 endif()

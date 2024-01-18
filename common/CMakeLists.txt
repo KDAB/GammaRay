@@ -23,10 +23,10 @@ configure_file(
 )
 
 add_library(
-    gammaray_lz4 STATIC
+    gammaray_lz4 OBJECT
     ${CMAKE_SOURCE_DIR}/3rdparty/lz4/lz4.c
 )
-set_target_properties(gammaray_lz4 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(gammaray_lz4 PROPERTIES POSITION_INDEPENDENT_CODE $<IF:$<BOOL:GAMMARAY_STATIC_PROBE>,OFF,ON>)
 #
 # Shared non-UI code between probe and client
 #
@@ -101,7 +101,9 @@ target_link_libraries(
 )
 target_link_libraries(
     gammaray_common
-    PRIVATE gammaray_lz4 gammaray_kitemmodels ${CMAKE_DL_LIBS}
+    PRIVATE $<BUILD_INTERFACE:gammaray_lz4>
+            gammaray_kitemmodels
+            ${CMAKE_DL_LIBS}
 )
 gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
 if(GAMMARAY_USE_PCH)
@@ -144,65 +146,63 @@ set(gammaray_common_internal_srcs
 )
 
 add_library(
-    gammaray_common_internal STATIC
+    gammaray_common_internal OBJECT
     ${gammaray_common_internal_srcs}
 )
-set_target_properties(gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(
+    gammaray_common_internal PROPERTIES POSITION_INDEPENDENT_CODE $<IF:$<BOOL:GAMMARAY_STATIC_PROBE>,OFF,ON>
+)
 target_compile_features(gammaray_common_internal PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
+target_link_libraries(gammaray_common_internal PUBLIC gammaray_common)
 target_link_libraries(
-    gammaray_common_internal gammaray_common
+    gammaray_common_internal
+    PUBLIC Qt::Core
+    PRIVATE Qt::Network
 )
-target_link_libraries(
-    gammaray_common_internal Qt::Core Qt::Network
+
+install(
+    TARGETS gammaray_common
+    EXPORT GammaRayTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
-    install(
-        TARGETS gammaray_common
-        EXPORT GammaRayTargets
-        ${INSTALL_TARGETS_DEFAULT_ARGS}
-    )
+gammaray_install_headers(
+    ${CMAKE_CURRENT_BINARY_DIR}/gammaray_common_export.h
+    endpoint.h
+    enumdefinition.h
+    enumrepository.h
+    enumvalue.h
+    metatypedeclarations.h
+    modelroles.h
+    objectbroker.h
+    objectid.h
+    objectmodel.h
+    objectidfilterproxymodel.h
+    paths.h
+    probecontrollerinterface.h
+    propertycontrollerinterface.h
+    protocol.h
+    sourcelocation.h
+    translator.h
+    commonutils.h
+    favoriteobjectinterface.h
+)
 
-    gammaray_install_headers(
-        ${CMAKE_CURRENT_BINARY_DIR}/gammaray_common_export.h
-        endpoint.h
-        enumdefinition.h
-        enumrepository.h
-        enumvalue.h
-        metatypedeclarations.h
-        modelroles.h
-        objectbroker.h
-        objectid.h
-        objectmodel.h
-        objectidfilterproxymodel.h
-        paths.h
-        probecontrollerinterface.h
-        propertycontrollerinterface.h
-        protocol.h
-        sourcelocation.h
-        translator.h
-        commonutils.h
-        favoriteobjectinterface.h
-    )
+ecm_generate_pri_file(
+    BASE_NAME
+    GammaRayCommon
+    LIB_NAME
+    gammaray_common-${GAMMARAY_PROBE_ABI}
+    DEPS
+    "core gui network"
+    FILENAME_VAR
+    PRI_FILENAME
+    INCLUDE_INSTALL_DIR
+    ${INCLUDE_INSTALL_DIR}
+)
 
-    ecm_generate_pri_file(
-        BASE_NAME
-        GammaRayCommon
-        LIB_NAME
-        gammaray_common-${GAMMARAY_PROBE_ABI}
-        DEPS
-        "core gui network"
-        FILENAME_VAR
-        PRI_FILENAME
-        INCLUDE_INSTALL_DIR
-        ${INCLUDE_INSTALL_DIR}
-    )
-
-    install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
-else()
-    install(TARGETS gammaray_common ${INSTALL_TARGETS_DEFAULT_ARGS})
-endif()
+install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
 if(MSVC)
     install(
         FILES "$<TARGET_PDB_FILE_DIR:gammaray_common>/$<TARGET_PDB_FILE_NAME:gammaray_common>"

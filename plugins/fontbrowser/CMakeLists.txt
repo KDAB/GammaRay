@@ -28,10 +28,12 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_fontbrowser.json
         SOURCES
         ${gammaray_fontbrowser_plugin_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
-    target_link_libraries(gammaray_fontbrowser_plugin gammaray_core)
-    target_link_libraries(gammaray_fontbrowser_plugin Qt::Gui)
+    target_link_libraries(gammaray_fontbrowser_plugin PUBLIC gammaray_core)
+    target_link_libraries(gammaray_fontbrowser_plugin PUBLIC Qt::Gui)
 endif()
 
 # ui part

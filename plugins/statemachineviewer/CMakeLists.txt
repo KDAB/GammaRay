@@ -40,17 +40,18 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         SOURCES
         ${gammaray_statemachineviewer_plugin_srcs}
         ${gammaray_statemachineviewer_shared_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
     set_target_properties(gammaray_statemachineviewer_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
-
-    target_link_libraries(gammaray_statemachineviewer_plugin gammaray_core)
+    target_link_libraries(gammaray_statemachineviewer_plugin PUBLIC gammaray_core)
 
     if(TARGET Qt::Scxml)
-        target_link_libraries(gammaray_statemachineviewer_plugin Qt::Scxml Qt::ScxmlPrivate)
+        target_link_libraries(gammaray_statemachineviewer_plugin PUBLIC Qt::Scxml Qt::ScxmlPrivate)
     endif()
     if(TARGET Qt6::StateMachine)
-        target_link_libraries(gammaray_statemachineviewer_plugin Qt6::StateMachine Qt6::StateMachinePrivate)
+        target_link_libraries(gammaray_statemachineviewer_plugin PUBLIC Qt6::StateMachine Qt6::StateMachinePrivate)
     endif()
 endif()
 

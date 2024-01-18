@@ -29,9 +29,16 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_eventmonitor.json
         SOURCES
         ${gammaray_eventmonitor_plugin_srcs}
+        EXPORT
+        GammaRayTargets
     )
 
-    target_link_libraries(gammaray_eventmonitor_plugin Qt::Gui Qt::CorePrivate gammaray_core)
+    target_link_libraries(gammaray_eventmonitor_plugin PUBLIC gammaray_core)
+    target_link_libraries(
+        gammaray_eventmonitor_plugin
+        PUBLIC Qt::Gui
+        PRIVATE Qt::CorePrivate
+    )
 endif()
 
 # ui part

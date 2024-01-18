@@ -16,8 +16,15 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_guisupport.json
         SOURCES
         ${gammaray_guisupport_srcs}
+        EXPORT
+        GammaRayTargets
     )
-    target_link_libraries(gammaray_guisupport gammaray_core Qt::Gui Qt::GuiPrivate)
+    target_link_libraries(gammaray_guisupport PUBLIC gammaray_core)
+    target_link_libraries(
+        gammaray_guisupport
+        PUBLIC Qt::Gui
+        PRIVATE Qt::GuiPrivate
+    )
 endif()
 
 # ui plugin

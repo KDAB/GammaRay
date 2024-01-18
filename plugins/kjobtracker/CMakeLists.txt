@@ -27,9 +27,16 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             gammaray_kjobtracker.json
             SOURCES
             ${gammaray_kjob_plugin_srcs}
+            EXPORT
+            GammaRayTargets
         )
 
-        target_link_libraries(gammaray_kjobtracker_plugin gammaray_core KF${QtCore_VERSION_MAJOR}::CoreAddons Qt::Gui)
+        target_link_libraries(gammaray_kjobtracker_plugin PUBLIC gammaray_core)
+        target_link_libraries(
+            gammaray_kjobtracker_plugin
+            PUBLIC KF${QtCore_VERSION_MAJOR}::CoreAddons
+            PRIVATE Qt::Gui
+        )
     endif()
 endif()
 

@@ -16,9 +16,12 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         SOURCES
         openglsupport.cpp
         openglsupport.h
+        EXPORT
+        GammaRayTargets
     )
-    target_link_libraries(gammaray_openglsupport gammaray_core Qt::Gui)
+    target_link_libraries(gammaray_openglsupport PUBLIC gammaray_core)
+    target_link_libraries(gammaray_openglsupport PUBLIC Qt::Gui)
     if(TARGET Qt6::OpenGL)
-        target_link_libraries(gammaray_openglsupport Qt6::OpenGL)
+        target_link_libraries(gammaray_openglsupport PUBLIC Qt6::OpenGL)
     endif()
 endif()

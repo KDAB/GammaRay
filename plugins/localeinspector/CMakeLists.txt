@@ -34,10 +34,11 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_localeinspector.json
         SOURCES
         ${gammaray_localeinspector_plugin_srcs}
+        EXPORT
+        GammaRayTargets
     )
     set_target_properties(gammaray_localeinspector_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
-
-    target_link_libraries(gammaray_localeinspector_plugin gammaray_core)
+    target_link_libraries(gammaray_localeinspector_plugin PUBLIC gammaray_core)
 endif()
 
 # ui part

@@ -7,6 +7,7 @@
 # Contact KDAB at <info@kdab.com> for commercial licensing options.
 #
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
-    install(FILES GammaRayMacros.cmake DESTINATION ${CMAKECONFIG_INSTALL_DIR})
-endif()
+install(
+	FILES GammaRayMacros.cmake
+	DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+)

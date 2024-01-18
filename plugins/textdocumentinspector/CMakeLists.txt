@@ -23,9 +23,11 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_textdocumentinspector.json
         SOURCES
         ${gammaray_textdocumentinspector_srcs}
+        EXPORT
+        GammaRayTargets
     )
-    target_link_libraries(gammaray_textdocumentinspector gammaray_core)
-    target_link_libraries(gammaray_textdocumentinspector Qt::Gui)
+    target_link_libraries(gammaray_textdocumentinspector PUBLIC gammaray_core)
+    target_link_libraries(gammaray_textdocumentinspector PUBLIC Qt::Gui)
 endif()
 
 # ui plugin

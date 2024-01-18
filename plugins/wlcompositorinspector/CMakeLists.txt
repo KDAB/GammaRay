@@ -32,15 +32,19 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             gammaray_wlcompositorinspector.json
             SOURCES
             ${gammaray_wlcompositorinspector_srcs}
+            EXPORT
+            GammaRayTargets
         )
         target_link_libraries(
             gammaray_wlcompositorinspector
-            gammaray_core
-            gammaray_kitemmodels
-            Qt::WaylandCompositor
-            Wayland::Server
+            PUBLIC gammaray_core
+            PRIVATE gammaray_kitemmodels
         )
-
+        target_link_libraries(
+            gammaray_wlcompositorinspector
+            PUBLIC Qt::WaylandCompositor
+            PRIVATE Wayland::Server
+        )
     endif()
 endif()
 

@@ -12,22 +12,45 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
 
     list(APPEND gammaray_probe_srcs entry_unix.cpp)
 
-    # create intermediate gammaray_probe object files which unit tests can use
-    add_library(gammaray_probe_obj OBJECT ${gammaray_probe_srcs})
-    set_target_properties(gammaray_probe_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    target_compile_features(gammaray_probe_obj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
-    target_compile_definitions(gammaray_probe_obj PRIVATE ${QtCore_DEFINITIONS}) # for -DQT_NAMESPACE=...
-    target_include_directories(
-        gammaray_probe_obj PUBLIC $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
-                                  $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
-    )
-    target_link_libraries(gammaray_probe_obj Qt::CorePrivate)
-
     # probe lib
     # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
     # Windows also needs SHARED rather than MODULE here, to end up in bin/
-    add_library(gammaray_probe ${GAMMARAY_LIBRARY_TYPE} $<TARGET_OBJECTS:gammaray_probe_obj>)
-    target_link_libraries(gammaray_probe gammaray_core ${CMAKE_DL_LIBS})
+    if(GAMMARAY_STATIC_PROBE)
+        add_library(gammaray_probe ${GAMMARAY_PROBE_TYPE} ${gammaray_probe_srcs})
+        target_compile_features(gammaray_probe PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
+        target_compile_definitions(gammaray_probe PRIVATE ${QtCore_DEFINITIONS}) # for -DQT_NAMESPACE=...
+        target_include_directories(
+            gammaray_probe
+            PUBLIC $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
+                   $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
+        )
+        target_link_libraries(
+            gammaray_probe
+            PUBLIC gammaray_core
+            PRIVATE Qt::CorePrivate ${CMAKE_DL_LIBS}
+        )
+    else()
+        # create intermediate gammaray_probe object files which unit tests can use
+        add_library(gammaray_probe_obj OBJECT ${gammaray_probe_srcs})
+        set_target_properties(gammaray_probe_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
+        target_compile_features(gammaray_probe_obj PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
+        target_compile_definitions(gammaray_probe_obj PRIVATE ${QtCore_DEFINITIONS}) # for -DQT_NAMESPACE=...
+        target_include_directories(
+            gammaray_probe_obj PUBLIC $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
+                                      $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
+        )
+        target_link_libraries(gammaray_probe_obj PRIVATE Qt::CorePrivate)
+
+        # probe lib
+        # DYLD_INSERT_LIBRARIES only works with real shared libraries, not modules
+        # Windows also needs SHARED rather than MODULE here, to end up in bin/
+        add_library(gammaray_probe ${GAMMARAY_PROBE_TYPE} $<TARGET_OBJECTS:gammaray_probe_obj>)
+        target_link_libraries(
+            gammaray_probe
+            PUBLIC gammaray_core
+            PRIVATE ${CMAKE_DL_LIBS}
+        )
+    endif()
 
     set_target_properties(
         gammaray_probe PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${GAMMARAY_OUTPUT_PREFIX}/${PROBE_INSTALL_DIR}"
@@ -63,30 +86,28 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             set_target_properties(gammaray_winloader PROPERTIES OUTPUT_NAME gammaray_winloader-${GAMMARAY_PROBE_ABI})
             install(TARGETS gammaray_winloader ${INSTALL_TARGETS_DEFAULT_ARGS})
         endif()
-        if(NOT GAMMARAY_PROBE_ONLY_BUILD)
-            install(
-                TARGETS gammaray_probe
-                EXPORT GammaRayTargets
-                ${INSTALL_TARGETS_DEFAULT_ARGS}
-            )
 
-            ecm_generate_pri_file(
-                BASE_NAME
-                GammaRayProbe
-                LIB_NAME
-                gammaray_probe-${GAMMARAY_PROBE_ABI}
-                DEPS
-                "core gui network GammaRayCommon GammaRayCore"
-                FILENAME_VAR
-                PRI_FILENAME
-                INCLUDE_INSTALL_DIR
-                ${INCLUDE_INSTALL_DIR}
-            )
+        install(
+            TARGETS gammaray_probe
+            EXPORT GammaRayTargets
+            ${INSTALL_TARGETS_DEFAULT_ARGS}
+        )
 
-            install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
-        else()
-            install(TARGETS gammaray_probe ${INSTALL_TARGETS_DEFAULT_ARGS})
-        endif()
+        ecm_generate_pri_file(
+            BASE_NAME
+            GammaRayProbe
+            LIB_NAME
+            gammaray_probe-${GAMMARAY_PROBE_ABI}
+            DEPS
+            "core GammaRayCore"
+            FILENAME_VAR
+            PRI_FILENAME
+            INCLUDE_INSTALL_DIR
+            ${INCLUDE_INSTALL_DIR}
+        )
+
+        install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+
         if(ANDROID)
             install(
                 FILES gammaray_probe-android-dependencies.xml

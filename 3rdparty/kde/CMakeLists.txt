@@ -5,7 +5,7 @@ set(gammaray_kitemmodels_srcs
   kitemmodels_debug.cpp
 )
 
-add_library(gammaray_kitemmodels SHARED ${gammaray_kitemmodels_srcs})
+add_library(gammaray_kitemmodels ${GAMMARAY_LIBRARY_TYPE} ${gammaray_kitemmodels_srcs})
 
 target_link_libraries(gammaray_kitemmodels PUBLIC Qt::Core)
 
@@ -16,20 +16,16 @@ set_target_properties(gammaray_kitemmodels PROPERTIES
 )
 gammaray_set_rpath(gammaray_kitemmodels ${LIB_INSTALL_DIR})
 
-if(NOT GAMMARAY_PROBE_ONLY_BUILD)
-  install(TARGETS gammaray_kitemmodels EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-  if(MSVC)
-    install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_kitemmodels>/$<TARGET_PDB_FILE_NAME:gammaray_kitemmodels>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
-  endif()
-
-  ecm_generate_pri_file(BASE_NAME GammaRayKItemModels
-                        LIB_NAME gammaray_kitemmodels-${GAMMARAY_PROBE_ABI}
-                        DEPS "core"
-                        FILENAME_VAR PRI_FILENAME
-                        INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
-  )
-
-  install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
-else()
-  install(TARGETS gammaray_kitemmodels ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS gammaray_kitemmodels EXPORT GammaRayTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+if(MSVC)
+  install(FILES "$<TARGET_PDB_FILE_DIR:gammaray_kitemmodels>/$<TARGET_PDB_FILE_NAME:gammaray_kitemmodels>" DESTINATION ${BIN_INSTALL_DIR} CONFIGURATIONS Debug RelWithDebInfo)
 endif()
+
+ecm_generate_pri_file(BASE_NAME GammaRayKItemModels
+                      LIB_NAME gammaray_kitemmodels-${GAMMARAY_PROBE_ABI}
+                      DEPS "core"
+                      FILENAME_VAR PRI_FILENAME
+                      INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_DIR}
+)
+
+install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
