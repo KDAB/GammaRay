@@ -222,34 +222,41 @@ message(STATUS "Building GammaRay ${GAMMARAY_VERSION_STRING} in ${CMAKE_BUILD_TY
 #
 # Build options
 #
-set(GAMMARAY_BUILD_UI_DEFAULT ON)
-if(QNXNTO OR ANDROID)
-    set(GAMMARAY_BUILD_UI_DEFAULT OFF)
+gammaray_option(GAMMARAY_STATIC_PROBE "Build the probe as static library for compile-time injection." OFF)
+gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
+gammaray_option(GAMMARAY_ENFORCE_QT_ASSERTS "Force QT_ASSERT in all builds." OFF)
+
+set(GAMMARAY_INSTALL_QT_LAYOUT_DEFAULT OFF)
+if(ANDROID)
+    set(GAMMARAY_INSTALL_QT_LAYOUT_DEFAULT ON)
+endif()
+gammaray_option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." ${GAMMARAY_INSTALL_QT_LAYOUT_DEFAULT})
+if(ANDROID AND NOT GAMMARAY_INSTALL_QT_LAYOUT)
+    message(FATAL_ERROR "Must use GAMMARAY_INSTALL_QT_LAYOUT on Android.")
 endif()
 
+set(GAMMARAY_PROBE_ONLY_BUILD_DEFAULT OFF)
+if(GAMMARAY_STATIC_PROBE)
+    set(GAMMARAY_PROBE_ONLY_BUILD_DEFAULT ON)
+endif()
 gammaray_option(
-    GAMMARAY_PROBE_ONLY_BUILD "Build only an additional probe configuration for an already existing launcher." OFF
+    GAMMARAY_PROBE_ONLY_BUILD "Build only an additional probe configuration for an already existing launcher."
+    ${GAMMARAY_PROBE_ONLY_BUILD_DEFAULT}
 )
+if(GAMMARAY_STATIC_PROBE AND NOT GAMMARAY_PROBE_ONLY_BUILD)
+    message(FATAL_ERROR "Must use PROBE_ONLY_BUILD for STATIC_PROBE.")
+elseif(GAMMARAY_STATIC_PROBE)
+    set(GAMMARAY_LIBRARY_TYPE STATIC)
+    set(GAMMARAY_PLUGIN_TYPE STATIC)
+else()
+    set(GAMMARAY_LIBRARY_TYPE SHARED)
+    set(GAMMARAY_PLUGIN_TYPE MODULE)
+endif()
 
 gammaray_option(GAMMARAY_CLIENT_ONLY_BUILD "Build the client part only." OFF)
-
-if(GAMMARAY_CLIENT_ONLY_BUILD)
-    set(GAMMARAY_BUILD_UI_DEFAULT ON)
-endif()
-
-if(GAMMARAY_PROBE_ONLY_BUILD)
-    set(GAMMARAY_BUILD_UI_DEFAULT OFF)
-endif()
-
-gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
-
 if(GAMMARAY_PROBE_ONLY_BUILD AND GAMMARAY_CLIENT_ONLY_BUILD)
-    message(FATAL_ERROR "You can only use one of the *ONLY* option.")
+    message(FATAL_ERROR "Cannot use PROBE_ONLY_BUILD and CLIENT_ONLY_BUILD at the same time.")
 endif()
-
-gammaray_option(GAMMARAY_INSTALL_QT_LAYOUT "Install into Qt directory layout." OFF)
-gammaray_option(GAMMARAY_MULTI_BUILD "Build multiple applicable probe configurations." ON)
-gammaray_option(GAMMARAY_BUILD_CLI_INJECTOR "Build command line injector on Windows." ON)
 
 set(GAMMARAY_BUILD_DOCS_DEFAULT ON)
 set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT OFF)
@@ -258,24 +265,17 @@ if(GAMMARAY_PROBE_ONLY_BUILD OR CMAKE_CROSSCOMPILING)
     set(GAMMARAY_DISABLE_FEEDBACK_DEFAULT ON)
 endif()
 gammaray_option(GAMMARAY_BUILD_DOCS "Build GammaRay documentation." ${GAMMARAY_BUILD_DOCS_DEFAULT})
-gammaray_option(GAMMARAY_STATIC_PROBE "Build the probe as static library for compile-time injection." OFF)
-
-gammaray_option(GAMMARAY_ENFORCE_QT_ASSERTS "Force QT_ASSERT in all builds." OFF)
-
 gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." ${GAMMARAY_DISABLE_FEEDBACK_DEFAULT})
 
-#
-# Static probe setup
-#
-if(GAMMARAY_STATIC_PROBE)
-    set(GAMMARAY_BUILD_UI OFF)
-    set(GAMMARAY_PROBE_ONLY_BUILD ON)
-
-    set(GAMMARAY_LIBRARY_TYPE STATIC)
-    set(GAMMARAY_PLUGIN_TYPE STATIC)
-else()
-    set(GAMMARAY_LIBRARY_TYPE SHARED)
-    set(GAMMARAY_PLUGIN_TYPE MODULE)
+set(GAMMARAY_BUILD_UI_DEFAULT ON)
+if(GAMMARAY_PROBE_ONLY_BUILD)
+    set(GAMMARAY_BUILD_UI_DEFAULT OFF)
+elseif(QNXNTO OR ANDROID)
+    set(GAMMARAY_BUILD_UI_DEFAULT OFF)
+endif()
+gammaray_option(GAMMARAY_BUILD_UI "Build the GammaRay client and in-process UI." ${GAMMARAY_BUILD_UI_DEFAULT})
+if(GAMMARAY_BUILD_UI AND GAMMARAY_PROBE_ONLY_BUILD)
+    message(FATAL_ERROR "Cannot use BUILD_UI and PROBE_ONLY_BUILD at the same time.")
 endif()
 
 gammaray_option(GAMMARAY_USE_PCH "Enable Precompiled Headers support" OFF)
@@ -295,6 +295,17 @@ if(GAMMARAY_USE_PCH)
                    VISIBILITY_INLINES_HIDDEN ON
                    POSITION_INDEPENDENT_CODE ON
     )
+endif()
+
+set(GAMMARAY_BUILD_CLI_INJECTOR_DEFAULT ON)
+if(WIN32)
+    set(GAMMARAY_BUILD_CLI_INJECTOR_DEFAULT OFF)
+endif()
+gammaray_option(
+    GAMMARAY_BUILD_CLI_INJECTOR "Build command line injector on Windows." ${GAMMARAY_BUILD_CLI_INJECTOR_DEFAULT}
+)
+if(WIN32 AND GAMMARAY_BUILD_CLI_INJECTOR)
+    message(FATAL_ERROR "Cannot use CLI injection on Windows.")
 endif()
 
 #
@@ -601,13 +612,17 @@ if(UPPERCASE_CMAKE_BUILD_TYPE MATCHES "^RELEASE$")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
-if(HAVE_QT_WIDGETS)
-    gammaray_option(
-        GAMMARAY_CORE_ONLY_LAUNCHER
-        "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatibility)" FALSE
-    )
-else()
-    set(GAMMARAY_CORE_ONLY_LAUNCHER TRUE)
+set(GAMMARAY_CORE_ONLY_LAUNCHER_DEFAULT FALSE)
+if(NOT HAVE_QT_WIDGETS)
+    set(GAMMARAY_CORE_ONLY_LAUNCHER_DEFAULT TRUE)
+endif()
+gammaray_option(
+    GAMMARAY_CORE_ONLY_LAUNCHER
+    "Only use QtCore in the CLI launcher (breaks style injector, but is needed for Boot2Qt compatibility)"
+    ${GAMMARAY_CORE_ONLY_LAUNCHER_DEFAULT}
+)
+if(NOT HAVE_QT_WIDGETS AND NOT GAMMARAY_CORE_ONLY_LAUNCHER)
+    message(FATAL_ERROR "Must CORE_ONLY_LAUNCHER when Qt Widgets are not available.")
 endif()
 
 add_feature_info("QtScript debugger" Qt5ScriptTools_FOUND "Requires QtScript and QtScriptTools.")
@@ -657,9 +672,6 @@ include(GammaRayProbeABI)
 # Installation settings
 #
 set(BUNDLE_INSTALL_DIR "")
-if(ANDROID)
-    set(GAMMARAY_INSTALL_QT_LAYOUT ON)
-endif()
 if(APPLE)
     set(BUNDLE_APP_NAME "GammaRay.app")
 
