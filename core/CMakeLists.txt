@@ -226,7 +226,7 @@ target_link_libraries(
             Qt::GuiPrivate
 )
 if(GAMMARAY_USE_PCH)
-    target_precompile_headers(gammaray_core REUSE_FROM gammaray_pch_core_gui)
+    target_link_libraries(gammaray_core PRIVATE gammaray_pch_core_gui)
 endif()
 
 # cmake-lint: disable=E1120

@@ -79,7 +79,7 @@ target_link_libraries(
             Qt::Network
 )
 if(GAMMARAY_USE_PCH)
-    target_precompile_headers(gammaray_client REUSE_FROM gammaray_pch_core_gui)
+    target_link_libraries(gammaray_client PRIVATE gammaray_pch_core_gui)
 endif()
 
 set(gammaray_client_srcs main.cpp)

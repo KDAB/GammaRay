@@ -52,7 +52,7 @@ function(gammaray_add_plugin _target_name)
     endif()
 
     if(GAMMARAY_USE_PCH)
-        target_precompile_headers(${_target_name} REUSE_FROM gammaray_pch_core_gui)
+        target_link_libraries(${_target_name} PRIVATE gammaray_pch_core_gui)
     endif()
 
     gammaray_set_rpath(${_target_name} ${_install_target_dir})

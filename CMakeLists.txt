@@ -280,21 +280,12 @@ endif()
 
 gammaray_option(GAMMARAY_USE_PCH "Enable Precompiled Headers support" OFF)
 if(GAMMARAY_USE_PCH)
-    add_library(gammaray_pch_core_gui STATIC)
-    file(
-        GENERATE
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cpp
-        CONTENT "/*dummy pch file*/"
+    add_library(gammaray_pch_core_gui INTERFACE)
+    target_include_directories(
+        gammaray_pch_core_gui INTERFACE "$<TARGET_PROPERTY:Qt::Core,INTERFACE_INCLUDE_DIRECTORIES>"
+                                        "$<TARGET_PROPERTY:Qt::Gui,INTERFACE_INCLUDE_DIRECTORIES>"
     )
-    target_sources(gammaray_pch_core_gui PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cpp)
-    target_link_libraries(gammaray_pch_core_gui PRIVATE Qt::Core Qt::Gui)
-    set_target_properties(
-        gammaray_pch_core_gui
-        PROPERTIES PRECOMPILE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/core/pch.h
-                   CXX_VISIBILITY_PRESET hidden
-                   VISIBILITY_INLINES_HIDDEN ON
-                   POSITION_INDEPENDENT_CODE ON
-    )
+    target_precompile_headers(gammaray_pch_core_gui INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/core/pch.h)
 endif()
 
 #
