@@ -73,5 +73,5 @@ if(GAMMARAY_BUILD_UI)
         ${gammaray_styleinspector_ui_plugin_srcs}
     )
 
-    target_link_libraries(gammaray_styleinspector_ui_plugin gammaray_ui)
+    target_link_libraries(gammaray_styleinspector_ui_plugin PUBLIC gammaray_ui)
 endif()

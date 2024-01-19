@@ -67,5 +67,5 @@ if(GAMMARAY_BUILD_UI)
         ${gammaray_signalmonitor_ui_srcs}
     )
 
-    target_link_libraries(gammaray_signalmonitor_ui gammaray_ui $<BUILD_INTERFACE:gammaray_signalmonitor_shared>)
+    target_link_libraries(gammaray_signalmonitor_ui PUBLIC gammaray_ui $<BUILD_INTERFACE:gammaray_signalmonitor_shared>)
 endif()

@@ -73,5 +73,6 @@ if(GAMMARAY_BUILD_UI)
         SOURCES
         ${gammaray_network_ui_srcs}
     )
-    target_link_libraries(gammaray_network_ui gammaray_ui Qt::Network)
+    target_link_libraries(gammaray_network_ui PUBLIC gammaray_ui)
+    target_link_libraries(gammaray_network_ui PRIVATE Qt::Network)
 endif()

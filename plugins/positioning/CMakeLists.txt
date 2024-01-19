@@ -95,12 +95,10 @@ if(GAMMARAY_BUILD_UI
         ${gammaray_positioning_ui_srcs}
     )
 
+    target_link_libraries(gammaray_positioning_ui PUBLIC gammaray_ui)
     target_link_libraries(
         gammaray_positioning_ui
-        gammaray_ui
-        Qt::Widgets
-        Qt::Positioning
-        Qt::Location
-        Qt::QuickWidgets
+        PUBLIC Qt::Positioning
+        PRIVATE Qt::Location Qt::QuickWidgets
     )
 endif()

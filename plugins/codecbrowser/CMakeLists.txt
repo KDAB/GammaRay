@@ -37,6 +37,6 @@ if(GAMMARAY_BUILD_UI)
         ${gammaray_codecbrowser_plugin_ui_srcs}
     )
 
-    target_link_libraries(gammaray_codecbrowser_ui_plugin gammaray_common gammaray_ui)
+    target_link_libraries(gammaray_codecbrowser_ui_plugin PUBLIC gammaray_ui)
 
 endif()

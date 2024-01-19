@@ -39,5 +39,5 @@ if(GAMMARAY_BUILD_UI)
         SOURCES
         ${gammaray_guisupport_ui_srcs}
     )
-    target_link_libraries(gammaray_guisupport_ui gammaray_ui)
+    target_link_libraries(gammaray_guisupport_ui PUBLIC gammaray_ui)
 endif()

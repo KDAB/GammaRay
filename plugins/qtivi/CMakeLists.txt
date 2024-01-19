@@ -61,5 +61,5 @@ if(GAMMARAY_BUILD_UI)
         qtivisupportwidget.cpp
         qtivisupportwidget.h
     )
-    target_link_libraries(gammaray_qtivi_ui gammaray_ui)
+    target_link_libraries(gammaray_qtivi_ui PUBLIC gammaray_ui)
 endif()

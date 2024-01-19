@@ -37,5 +37,6 @@ if(GAMMARAY_BUILD_UI AND TARGET Qt::WebEngineWidgets)
         ${gammaray_webinspector_ui_plugin_srcs}
     )
 
-    target_link_libraries(gammaray_webinspector_ui_plugin Qt::WebEngineWidgets gammaray_ui)
+    target_link_libraries(gammaray_webinspector_ui_plugin PUBLIC gammaray_ui)
+    target_link_libraries(gammaray_webinspector_ui_plugin PUBLIC Qt::WebEngineWidgets)
 endif()

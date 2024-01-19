@@ -46,5 +46,5 @@ if(GAMMARAY_BUILD_UI)
         SOURCES
         ${sysinfo_ui_srcs}
     )
-    target_link_libraries(gammaray_sysinfo_ui_plugin gammaray_ui)
+    target_link_libraries(gammaray_sysinfo_ui_plugin PUBLIC gammaray_ui)
 endif()

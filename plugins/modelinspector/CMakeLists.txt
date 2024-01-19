@@ -63,6 +63,6 @@ if(GAMMARAY_BUILD_UI)
         ${gammaray_models_ui_srcs}
     )
 
-    target_link_libraries(gammaray_modelinspector_ui gammaray_ui)
+    target_link_libraries(gammaray_modelinspector_ui PUBLIC gammaray_ui)
 
 endif()

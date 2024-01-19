@@ -38,5 +38,10 @@ if(GAMMARAY_BUILD_UI)
         ${gammaray_scriptenginedebugger_ui_plugin_srcs}
     )
 
-    target_link_libraries(gammaray_scriptenginedebugger_ui_plugin Qt5::Script Qt5::ScriptTools gammaray_ui)
+    target_link_libraries(gammaray_scriptenginedebugger_ui_plugin PUBLIC gammaray_ui)
+    target_link_libraries(
+        gammaray_scriptenginedebugger_ui_plugin
+        PUBLIC Qt5::Script
+        PRIVATE Qt5::ScriptTools
+    )
 endif()

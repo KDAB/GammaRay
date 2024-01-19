@@ -56,6 +56,6 @@ if(GAMMARAY_BUILD_UI)
         ${gammaray_fontbrowser_plugin_ui_srcs}
     )
 
-    target_link_libraries(gammaray_fontbrowser_ui_plugin gammaray_common gammaray_ui)
+    target_link_libraries(gammaray_fontbrowser_ui_plugin PUBLIC gammaray_ui)
 
 endif()

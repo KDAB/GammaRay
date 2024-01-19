@@ -56,6 +56,6 @@ if(GAMMARAY_BUILD_UI)
         ${gammaray_timertop_plugin_ui_srcs}
     )
 
-    target_link_libraries(gammaray_timertop_ui_plugin gammaray_ui)
+    target_link_libraries(gammaray_timertop_ui_plugin PUBLIC gammaray_ui)
 
 endif()

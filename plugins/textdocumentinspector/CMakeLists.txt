@@ -43,5 +43,5 @@ if(GAMMARAY_BUILD_UI)
         SOURCES
         ${gammaray_textdocumentinspector_ui_srcs}
     )
-    target_link_libraries(gammaray_textdocumentinspector_ui gammaray_ui)
+    target_link_libraries(gammaray_textdocumentinspector_ui PUBLIC gammaray_ui)
 endif()

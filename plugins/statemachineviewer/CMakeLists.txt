@@ -48,10 +48,14 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     target_link_libraries(gammaray_statemachineviewer_plugin PUBLIC gammaray_core)
 
     if(TARGET Qt::Scxml)
-        target_link_libraries(gammaray_statemachineviewer_plugin PUBLIC Qt::Scxml Qt::ScxmlPrivate)
+        target_link_libraries(
+            gammaray_statemachineviewer_plugin
+            PUBLIC Qt::ScxmlPrivate
+            PRIVATE Qt::Scxml
+        )
     endif()
     if(TARGET Qt6::StateMachine)
-        target_link_libraries(gammaray_statemachineviewer_plugin PUBLIC Qt6::StateMachine Qt6::StateMachinePrivate)
+        target_link_libraries(gammaray_statemachineviewer_plugin PRIVATE Qt6::StateMachine Qt6::StateMachinePrivate)
     endif()
 endif()
 
@@ -90,15 +94,10 @@ if(GAMMARAY_BUILD_UI AND ${KDSME_PACKAGE_NAME}_FOUND)
         ${gammaray_statemachineviewer_shared_srcs}
     )
 
-    target_link_libraries(
-        gammaray_statemachineviewer_ui_plugin
-        KDSME::Core
-        KDSME::View
-        gammaray_common
-        gammaray_ui
-    )
+    target_link_libraries(gammaray_statemachineviewer_ui_plugin PUBLIC gammaray_ui)
+    target_link_libraries(gammaray_statemachineviewer_ui_plugin PRIVATE KDSME::Core KDSME::View)
 
     if(TARGET Qt6::StateMachine)
-        target_link_libraries(gammaray_statemachineviewer_ui_plugin Qt6::StateMachine)
+        target_link_libraries(gammaray_statemachineviewer_ui_plugin PRIVATE Qt6::StateMachine)
     endif()
 endif()

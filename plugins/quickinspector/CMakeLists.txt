@@ -164,7 +164,10 @@ if(GAMMARAY_BUILD_UI)
     )
 
     target_link_libraries(
-        gammaray_quickinspector_ui $<BUILD_INTERFACE:gammaray_quickinspector_shared> gammaray_ui Qt::Quick
+        gammaray_quickinspector_ui
+        PUBLIC gammaray_ui
+        PRIVATE $<BUILD_INTERFACE:gammaray_quickinspector_shared>
     )
+    target_link_libraries(gammaray_quickinspector_ui PRIVATE Qt::Quick)
 
 endif()

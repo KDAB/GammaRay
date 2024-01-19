@@ -34,11 +34,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         PUBLIC gammaray_core
         PRIVATE gammaray_kitemmodels
     )
-    target_link_libraries(
-        gammaray_3dinspector
-        PUBLIC Qt::3DRender
-        PRIVATE Qt::3DInput
-    )
+    target_link_libraries(gammaray_3dinspector PRIVATE Qt::3DRender Qt::3DInput)
     if(TARGET Qt::3DAnimation)
         target_link_libraries(gammaray_3dinspector PRIVATE Qt::3DAnimation)
     endif()
@@ -68,12 +64,6 @@ if(GAMMARAY_BUILD_UI)
         SOURCES
         ${gammaray_3dinspector_ui_srcs}
     )
-    target_link_libraries(
-        gammaray_3dinspector_ui
-        gammaray_ui
-        Qt::3DRender
-        Qt::3DInput
-        Qt::3DLogic
-        Qt::3DExtras
-    )
+    target_link_libraries(gammaray_3dinspector_ui PUBLIC gammaray_ui)
+    target_link_libraries(gammaray_3dinspector_ui PRIVATE Qt::3DRender Qt::3DInput Qt::3DLogic Qt::3DExtras)
 endif()
