@@ -226,6 +226,7 @@ private:
     QPointF m_currentMousePosition; // in view coordinates
     QPoint m_measurementStartPosition; // in source coordinates
     QPoint m_measurementEndPosition; // in source coordinates
+    QCursor m_cursorBeforeMmbPan;
     bool m_hasMeasurement;
     ObjectIdsFilterProxyModel *m_pickProxyModel;
     VisibilityFilterProxyModel *m_invisibleItemsProxyModel;
