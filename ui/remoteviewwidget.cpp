@@ -1013,8 +1013,7 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
     if (m_interactionMode != NoInteraction
         && m_interactionMode != ViewInteraction
         && event->buttons() & Qt::LeftButton
-        && event->modifiers() & Qt::ControlModifier
-        && event->modifiers() & Qt::ShiftModifier) {
+        && event->modifiers() & Qt::ControlModifier) {
 
         pan();
     } else {
@@ -1126,8 +1125,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
 
     if (m_interactionMode != NoInteraction
         && event->buttons() & Qt::LeftButton
-        && event->modifiers() & Qt::ControlModifier
-        && event->modifiers() & Qt::ShiftModifier) {
+        && event->modifiers() & Qt::ControlModifier) {
 
         pan();
     } else {
@@ -1212,8 +1210,8 @@ void RemoteViewWidget::keyPressEvent(QKeyEvent *event)
 {
     if (m_interactionMode != NoInteraction
         && m_interactionMode != ViewInteraction
-        && ((event->key() == Qt::Key_Control && event->modifiers() & Qt::ShiftModifier)
-            || (event->key() == Qt::Key_Shift && event->modifiers() & Qt::ControlModifier))) {
+        && event->key() == Qt::Key_Control) {
+
         setCursor(Qt::OpenHandCursor);
     }
     switch (m_interactionMode) {
@@ -1241,8 +1239,8 @@ void RemoteViewWidget::keyReleaseEvent(QKeyEvent *event)
     if (m_interactionMode != NoInteraction
         && m_interactionMode != ViewInteraction
         && cursor() == Qt::OpenHandCursor
-        && ((event->key() == Qt::Key_Control && event->modifiers() & Qt::ShiftModifier)
-            || (event->key() == Qt::Key_Shift && event->modifiers() & Qt::ControlModifier))) {
+        && event->key() == Qt::Key_Control) {
+
         setCursor(Qt::CrossCursor);
     }
     switch (m_interactionMode) {
