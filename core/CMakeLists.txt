@@ -219,7 +219,7 @@ target_include_directories(
 target_link_libraries(
     gammaray_core
     PUBLIC gammaray_common
-    PRIVATE gammaray_common_internal
+    PRIVATE $<BUILD_INTERFACE:gammaray_common_internal>
             gammaray_kitemmodels
             ${CMAKE_DL_LIBS}
             Qt::CorePrivate
