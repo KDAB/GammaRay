@@ -15,7 +15,10 @@ add_library(
     gammaray_signalmonitor_shared OBJECT
     ${gammaray_signalmonitor_shared_srcs}
 )
-target_link_libraries(gammaray_signalmonitor_shared PUBLIC gammaray_core)
+target_link_libraries(
+    gammaray_signalmonitor_shared
+    PUBLIC gammaray_core
+)
 set_target_properties(
     gammaray_signalmonitor_shared PROPERTIES POSITION_INDEPENDENT_CODE $<IF:$<BOOL:GAMMARAY_STATIC_PROBE>,OFF,ON>
 )

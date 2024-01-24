@@ -19,9 +19,6 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         EXPORT
         GammaRayTargets
     )
-    target_link_libraries(
-        gammaray_quickwidgetsupport
-        PUBLIC gammaray_core
-    )
+    target_link_libraries(gammaray_quickwidgetsupport PUBLIC gammaray_core)
     target_link_libraries(gammaray_quickwidgetsupport PUBLIC Qt::QuickWidgets)
 endif()

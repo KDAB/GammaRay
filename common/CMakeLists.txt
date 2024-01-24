@@ -101,9 +101,7 @@ target_link_libraries(
 )
 target_link_libraries(
     gammaray_common
-    PRIVATE $<BUILD_INTERFACE:gammaray_lz4>
-            gammaray_kitemmodels
-            ${CMAKE_DL_LIBS}
+    PRIVATE $<BUILD_INTERFACE:gammaray_lz4> gammaray_kitemmodels ${CMAKE_DL_LIBS}
 )
 gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
 if(GAMMARAY_USE_PCH)
@@ -154,7 +152,10 @@ set_target_properties(
 )
 target_compile_features(gammaray_common_internal PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
 
-target_link_libraries(gammaray_common_internal PUBLIC gammaray_common)
+target_link_libraries(
+    gammaray_common_internal
+    PUBLIC gammaray_common
+)
 target_link_libraries(
     gammaray_common_internal
     PUBLIC Qt::Core
@@ -202,7 +203,10 @@ ecm_generate_pri_file(
     ${INCLUDE_INSTALL_DIR}
 )
 
-install(FILES ${PRI_FILENAME} DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
+install(
+    FILES ${PRI_FILENAME}
+    DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
+)
 if(MSVC)
     install(
         FILES "$<TARGET_PDB_FILE_DIR:gammaray_common>/$<TARGET_PDB_FILE_NAME:gammaray_common>"

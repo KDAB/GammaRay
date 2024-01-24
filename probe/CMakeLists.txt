@@ -20,9 +20,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         target_compile_features(gammaray_probe PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
         target_compile_definitions(gammaray_probe PRIVATE ${QtCore_DEFINITIONS}) # for -DQT_NAMESPACE=...
         target_include_directories(
-            gammaray_probe
-            PUBLIC $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
-                   $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
+            gammaray_probe PUBLIC $<TARGET_PROPERTY:gammaray_core,INTERFACE_INCLUDE_DIRECTORIES>
+                                  $<TARGET_PROPERTY:gammaray_common,INTERFACE_INCLUDE_DIRECTORIES>
         )
         target_link_libraries(
             gammaray_probe

@@ -17,7 +17,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_codecbrowser.json
         SOURCES
         ${gammaray_codecbrowser_plugin_srcs}
-        EXPORT GammaRayTargets
+        EXPORT
+        GammaRayTargets
     )
     set_target_properties(gammaray_codecbrowser_plugin PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
     target_link_libraries(gammaray_codecbrowser_plugin PUBLIC gammaray_core)

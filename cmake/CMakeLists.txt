@@ -8,6 +8,6 @@
 #
 
 install(
-	FILES GammaRayMacros.cmake
-	DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+    FILES GammaRayMacros.cmake
+    DESTINATION ${CMAKECONFIG_INSTALL_DIR}
 )

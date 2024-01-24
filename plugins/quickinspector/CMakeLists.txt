@@ -21,7 +21,10 @@ add_library(
     gammaray_quickinspector_shared OBJECT
     ${gammaray_quickinspector_shared_srcs}
 )
-target_link_libraries(gammaray_quickinspector_shared PUBLIC gammaray_common)
+target_link_libraries(
+    gammaray_quickinspector_shared
+    PUBLIC gammaray_common
+)
 target_link_libraries(
     gammaray_quickinspector_shared
     PUBLIC Qt::Gui Qt::Quick
