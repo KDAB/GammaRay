@@ -42,11 +42,17 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         positioninginterface.cpp
         positioninginterface.h
     )
-
-    add_library(gammaray_geopositioninfosource MODULE ${gammaray_geopositioninfosource_srcs})
+    gammaray_add_plugin(
+        gammaray_geopositioninfosource
+        JSON
+        geopositioninfosourcefactory.json
+        SOURCES
+        ${gammaray_positioning_srcs}
+        INSTALL_DIR
+        position
+    )
     target_compile_features(gammaray_geopositioninfosource PUBLIC ${GAMMARAY_REQUIRED_CXX_FEATURES})
     target_link_libraries(gammaray_geopositioninfosource gammaray_common Qt::Positioning Qt::CorePrivate)
-    install(TARGETS gammaray_geopositioninfosource DESTINATION ${TARGET_PLUGIN_INSTALL_DIR}/position)
 endif()
 
 # ui plugin
