@@ -91,6 +91,9 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
 
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+
 if(NOT DEFINED CMAKE_SKIP_BUILD_RPATH)
     set(CMAKE_SKIP_BUILD_RPATH ON)
 endif()
@@ -280,21 +283,13 @@ endif()
 
 gammaray_option(GAMMARAY_USE_PCH "Enable Precompiled Headers support" OFF)
 if(GAMMARAY_USE_PCH)
-    add_library(gammaray_pch_core_gui STATIC)
-    file(
-        GENERATE
-        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cpp
-        CONTENT "/*dummy pch file*/"
+    add_library(gammaray_pch_core_gui INTERFACE)
+    target_include_directories(
+        gammaray_pch_core_gui INTERFACE "$<TARGET_PROPERTY:Qt::Core,INTERFACE_INCLUDE_DIRECTORIES>"
+                                        "$<TARGET_PROPERTY:Qt::Gui,INTERFACE_INCLUDE_DIRECTORIES>"
     )
-    target_sources(gammaray_pch_core_gui PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/empty_pch.cpp)
-    target_link_libraries(gammaray_pch_core_gui PRIVATE Qt::Core Qt::Gui)
-    set_target_properties(
-        gammaray_pch_core_gui
-        PROPERTIES PRECOMPILE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/core/pch.h
-                   CXX_VISIBILITY_PRESET hidden
-                   VISIBILITY_INLINES_HIDDEN ON
-                   POSITION_INDEPENDENT_CODE ON
-    )
+    target_precompile_headers(gammaray_pch_core_gui INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/core/pch.h)
+    set_target_properties(gammaray_pch_core_gui PROPERTIES INTERFACE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
 #
@@ -318,9 +313,6 @@ macro(add_flag_if_supported flag name)
     check_cxx_compiler_flag("-Werror ${flag}" "CXX_SUPPORTS_${name}")
     append_if("CXX_SUPPORTS_${name}" "${flag}" CMAKE_CXX_FLAGS)
 endmacro()
-
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_flag_if_supported(-Wunused-but-set-variable UNUSED_BUT_SET)

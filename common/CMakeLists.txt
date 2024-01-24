@@ -105,7 +105,7 @@ target_link_libraries(
 )
 gammaray_set_rpath(gammaray_common ${LIB_INSTALL_DIR})
 if(GAMMARAY_USE_PCH)
-    target_precompile_headers(gammaray_common REUSE_FROM gammaray_pch_core_gui)
+    target_link_libraries(gammaray_common PRIVATE gammaray_pch_core_gui)
 endif()
 
 set(gammaray_common_internal_srcs
