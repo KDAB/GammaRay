@@ -219,10 +219,8 @@ void MetaObjectRepository::initQEventTypes()
     MO_ADD_METAOBJECT1(QDynamicPropertyChangeEvent, QEvent);
     MO_ADD_PROPERTY_RO(QDynamicPropertyChangeEvent, propertyName);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
     MO_ADD_METAOBJECT1(QDeferredDeleteEvent, QEvent);
     MO_ADD_PROPERTY_RO(QDeferredDeleteEvent, loopLevel);
-#endif
 
     MO_ADD_METAOBJECT1(QMetaCallEvent, QEvent);
     MO_ADD_PROPERTY_RO(QMetaCallEvent, id);
