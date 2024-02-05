@@ -9,7 +9,20 @@
 
 # probe plugin
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
-    set(gammaray_positioning_srcs positioning.cpp positioninginterface.cpp positioninfopropertyadaptor.cpp)
+    set(gammaray_positioning_srcs
+        positioninfopropertyadaptor.cpp
+        positioninfopropertyadaptor.cpp
+        positioninfopropertyadaptor.h
+        positioninfopropertyadaptor.h
+        positioning.cpp
+        positioning.cpp
+        positioning.h
+        positioning.h
+        positioninginterface.cpp
+        positioninginterface.cpp
+        positioninginterface.h
+        positioninginterface.h
+    )
     gammaray_add_plugin(
         gammaray_positioning
         JSON
@@ -21,8 +34,13 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     set_target_properties(gammaray_positioning PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 
     # proxy geo position info source factory
-    set(gammaray_geopositioninfosource_srcs geopositioninfosourcefactory.cpp geopositioninfosource.cpp
-                                            positioninginterface.cpp
+    set(gammaray_geopositioninfosource_srcs
+        geopositioninfosource.cpp
+        geopositioninfosource.h
+        geopositioninfosourcefactory.cpp
+        geopositioninfosourcefactory.h
+        positioninginterface.cpp
+        positioninginterface.h
     )
 
     add_library(gammaray_geopositioninfosource MODULE ${gammaray_geopositioninfosource_srcs})
@@ -37,10 +55,14 @@ if(GAMMARAY_BUILD_UI
    AND TARGET Qt::QuickWidgets
 )
     set(gammaray_positioning_ui_srcs
-        positioningwidget.cpp
-        positioninginterface.cpp
-        positioningclient.cpp
         mapcontroller.cpp
+        mapcontroller.h
+        positioningclient.cpp
+        positioningclient.h
+        positioninginterface.cpp
+        positioninginterface.h
+        positioningwidget.cpp
+        positioningwidget.h
         positioningwidget.qrc
     )
 

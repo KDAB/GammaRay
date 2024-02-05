@@ -140,7 +140,7 @@ void MessageHandlerWidget::fatalMessageReceived(const QString &app, const QStrin
         QPushButton *copyBacktraceButton = new QPushButton(tr("Copy Backtrace"));
         buttons->addButton(copyBacktraceButton, QDialogButtonBox::ActionRole);
 
-        auto joinedBacktrace = backtrace.join(QStringLiteral("\n"));
+        auto joinedBacktrace = backtrace.join(u'\n');
         connect(copyBacktraceButton, &QPushButton::clicked, this, [joinedBacktrace] { copyToClipboard(joinedBacktrace); });
     }
 

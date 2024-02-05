@@ -65,7 +65,7 @@ void AuditLogEntryModel::reload()
     beginResetModel();
     m_entries.clear();
 
-    foreach (auto e, QDir(m_path).entryList(QDir::Files | QDir::Readable)) {
+    for (auto &e : QDir(m_path).entryList(QDir::Files | QDir::Readable)) {
         if (!e.endsWith(QLatin1String(".log")))
             continue;
         e.chop(4);
@@ -203,8 +203,9 @@ QString AuditLogUiController::logEntry(const QDateTime &dt) const
 void AuditLogUiController::clear()
 {
     QDir dir(d->path);
-    foreach (auto e, dir.entryList(QDir::Files | QDir::Readable)) {
-        if (!e.endsWith(QLatin1String(".log")))
+    const auto readableFiles = dir.entryList(QDir::Files | QDir::Readable);
+    for (const auto &e :  readableFiles) {
+        if (!e.endsWith(u".log"))
             continue;
         dir.remove(e);
     }

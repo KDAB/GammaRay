@@ -19,7 +19,7 @@ set_package_properties(
 # probe part
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     if(TARGET KF${QtCore_VERSION_MAJOR}::CoreAddons)
-        set(gammaray_kjob_plugin_srcs kjobtracker.cpp kjobmodel.cpp)
+        set(gammaray_kjob_plugin_srcs kjobmodel.cpp kjobmodel.h kjobtracker.cpp kjobtracker.h)
 
         gammaray_add_plugin(
             gammaray_kjobtracker_plugin
@@ -35,7 +35,7 @@ endif()
 
 # ui part
 if(GAMMARAY_BUILD_UI)
-    set(gammaray_kjob_ui_plugin_srcs kjobtrackerwidget.cpp)
+    set(gammaray_kjob_ui_plugin_srcs kjobtrackerwidget.cpp kjobtrackerwidget.h)
 
     gammaray_add_plugin(
         gammaray_kjobtracker_ui_plugin

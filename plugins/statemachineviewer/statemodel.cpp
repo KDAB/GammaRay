@@ -117,7 +117,7 @@ void StateModelPrivate::stateConfigurationChanged()
                         std::back_inserter(difference));
     for (State state : qAsConst(difference))
         emitDataChangedForState(state);
-    m_lastConfiguration = newConfig;
+    m_lastConfiguration = std::move(newConfig);
 }
 
 void StateModelPrivate::handleMachineDestroyed(QObject *)

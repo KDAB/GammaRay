@@ -488,6 +488,7 @@ void GuiSupport::registerMetaTypes()
 #endif
     MO_ADD_PROPERTY_RO(QHoverEvent, oldPosF);
 
+#if QT_CONFIG(wheelevent)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT1(QWheelEvent, QInputEvent);
     MO_ADD_PROPERTY_RO(QWheelEvent, buttons);
@@ -505,7 +506,9 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QWheelEvent, inverted);
 #endif
     MO_ADD_PROPERTY_RO(QWheelEvent, source);
+#endif
 
+#if QT_CONFIG(tabletevent)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT1(QTabletEvent, QInputEvent);
     MO_ADD_PROPERTY_RO(QTabletEvent, device);
@@ -524,6 +527,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QTabletEvent, yTilt);
     MO_ADD_PROPERTY_RO(QTabletEvent, button);
     MO_ADD_PROPERTY_RO(QTabletEvent, buttons);
+#endif
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT1(QNativeGestureEvent, QInputEvent);

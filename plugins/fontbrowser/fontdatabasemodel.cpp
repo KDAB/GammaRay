@@ -70,7 +70,7 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
     const auto isSortRole = role == FontBrowserInterface::SortRole;
 
     if (role == Qt::DisplayRole || isSortRole) {
-        auto toSortVariant = [isSortRole](bool state) {
+        const auto &toSortVariant = [isSortRole](bool state) {
             return isSortRole ? QVariant(state) : QVariant();
         };
         switch (static_cast<Columns>(index.column())) {

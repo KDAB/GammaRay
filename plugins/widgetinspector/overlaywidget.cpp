@@ -164,7 +164,7 @@ void OverlayWidget::updatePositions()
         m_layoutPath = outerPath.subtracted(innerPath);
 
         if (m_layoutPath.isEmpty()) {
-            m_layoutPath = outerPath;
+            m_layoutPath = std::move(outerPath);
             m_layoutPath.addPath(innerPath);
             m_drawLayoutOutlineOnly = true;
         } else {

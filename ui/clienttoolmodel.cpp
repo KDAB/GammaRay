@@ -89,7 +89,7 @@ Qt::ItemFlags ClientToolModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return flags;
 
-    const auto tool = m_toolManager->tools().at(index.row());
+    const auto &tool = m_toolManager->tools().at(index.row());
     if (!tool.isEnabled() || (!tool.remotingSupported() && Endpoint::instance()->isRemoteClient()))
         flags &= ~(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     return flags;

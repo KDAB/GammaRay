@@ -27,7 +27,7 @@ public:
             if (!vendorVersion.isEmpty())
                 m.insert(QStringLiteral("vendorVersion"), normalizeVendorVersionString(vendorVersion));
         } else {
-            glVersion = vendorVersion;
+            glVersion = std::move(vendorVersion);
         }
         // in case glGetIntegerv(GL_MAJOR_VERSION) failed...
         if (!m.contains(QLatin1String("version")) && !glVersion.isEmpty())

@@ -1,4 +1,4 @@
-# <a name="title"></a> [![Logo](ui/resources/gammaray/ui/light/pixmaps/GammaRay-logo-small.png)](https://www.kdab.com/gammaray)
+# <a name="title"></a> [![Logo](ui/resources/gammaray/ui/light/pixmaps/gammaray-trademark@2x.png)](https://www.kdab.com/gammaray)
 
 GammaRay is a software introspection tool for Qt applications developed by KDAB.
 Leveraging the QObject introspection mechanism it allows you to observe and
@@ -78,8 +78,8 @@ Thanks to our [contributors](CONTRIBUTORS.txt).
 
 ## License
 
-The GammaRay Software is (C) 2010-2024 Klarälvdalens Datakonsult AB (KDAB),
-and is available under the terms of the GPL version 2 (or any later version,
+The GammaRay Software is © Klarälvdalens Datakonsult AB (KDAB), and is
+available under the terms of the GPL version 2 (or any later version,
 at your option).  See [GPL-2.0-or-later.txt](LICENSES/GPL-2.0-or-later.txt)
 for license details.
 

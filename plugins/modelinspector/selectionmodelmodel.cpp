@@ -134,7 +134,7 @@ void SelectionModelModel::setModel(QAbstractItemModel *model)
         return;
 
     beginInsertRows(QModelIndex(), 0, models.size() - 1);
-    m_currentSelectionModels = models;
+    m_currentSelectionModels = std::move(models);
     endInsertRows();
 }
 

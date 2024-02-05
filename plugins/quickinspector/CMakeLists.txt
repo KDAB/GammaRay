@@ -30,25 +30,38 @@ target_compile_features(gammaray_quickinspector_shared PUBLIC ${GAMMARAY_REQUIRE
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     set(gammaray_quickinspector_srcs
-        quickinspector.cpp
         quickanchorspropertyadaptor.cpp
+        quickanchorspropertyadaptor.h
+        quickinspector.cpp
+        quickinspector.h
         quickitemmodel.cpp
-        quickscenegraphmodel.cpp
+        quickitemmodel.h
         quickpaintanalyzerextension.cpp
+        quickpaintanalyzerextension.h
+        quickscenegraphmodel.cpp
+        quickscenegraphmodel.h
         quickscreengrabber.cpp
+        quickscreengrabber.h
     )
 
     if(NOT QT_NO_OPENGL)
         list(
             APPEND
             gammaray_quickinspector_srcs
-            materialextension/materialextension.cpp
-            materialextension/materialshadermodel.cpp
-            materialextension/qquickopenglshadereffectmaterialadaptor.cpp
             geometryextension/sggeometryextension.cpp
+            geometryextension/sggeometryextension.h
             geometryextension/sggeometrymodel.cpp
-            textureextension/textureextension.cpp
+            geometryextension/sggeometrymodel.h
+            materialextension/materialextension.cpp
+            materialextension/materialextension.h
+            materialextension/materialshadermodel.cpp
+            materialextension/materialshadermodel.h
+            materialextension/qquickopenglshadereffectmaterialadaptor.cpp
+            materialextension/qquickopenglshadereffectmaterialadaptor.h
             textureextension/qsgtexturegrabber.cpp
+            textureextension/qsgtexturegrabber.h
+            textureextension/textureextension.cpp
+            textureextension/textureextension.h
         )
     endif()
 
@@ -94,25 +107,43 @@ endif()
 if(GAMMARAY_BUILD_UI)
     # ui plugin
     set(gammaray_quickinspector_ui_srcs
-        quickinspectorwidget.cpp
-        quickinspectorclient.cpp
-        quickclientitemmodel.cpp
-        quickitemdelegate.cpp
-        quickitemtreewatcher.cpp
-        quickscenepreviewwidget.cpp
-        quickscenecontrolwidget.cpp
-        quickoverlaylegend.cpp
         gridsettingswidget.cpp
+        gridsettingswidget.h
         materialextension/materialextensionclient.cpp
+        materialextension/materialextensionclient.h
         materialextension/materialtab.cpp
+        materialextension/materialtab.h
+        quickclientitemmodel.cpp
+        quickclientitemmodel.h
+        quickinspectorclient.cpp
+        quickinspectorclient.h
+        quickinspectorwidget.cpp
+        quickinspectorwidget.h
+        quickitemdelegate.cpp
+        quickitemdelegate.h
+        quickitemtreewatcher.cpp
+        quickitemtreewatcher.h
+        quickoverlaylegend.cpp
+        quickoverlaylegend.h
+        quickscenecontrolwidget.cpp
+        quickscenecontrolwidget.h
+        quickscenepreviewwidget.cpp
+        quickscenepreviewwidget.h
         textureextension/texturetab.cpp
+        textureextension/texturetab.h
         textureextension/textureviewwidget.cpp
+        textureextension/textureviewwidget.h
         textureextension/resources.qrc
     )
 
     if(NOT QT_NO_OPENGL)
-        list(APPEND gammaray_quickinspector_ui_srcs geometryextension/sggeometrytab.cpp
-             geometryextension/sgwireframewidget.cpp
+        list(
+            APPEND
+            gammaray_quickinspector_ui_srcs
+            geometryextension/sggeometrytab.cpp
+            geometryextension/sggeometrytab.h
+            geometryextension/sgwireframewidget.cpp
+            geometryextension/sgwireframewidget.h
         )
     endif()
 

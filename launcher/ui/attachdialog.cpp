@@ -159,8 +159,12 @@ void AttachDialog::updateProcessesFinished()
     }
     const int oldPid = pid();
     m_model->mergeProcesses(watcher->result());
-    if (oldPid != pid())
+    if (oldPid == 0) {
+        ui->view->setCurrentIndex(m_proxyModel->index(0, 0));
+    } else if (oldPid != pid()) {
         ui->view->setCurrentIndex(QModelIndex());
+    }
+
     watcher->deleteLater();
 
     QTimer::singleShot(1000, this, &AttachDialog::updateProcesses);

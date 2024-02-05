@@ -327,7 +327,7 @@ void StateMachineViewerServer::objectSelected(QObject *obj)
         qDebug() << idxs;
         if (idxs.isEmpty())
             return;
-        const auto idx = idxs.first();
+        const auto &idx = idxs.first();
         m_stateSelectionModel->select(idx, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows | QItemSelectionModel::Current);
     }
 }

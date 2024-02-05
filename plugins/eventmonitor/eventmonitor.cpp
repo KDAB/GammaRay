@@ -34,6 +34,7 @@
 #include <QMutex>
 #include <QSortFilterProxyModel>
 #include <QtCore/private/qobject_p.h>
+#include <QtGui/qtgui-config.h>
 
 using namespace GammaRay;
 
@@ -62,12 +63,14 @@ static QString eventTypeToClassName(QEvent::Type type)
         return QStringLiteral("QScrollPrepareEvent");
     case QEvent::Scroll:
         return QStringLiteral("QScrollEvent");
+#if QT_CONFIG(tabletevent)
     case QEvent::TabletMove:
     case QEvent::TabletPress:
     case QEvent::TabletRelease:
     case QEvent::TabletEnterProximity:
     case QEvent::TabletLeaveProximity:
         return QStringLiteral("QTabletEvent");
+#endif
     case QEvent::NativeGesture:
         return QStringLiteral("QNativeGestureEvent");
     case QEvent::KeyPress:
@@ -100,8 +103,10 @@ static QString eventTypeToClassName(QEvent::Type type)
         return QStringLiteral("QPaintEvent");
     case QEvent::Enter:
         return QStringLiteral("QEnterEvent");
+#if QT_CONFIG(wheelevent)
     case QEvent::Wheel:
         return QStringLiteral("QWheelEvent");
+#endif
     case QEvent::HoverEnter:
     case QEvent::HoverMove:
     case QEvent::HoverLeave:
