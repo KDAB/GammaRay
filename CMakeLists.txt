@@ -464,13 +464,14 @@ find_package(
         Quick
         QuickWidgets
         Svg
-        Script
-        ScriptTools
         Test
         WebEngineWidgets
         Widgets
         WaylandCompositor
 )
+if(QT_VERSION_MAJOR EQUAL 5)
+    find_package(Qt5 NO_MODULE OPTIONAL_COMPONENTS Script ScriptTools)
+endif()
 if(ANDROID)
     find_package(Qt${QT_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS AndroidExtras)
 endif()
@@ -610,7 +611,9 @@ else()
     set(GAMMARAY_CORE_ONLY_LAUNCHER TRUE)
 endif()
 
-add_feature_info("QtScript debugger" Qt5ScriptTools_FOUND "Requires QtScript and QtScriptTools.")
+if(QT_VERSION_MAJOR EQUAL 5)
+    add_feature_info("QtScript debugger" Qt5ScriptTools_FOUND "Requires QtScript and QtScriptTools.")
+endif()
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
 
 #
