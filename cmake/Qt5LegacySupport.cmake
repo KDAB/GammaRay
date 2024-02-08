@@ -64,7 +64,6 @@ endmacro()
 
 _create_private_target(Core)
 _create_private_target(Gui Core)
-_create_private_target(IviCore Core)
 _create_private_target(Qml Gui)
 _create_private_target(Quick Qml)
 _create_private_target(Scxml Core)

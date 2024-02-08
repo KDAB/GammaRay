@@ -478,9 +478,6 @@ endif()
 
 # Find these 'exotic' Qt modules without using find_package(... COMPONENTS)
 # so we can retrieve those packages even when installed into a different prefix
-find_package(Qt${QT_VERSION_MAJOR}IviCore 1.1 NO_MODULE QUIET) # 1.1 is based on 5.8
-find_package(Qt${QT_VERSION_MAJOR}IviVehicleFunctions 1.1 NO_MODULE QUIET)
-find_package(Qt${QT_VERSION_MAJOR}IviMedia 1.1 NO_MODULE QUIET)
 find_package(
     Qt${QT_VERSION_MAJOR}Scxml
     ${Qt${QT_VERSION_MAJOR}_VERSION}

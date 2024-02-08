@@ -583,27 +583,4 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         endif()
         target_link_libraries(quickmaterialtest gammaray_core Qt::Quick Qt::QuickPrivate)
     endif()
-
-    if(TARGET Qt::IviCore
-       AND TARGET Qt::IviVehicleFunctions
-       AND QtIviCore_VERSION VERSION_LESS 1.2
-    )
-        gammaray_add_probe_test(
-            qtivipropertymodeltest
-            qtivipropertymodeltest.cpp
-            ../plugins/qtivi/qtivipropertyoverrider.cpp
-            ../plugins/qtivi/qtivipropertymodel.cpp
-            $<TARGET_OBJECTS:modeltestobj>
-        )
-        target_link_libraries(
-            qtivipropertymodeltest
-            Qt::Gui
-            Qt::IviCore
-            Qt::IviVehicleFunctions
-            Qt::IviCorePrivate
-        )
-        if(TARGET Qt::IviMedia)
-            target_link_libraries(qtivipropertymodeltest Qt::IviMedia)
-        endif()
-    endif()
 endif()
