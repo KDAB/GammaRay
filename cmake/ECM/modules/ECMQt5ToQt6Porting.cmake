@@ -96,9 +96,6 @@ set(_libs
     Gui_GLESv2
     Help
     HunspellInputMethod
-    IviCore
-    IviMedia
-    IviVehicleFunctions
     LinguistTools
     Location
     Mqtt
