@@ -559,25 +559,27 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             quickmaterialtest quickmaterialtest.cpp quickinspectortest.qrc $<TARGET_OBJECTS:modeltestobj>
         )
         if(QT_VERSION_MAJOR GREATER_EQUAL 6)
-            find_package(Qt6 COMPONENTS ShaderTools)
-            qt6_add_shaders(
-                quicktexturetest
-                "quicktexturetest_shaders"
-                PREFIX
-                "/"
-                FILES
-                "manual/shadereffect.vert"
-                "manual/shadereffect.frag"
-            )
-            qt6_add_shaders(
-                quickmaterialtest
-                "quickmaterialtest_shaders"
-                PREFIX
-                "/"
-                FILES
-                "manual/shadereffect.vert"
-                "manual/shadereffect.frag"
-            )
+            find_package(Qt6ShaderTools)
+            if(Qt6ShaderTools_FOUND)
+                qt6_add_shaders(
+                    quicktexturetest
+                    "quicktexturetest_shaders"
+                    PREFIX
+                    "/"
+                    FILES
+                    "manual/shadereffect.vert"
+                    "manual/shadereffect.frag"
+                )
+                qt6_add_shaders(
+                    quickmaterialtest
+                    "quickmaterialtest_shaders"
+                    PREFIX
+                    "/"
+                    FILES
+                    "manual/shadereffect.vert"
+                    "manual/shadereffect.frag"
+                )
+            endif()
         endif()
         target_link_libraries(quickmaterialtest gammaray_core Qt::Quick Qt::QuickPrivate)
     endif()
