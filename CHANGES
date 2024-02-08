@@ -5,6 +5,7 @@ Version 3.1.0 (unreleased)
 --------------------------
  * Qt5 versions less than 5.15 are no longer supported
  * Qt6 versions less that 6.3 are no longer supported
+ * Qt IVI is no longer supported
 
 Version 3.0.1 (unreleased)
 --------------------------

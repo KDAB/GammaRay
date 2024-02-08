@@ -2419,11 +2419,6 @@ Message Size: %6 of %7 (%8%)</source>
     </message>
     <message>
         <location line="+1"/>
-        <source>Qt IVI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
         <source>Quick Scenes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3208,62 +3203,6 @@ Probe available: %5</source>
     <message>
         <location line="+18"/>
         <source>Frame Graph Node @ %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>GammaRay::QtIviObjectModel</name>
-    <message>
-        <location filename="../plugins/qtivi/qtiviobjectmodel.cpp" line="+344"/>
-        <source>Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Writable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Override</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>GammaRay::QtIviPropertyModel</name>
-    <message>
-        <location filename="../plugins/qtivi/qtivipropertymodel.cpp" line="+562"/>
-        <source>Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Value</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Writable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Override</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

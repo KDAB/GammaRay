@@ -2442,11 +2442,6 @@ Nachrichtengröße: %6 of %7 (%8%)</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Qt IVI</source>
-        <translation>Qt IVI</translation>
-    </message>
-    <message>
-        <location line="+1"/>
         <source>Quick Scenes</source>
         <translation>Quick Szenen</translation>
     </message>
@@ -3236,62 +3231,6 @@ Probe verfügbar: %5</translation>
         <location line="+18"/>
         <source>Frame Graph Node @ %1</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>GammaRay::QtIviObjectModel</name>
-    <message>
-        <location filename="../plugins/qtivi/qtiviobjectmodel.cpp" line="+344"/>
-        <source>Name</source>
-        <translation>Name</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Value</source>
-        <translation>Wert</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Writable</source>
-        <translation>Schreibbar</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Override</source>
-        <translation>Überschreiben</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Type</source>
-        <translation>Typ</translation>
-    </message>
-</context>
-<context>
-    <name>GammaRay::QtIviPropertyModel</name>
-    <message>
-        <location filename="../plugins/qtivi/qtivipropertymodel.cpp" line="+562"/>
-        <source>Name</source>
-        <translation>Name</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Value</source>
-        <translation>Wert</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Writable</source>
-        <translation>Schreibbar</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Override</source>
-        <translation>Überschreiben</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Type</source>
-        <translation>Typ</translation>
     </message>
 </context>
 <context>
