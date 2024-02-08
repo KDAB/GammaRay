@@ -121,7 +121,6 @@ cmake . -DCMAKE_INSTALL_PREFIX=/usr -DQT_VERSION_MAJOR=6 -DCMAKE_BUILD_TYPE=Rele
 %{_libdir}/gammaray/*/*/gammaray_network*
 %{_libdir}/gammaray/*/*/gammaray_objectvisualizer*
 %{_libdir}/gammaray/*/*/gammaray_qmlsupport*
-%{_libdir}/gammaray/*/*/gammaray_qtivi_ui*
 %{_libdir}/gammaray/*/*/gammaray_quickinspector*
 %{_libdir}/gammaray/*/*/gammaray_quickwidgetsupport*
 %{_libdir}/gammaray/*/*/gammaray_sceneinspector*
