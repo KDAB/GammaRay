@@ -20,7 +20,7 @@ your Qt installation provides private Qt headers.
 i.e. when using distro provided Qt make sure you have (or the equivalent for Qt6):
 
 - Redhat,Fedora: qt5-qtbase-private-devel
-- Debian,Ubuntu: qtbase5-private-dev qtdeclarative5-private-dev 
+- Debian,Ubuntu: qtbase5-private-dev qtdeclarative5-private-dev
 qtattributionsscanner-qt5 qhelpgenerator-qt5 qdoc-qt5
 - SUSE: libqt5-qtbase-private-headers-devel libqt5-qtdeclarative-private-headers-devel
 
