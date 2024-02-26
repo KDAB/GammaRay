@@ -24,6 +24,8 @@
 #include <QApplication>
 #include <QStringList>
 
+#include <QHeaderView>
+
 using namespace GammaRay;
 
 int main(int argc, char **argv)
@@ -42,6 +44,8 @@ int main(int argc, char **argv)
     Paths::setRelativeRootPath(GAMMARAY_INVERSE_LIBEXEC_DIR);
     Translator::loadStandAloneTranslations();
     ClientConnectionManager::init();
+
+    qRegisterMetaType<QHeaderView *>("QHeaderView*");
 
     QUrl serverUrl;
     if (app.arguments().size() == 2) {
