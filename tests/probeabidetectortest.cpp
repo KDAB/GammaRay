@@ -80,6 +80,9 @@ private slots:
         QTest::newRow("QT") << "QTCore" << false;
         QTest::newRow("prefix") << "libFooQtCore.so" << false;
         QTest::newRow("libQt") << "libQt.dylib" << false;
+
+        // pyside
+        QTest::newRow("QtCore.abi3.so") << "QtCore.abi3.so" << false;
     }
 
     static void testContainsQtCore()

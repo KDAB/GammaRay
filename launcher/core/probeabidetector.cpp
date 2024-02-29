@@ -146,6 +146,11 @@ static bool checkQtCoreSuffix(const QByteArray &line, int index)
     if (index < line.size() && ((line.at(index) >= 'a' && line.at(index) <= 'z') || (line.at(index) >= 'A' && line.at(index) <= 'Z')))
         return false;
 
+    // must not be followed by .abi3, (pyside)
+    if (line.lastIndexOf(".abi3", index) == index) {
+        return false;
+    }
+
     return true;
 }
 
