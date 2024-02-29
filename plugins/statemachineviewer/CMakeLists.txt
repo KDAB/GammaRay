@@ -54,22 +54,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     endif()
 endif()
 
-# UI part - dependencies
-set(KDSME_PACKAGE_NAME KDSME)
-if(QT_VERSION_MAJOR GREATER_EQUAL 6)
-    set(KDSME_PACKAGE_NAME KDSME-qt6)
-endif()
-set_package_properties(
-    ${KDSME_PACKAGE_NAME} PROPERTIES
-    URL "https://github.com/KDAB/KDStateMachineEditor"
-    DESCRIPTION "KDAB State Machine Editor framework"
-    TYPE RECOMMENDED
-    PURPOSE "Graphical state machine debugging."
-)
-find_package(${KDSME_PACKAGE_NAME} 1.2 CONFIG QUIET)
-
 # UI part
-if(GAMMARAY_BUILD_UI AND ${KDSME_PACKAGE_NAME}_FOUND)
+if(GAMMARAY_BUILD_UI AND GAMMARAY_WITH_KDSME)
 
     set(gammaray_statemachineviewer_ui_plugin_srcs
         statemachineviewerclient.cpp

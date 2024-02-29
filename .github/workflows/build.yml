@@ -48,6 +48,14 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Dependencies on Linux
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo apt update -qq
+          sudo apt install -y gdb doxygen libgraphviz-dev
 
       - name: Install ninja-build tool (must be after Qt due PATH changes)
         uses: turtlesec-no/get-ninja@main
@@ -59,16 +67,11 @@ jobs:
       - name: Configure project
         run: >
           cmake -S . -G Ninja --preset ${{ matrix.config.preset }}
+          -DGAMMARAY_WITH_KDSME=${{ runner.os == 'Linux' }}
           -DGAMMARAY_BUILD_DOCS=${{ runner.os == 'Linux' }}
 
       - name: Build Project
         run: cmake --build ./build-${{ matrix.config.preset }}
-
-      - name: Install dependencies on Ubuntu
-        if: ${{ runner.os == 'Linux' }}
-        run: |
-          sudo apt update -qq
-          sudo apt install -y gdb
 
       - name: Enable gdb attaching
         if: ${{ runner.os == 'Linux' }}
