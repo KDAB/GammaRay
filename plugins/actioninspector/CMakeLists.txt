@@ -26,7 +26,13 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         ${gammaray_actioninspector_plugin_srcs}
     )
 
-    target_link_libraries(gammaray_actioninspector_plugin Qt::Gui Qt::GuiPrivate Qt::Widgets gammaray_core)
+    target_link_libraries(
+        gammaray_actioninspector_plugin
+        Qt::Gui
+        Qt::GuiPrivate
+        Qt::Widgets
+        gammaray_core
+    )
 endif()
 
 # ui part
