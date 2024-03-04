@@ -15,7 +15,10 @@
 #define GAMMARAY_TYPETRAITS_H
 
 #include <type_traits>
+#include <QtVersionChecks>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
 #include <private/qcoreevent_p.h>
+#endif
 
 namespace GammaRay {
 
@@ -28,11 +31,13 @@ Out DynamicCast(In *in)
     return dynamic_cast<Out>(in);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
 template<>
 inline QDeferredDeleteEvent *DynamicCast<QDeferredDeleteEvent *, QEvent>(QEvent *in)
 {
     return static_cast<QDeferredDeleteEvent *>(in);
 }
+#endif
 
 ///@cond internal
 template<typename Out>
