@@ -15,6 +15,7 @@
 #define GAMMARAY_METAPROPERTY_H
 
 #include "gammaray_core_export.h"
+#include <common/metatypedeclarations.h>
 
 #include <QVariant>
 
