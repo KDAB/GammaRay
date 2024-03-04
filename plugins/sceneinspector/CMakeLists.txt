@@ -31,6 +31,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     target_link_libraries(
         gammaray_sceneinspector_plugin
         Qt::Gui
+        Qt::GuiPrivate
         Qt::Widgets
         gammaray_kitemmodels
         gammaray_core

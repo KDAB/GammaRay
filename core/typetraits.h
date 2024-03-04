@@ -15,6 +15,8 @@
 #define GAMMARAY_TYPETRAITS_H
 
 #include <type_traits>
+#include <common/metatypedeclarations.h>
+#include <private/qcoreevent_p.h>
 
 namespace GammaRay {
 
@@ -25,6 +27,12 @@ template<typename Out, typename In>
 Out DynamicCast(In *in)
 {
     return dynamic_cast<Out>(in);
+}
+
+template<>
+inline QDeferredDeleteEvent *DynamicCast<QDeferredDeleteEvent *, QEvent>(QEvent *in)
+{
+    return static_cast<QDeferredDeleteEvent *>(in);
 }
 
 ///@cond internal
