@@ -15,7 +15,6 @@
 #define GAMMARAY_TYPETRAITS_H
 
 #include <type_traits>
-#include <common/metatypedeclarations.h>
 #include <private/qcoreevent_p.h>
 
 namespace GammaRay {
