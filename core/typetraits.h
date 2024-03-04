@@ -15,7 +15,7 @@
 #define GAMMARAY_TYPETRAITS_H
 
 #include <type_traits>
-#include <QtVersionChecks>
+#include <QtGlobal>
 #if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
 #include <private/qcoreevent_p.h>
 #endif
