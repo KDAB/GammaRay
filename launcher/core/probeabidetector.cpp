@@ -151,6 +151,14 @@ static bool checkQtCoreSuffix(const QByteArray &line, int index)
         return false;
     }
 
+    // Sometimes when using PySide2 on Windows we end up loading QtCore.pyd, which doesn't
+    // have information about the corresponding Qt version among its file details.
+    // We can safely skip it since that will in turn load a QtCore dll file with the right
+    // information, and that will be picked up by this function.
+    if (line.endsWith(".pyd")) {
+        return false;
+    }
+
     return true;
 }
 
