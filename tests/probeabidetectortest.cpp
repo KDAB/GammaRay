@@ -83,6 +83,8 @@ private slots:
 
         // pyside
         QTest::newRow("QtCore.abi3.so") << "QtCore.abi3.so" << false;
+        QTest::newRow("QtCore.pyd") << "QtCore.pyd" << false;
+        QTest::newRow("QtGui.pyd") << "QtGui.pyd" << false;
     }
 
     static void testContainsQtCore()
