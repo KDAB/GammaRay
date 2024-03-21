@@ -136,6 +136,7 @@ private:
     QString findSGNodeType(QSGNode *node) const;
     static void scanForProblems();
 
+    QRectF combinedChildrenRect(QQuickItem *object) const;
     GammaRay::ObjectIds recursiveItemsAt(QQuickItem *parent, const QPointF &pos,
                                          GammaRay::RemoteViewInterface::RequestMode mode,
                                          int &bestCandidate, bool parentIsGoodCandidate = true) const;
