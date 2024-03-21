@@ -17,5 +17,5 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         SOURCES
         ${gammaray_quickwidgetsupport_srcs}
     )
-    target_link_libraries(gammaray_quickwidgetsupport gammaray_core Qt::QuickWidgets Qt::GuiPrivate)
+    target_link_libraries(gammaray_quickwidgetsupport gammaray_core Qt::QuickWidgets Qt::CorePrivate)
 endif()

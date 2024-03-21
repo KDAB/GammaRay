@@ -25,7 +25,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         ${gammaray_textdocumentinspector_srcs}
     )
     target_link_libraries(gammaray_textdocumentinspector gammaray_core)
-    target_link_libraries(gammaray_textdocumentinspector Qt::Gui Qt::GuiPrivate)
+    target_link_libraries(gammaray_textdocumentinspector Qt::Gui Qt::CorePrivate)
 endif()
 
 # ui plugin

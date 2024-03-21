@@ -16,6 +16,7 @@
 
 #include <type_traits>
 #include <QtGlobal>
+// Needed for QDeferredDeleteEvent after Qt 6.7
 #if QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
 #include <private/qcoreevent_p.h>
 #endif

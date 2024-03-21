@@ -38,7 +38,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             gammaray_core
             gammaray_kitemmodels
             Qt::WaylandCompositor
-            Qt::GuiPrivate
+            Qt::CorePrivate
             Wayland::Server
         )
 

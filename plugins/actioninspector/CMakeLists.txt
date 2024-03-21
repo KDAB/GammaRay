@@ -29,7 +29,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     target_link_libraries(
         gammaray_actioninspector_plugin
         Qt::Gui
-        Qt::GuiPrivate
+        Qt::CorePrivate
         Qt::Widgets
         gammaray_core
     )

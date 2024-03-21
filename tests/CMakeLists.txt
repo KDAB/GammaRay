@@ -228,7 +228,7 @@ target_link_libraries(
 
 gammaray_add_test(metaobjecttest metaobjecttest.cpp)
 target_link_libraries(
-    metaobjecttest Qt::GuiPrivate gammaray_core
+    metaobjecttest Qt::CorePrivate gammaray_core
 )
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
@@ -257,7 +257,7 @@ target_link_libraries(
     propertyadaptortest
     gammaray_core
     Qt::Gui
-    Qt::GuiPrivate
+    Qt::CorePrivate
     gammaray_shared_test_data
 )
 

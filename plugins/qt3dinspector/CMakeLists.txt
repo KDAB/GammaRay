@@ -33,7 +33,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_kitemmodels
         Qt::3DInput
         Qt::3DRender
-        Qt::GuiPrivate
+        Qt::CorePrivate
     )
     if(TARGET Qt::3DAnimation)
         target_link_libraries(gammaray_3dinspector Qt::3DAnimation)

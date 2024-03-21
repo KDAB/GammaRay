@@ -30,7 +30,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         SOURCES
         ${gammaray_positioning_srcs}
     )
-    target_link_libraries(gammaray_positioning gammaray_core Qt::Positioning Qt::GuiPrivate)
+    target_link_libraries(gammaray_positioning gammaray_core Qt::Positioning Qt::CorePrivate)
     set_target_properties(gammaray_positioning PROPERTIES DISABLE_PRECOMPILE_HEADERS ON)
 
     # proxy geo position info source factory
@@ -50,7 +50,6 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_common
         Qt::Positioning
         Qt::CorePrivate
-        Qt::GuiPrivate
     )
     install(TARGETS gammaray_geopositioninfosource DESTINATION ${TARGET_PLUGIN_INSTALL_DIR}/position)
 endif()
