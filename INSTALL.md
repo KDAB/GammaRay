@@ -35,7 +35,8 @@ Make sure you have cmake, ninja, compiler, Qt, etc in PATH.
 Adapt the instructions to suit your cmake generator and operating system.
 
 ```bash
-    cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/path/where/to/install ../path/to/gammaray
+    mkdir build && cd build/
+    cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/path/where/to/install ..
     cmake --build .
     cmake --build . --target install
 ```
