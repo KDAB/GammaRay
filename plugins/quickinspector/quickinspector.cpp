@@ -799,6 +799,30 @@ void QuickInspector::pickElementId(const GammaRay::ObjectId &id)
         m_probe->selectObject(item);
 }
 
+QRectF QuickInspector::combinedChildrenRect(QQuickItem *parent) const
+{
+    auto rect = parent->childrenRect();
+
+    const auto childItems = parent->childItems();
+    for (const auto child : childItems) {
+        auto childRect = child->childrenRect();
+
+        // Get Global positon of childRect
+        QPointF childGlobalPos = child->mapToScene(QPointF(0, 0));
+
+        // Convert global position to local coordinates of the parent object
+        QPointF localChildPos = parent->mapFromScene(childGlobalPos);
+
+        // Adjust childRect to be in local coordinates of the parent object
+        childRect.moveTopLeft(localChildPos.toPoint());
+
+        // Adding the childRect to the rect
+        rect = rect.united(childRect);
+    }
+
+    return rect;
+}
+
 ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &pos,
                                            GammaRay::RemoteViewInterface::RequestMode mode,
                                            int &bestCandidate, bool parentIsGoodCandidate) const
@@ -823,7 +847,7 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
     for (int i = childItems.size() - 1; i >= 0; --i) { // backwards to match z order
         const auto child = childItems.at(i);
         const auto requestedPoint = parent->mapToItem(child, pos);
-        if (!child->childItems().isEmpty() && (child->contains(requestedPoint) || child->childrenRect().contains(requestedPoint))) {
+        if (!child->childItems().isEmpty() && (child->contains(requestedPoint) || combinedChildrenRect(child).contains(requestedPoint))) {
             const int count = objects.count();
             int bc; // possibly better candidate among subChildren
             objects << recursiveItemsAt(child, requestedPoint, mode, bc, parentIsGoodCandidate);
