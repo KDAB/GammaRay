@@ -16,8 +16,16 @@ if(NOT DEFINED QT_VERSION_MAJOR)
     message(FATAL_ERROR "Please set QT_VERSION_MAJOR first (ie. set(QT_VERSION_MAJOR 5))")
 endif()
 
-if(TARGET Qt${QT_VERSION_MAJOR}::qmake)
-    get_target_property(QT_QMAKE_EXECUTABLE Qt${QT_VERSION_MAJOR}::qmake LOCATION)
+# can use qtpaths to find version instead of qmake
+# but cmake target Qt5::qtpaths DNE, so use qtpaths for 6 only
+if (QT_VERSION_MAJOR EQUAL 6)
+    set(findqt qtpaths)
+else()
+    set(findqt qmake)
+endif()
+
+if(TARGET Qt${QT_VERSION_MAJOR}::${findqt})
+    get_target_property(QT_QMAKE_EXECUTABLE Qt${QT_VERSION_MAJOR}::${findqt} LOCATION)
 else()
     message(FATAL_ERROR "No supported Qt version found. Make sure you find Qt before calling this")
 endif()
