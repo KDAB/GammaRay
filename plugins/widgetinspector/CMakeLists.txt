@@ -41,6 +41,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     target_link_libraries(
         gammaray_widgetinspector_plugin
         Qt::Gui
+        Qt::CorePrivate
         Qt::Widgets
         gammaray_kitemmodels
         gammaray_core
