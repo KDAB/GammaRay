@@ -21,16 +21,16 @@ repos:
   - id: destroyed-symlinks
   - id: check-executables-have-shebangs
 - repo: https://github.com/pre-commit/mirrors-clang-format
-  rev: v17.0.6
+  rev: v18.1.2
   hooks:
   - id: clang-format
 - repo: https://github.com/PyCQA/pylint
-  rev: v3.0.3
+  rev: v3.1.0
   hooks:
   - id: pylint
     exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
 - repo: https://github.com/hhatto/autopep8
-  rev: v2.0.4
+  rev: v2.1.0
   hooks:
   - id: autopep8
     exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
@@ -53,6 +53,6 @@ repos:
     language: ruby
     files: \.(md|mdown|markdown)$
 - repo: https://github.com/fsfe/reuse-tool
-  rev: v2.1.0
+  rev: v3.0.1
   hooks:
   - id: reuse
