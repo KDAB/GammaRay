@@ -61,8 +61,7 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     connect(ui->objectTreeView, &QWidget::customContextMenuRequested,
             this, &ObjectInspectorWidget::objectContextMenuRequested);
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "60%"
-                                                                    << "40%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "60%" << "40%");
 
     connect(ui->objectPropertyWidget, &PropertyWidget::tabsUpdated, this, &ObjectInspectorWidget::propertyWidgetTabsChanged);
 

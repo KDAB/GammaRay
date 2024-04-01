@@ -78,8 +78,7 @@ TranslatorInspectorWidget::TranslatorInspectorWidget(QWidget *parent)
         new SearchLineController(ui->translationsSearchLine, ui->translationsView->model());
     }
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
-                                                                    << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
 
     connect(ui->actionSendLanguageChange, &QAction::triggered, m_inspector, &TranslatorInspectorInterface::sendLanguageChangeEvent);
     connect(ui->actionReset, &QAction::triggered, m_inspector, &TranslatorInspectorInterface::resetTranslations);

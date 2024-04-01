@@ -38,8 +38,7 @@ CodecBrowserWidget::CodecBrowserWidget(QWidget *parent)
 
     connect(ui->codecText, &QLineEdit::textChanged, this, &CodecBrowserWidget::textChanged);
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
-                                                                    << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
 }
 
 CodecBrowserWidget::~CodecBrowserWidget() = default;

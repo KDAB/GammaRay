@@ -687,7 +687,7 @@ void Probe::objectRemoved(QObject *obj)
     EXPENSIVE_ASSERT(!instance()->isObjectCreationQueued(obj));
 
     if (instance()->thread() == QThread::currentThread())
-        emit instance()->objectDestroyed(obj);
+        emit instance() -> objectDestroyed(obj);
     else
         instance()->queueDestroyedObject(obj);
 }

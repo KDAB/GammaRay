@@ -157,10 +157,8 @@ QuickInspectorWidget::QuickInspectorWidget(QWidget *parent)
     addAction(createSeparator(this));
     addAction(ui->actionSlowDownMode);
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
-                                                                    << "50%");
-    m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%"
-                                                                           << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->previewTreeSplitter, UISizeVector() << "50%" << "50%");
 
     connect(ui->actionSaveAsImage, &QAction::triggered, this, &QuickInspectorWidget::saveAsImage);
     connect(ui->actionSaveAsImageWithDecoration, &QAction::triggered, this, &QuickInspectorWidget::saveAsImage);

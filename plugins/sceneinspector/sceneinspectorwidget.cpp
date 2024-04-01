@@ -107,10 +107,8 @@ SceneInspectorWidget::SceneInspectorWidget(QWidget *parent)
     else if (ui->sceneComboBox->currentIndex() >= 0) // no server-side selection yet, but there's data available
         sceneSelected(ui->sceneComboBox->currentIndex());
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
-                                                                    << "50%");
-    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%"
-                                                                       << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
 
     connect(ui->scenePropertyWidget, &PropertyWidget::tabsUpdated, this, &SceneInspectorWidget::propertyWidgetTabsChanged);
 

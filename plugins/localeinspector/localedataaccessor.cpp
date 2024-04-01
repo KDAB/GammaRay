@@ -101,7 +101,7 @@ void LocaleDataAccessorRegistry::init()
 
     LOCALE_SIMPLE_ACCESSOR(TextDirection,
                            return locale.textDirection() == Qt::LeftToRight ? QStringLiteral(
-                                      "LTR")
+                                                                                  "LTR")
                                                                             : QStringLiteral("RTL");)
 
     LOCALE_SIMPLE_DEFAULT_ACCESSOR(TimeFormatLong,
@@ -213,7 +213,7 @@ void LocaleDataAccessorRegistry::init()
                                    return locale.measurementSystem()
                                            == QLocale::ImperialSystem
                                        ? QStringLiteral(
-                                           "Imperial")
+                                             "Imperial")
                                        : QStringLiteral("Metric");)
 
     LOCALE_SIMPLE_DEFAULT_ACCESSOR(FloatFormat,

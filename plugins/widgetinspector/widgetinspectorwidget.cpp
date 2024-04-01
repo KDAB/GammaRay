@@ -134,10 +134,8 @@ WidgetInspectorWidget::WidgetInspectorWidget(QWidget *parent)
 
     updateActions();
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
-                                                                    << "50%");
-    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%"
-                                                                       << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(ui->previewSplitter, UISizeVector() << "50%" << "50%");
     ui->tabWidget->findChild<QTabBar *>()->hide();
 
     connect(ui->widgetPropertyWidget, &PropertyWidget::tabsUpdated, this, &WidgetInspectorWidget::propertyWidgetTabsChanged);

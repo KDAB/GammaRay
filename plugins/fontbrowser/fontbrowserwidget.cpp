@@ -84,8 +84,7 @@ FontBrowserWidget::FontBrowserWidget(QWidget *parent)
     m_fontBrowser->toggleUnderlineFont(ui->underlineBox->isChecked());
     m_fontBrowser->setPointSize(ui->pointSize->value());
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
-                                                                    << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     QMetaObject::invokeMethod(this, "delayedInit", Qt::QueuedConnection);
 }
 

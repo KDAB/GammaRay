@@ -65,8 +65,7 @@ TextDocumentInspectorWidget::TextDocumentInspectorWidget(QWidget *parent)
         ui->tabWidget->hide();
 
     m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << 280 << -1 << -1);
-    m_stateManager.setDefaultSizes(ui->structureSplitter, UISizeVector() << "50%"
-                                                                         << "50%");
+    m_stateManager.setDefaultSizes(ui->structureSplitter, UISizeVector() << "50%" << "50%");
 }
 
 TextDocumentInspectorWidget::~TextDocumentInspectorWidget() = default;

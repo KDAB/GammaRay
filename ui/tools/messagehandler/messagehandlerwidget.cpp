@@ -95,8 +95,7 @@ MessageHandlerWidget::MessageHandlerWidget(QWidget *parent)
 
     ui->categoriesView->setModel(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.LoggingCategoryModel")));
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%"
-                                                                    << "50%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "50%" << "50%");
     m_stateManager.setDefaultSizes(ui->messageView->header(),
                                    UISizeVector() << -1 << 300 << -1 << -1 << -1);
 }

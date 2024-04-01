@@ -219,10 +219,8 @@ StateMachineViewerWidget::StateMachineViewerWidget(QWidget *parent, Qt::WindowFl
     // share selection model
     new SelectionModelSyncer(this);
 
-    m_stateManager.setDefaultSizes(m_ui->verticalSplitter, UISizeVector() << "50%"
-                                                                          << "50%");
-    m_stateManager.setDefaultSizes(m_ui->horizontalSplitter, UISizeVector() << "30%"
-                                                                            << "70%");
+    m_stateManager.setDefaultSizes(m_ui->verticalSplitter, UISizeVector() << "50%" << "50%");
+    m_stateManager.setDefaultSizes(m_ui->horizontalSplitter, UISizeVector() << "30%" << "70%");
 
     loadSettings();
 }

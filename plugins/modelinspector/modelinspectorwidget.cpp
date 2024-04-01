@@ -83,9 +83,7 @@ ModelInspectorWidget::ModelInspectorWidget(QWidget *parent)
     ui->modelCellView->setModel(ObjectBroker::model(QStringLiteral(
         "com.kdab.GammaRay.ModelCellModel")));
 
-    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "33%"
-                                                                    << "33%"
-                                                                    << "33%");
+    m_stateManager.setDefaultSizes(ui->mainSplitter, UISizeVector() << "33%" << "33%" << "33%");
 
     cellDataChanged();
 }
