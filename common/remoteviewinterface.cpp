@@ -21,6 +21,8 @@
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qeventpoint_p.h>
 #endif
+#include <QPainterPath>
+Q_DECLARE_METATYPE(QPainterPath) // needed for Qt5
 
 using namespace GammaRay;
 QT_BEGIN_NAMESPACE
@@ -206,6 +208,7 @@ RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
 {
     ObjectBroker::registerObject(name, this);
 
+    qRegisterMetaType<QPainterPath>(); // for QGraphicsItem::shape
     qRegisterMetaType<QTouchEvent::TouchPoint>();
     qRegisterMetaType<QList<QTouchEvent::TouchPoint>>();
     qRegisterMetaType<RemoteViewInterface::TouchPointStates>();
