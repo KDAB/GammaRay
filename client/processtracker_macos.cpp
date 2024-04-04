@@ -49,7 +49,7 @@ void ProcessTrackerBackendMacOS::checkProcess(qint64 pid)
 
     // Call sysctl.
     size = sizeof(info);
-    status = sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, NULL, 0); // krazy:exclude=null
+    status = sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, nullptr, 0);
 
     if (status == 0) {
         // We're being debugged if the P_TRACED flag is set.

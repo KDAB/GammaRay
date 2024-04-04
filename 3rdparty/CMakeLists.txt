@@ -28,6 +28,8 @@ if(GAMMARAY_WITH_KDSME)
         )
 
         gammaray_ensure_submodule_exists(KDStateMachineEditor)
+        # remove this as it clashes with Gammaray's DQT_DISABLE_DEPRECATED_BEFORE
+        remove_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
         add_subdirectory(KDStateMachineEditor)
     endfunction()
     add_ksme_subdirectory()

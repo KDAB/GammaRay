@@ -72,6 +72,10 @@
 #  Use GNU gold linker
 #  Default=false
 #
+# -DWARNINGS_ARE_ERRORS=[true|false]
+#  Enables -Werror
+#  Default = false
+#
 
 cmake_minimum_required(VERSION 3.16.0)
 
@@ -268,6 +272,8 @@ gammaray_option(GAMMARAY_STATIC_PROBE "Build the probe as static library for com
 gammaray_option(GAMMARAY_ENFORCE_QT_ASSERTS "Force QT_ASSERT in all builds." OFF)
 
 gammaray_option(GAMMARAY_DISABLE_FEEDBACK "Disable user feedback support." ${GAMMARAY_DISABLE_FEEDBACK_DEFAULT})
+
+gammaray_option(WARNINGS_ARE_ERRORS "Enables -Werror" OFF)
 
 #
 # Static probe setup
@@ -554,6 +560,23 @@ endif()
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
 #add_definitions(-DQT_DEPRECATED_WARNINGS)
+
+if (WARNINGS_ARE_ERRORS)
+    if (NOT MSVC)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-error=deprecated-declarations")
+        if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND QT_VERSION_MAJOR EQUAL 5)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=suggest-override") # Q_OBJECT expansion warnings
+        endif()
+
+        if (CMAKE_COMPILER_IS_GNUCXX)
+            # each compiler has its own opinion on when to apply [noreturn]
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=suggest-attribute=noreturn")
+        endif()
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+        add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+    endif()
+endif()
 
 if(NOT DEFINED QT_LIBINFIX)
     set(QT_LIBINFIX "")
