@@ -113,8 +113,6 @@ void SceneInspector::sceneSelected(const QItemSelection &selection)
 
     m_sceneModel->setScene(scene);
     connectToScene();
-    // TODO remote support when a different graphics scene was selected
-    // ui->graphicsSceneView->setGraphicsScene(scene);
 }
 
 void SceneInspector::connectToScene()
