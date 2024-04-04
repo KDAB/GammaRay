@@ -4,7 +4,7 @@ ci:
     skip: [clang-format]
     autoupdate_schedule: monthly
 
-exclude: ^(3rdparty/|cmake/ECM/|cmake/KDAB/|launcher/ui/processlist.*|compat/qasconst.h)
+exclude: ^(3rdparty/|cmake/ECM/|cmake/KDAB/|launcher/ui/processlist.*|compat/qasconst.h|docs/api/doxygen-awesome.css)
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.5.0
