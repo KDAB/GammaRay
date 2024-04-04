@@ -76,3 +76,8 @@ License: LGPL-2.0-or-later
 Files: 3rdparty/kuserfeedback/*
 Copyright: 2017 Volker Krause <vkrause@kde.org>
 License: MIT
+
+# doxygen awesome
+Files: docs/api/doxygen-awesome.css
+Copyright: 2021 - 2023 jothepro
+License: MIT
