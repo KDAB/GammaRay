@@ -26,7 +26,7 @@ License: GPL-2.0-or-later
 #3rdparty from Qt
 Files: 3rdparty/qt/5.5/private/*
 Copyright: 2014 Digia Plc and/or its subsidiary(-ies)
-License:  LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-Qt-LGPL_EXCEPTION OR LicenseRef-Qt-Commercial
+License:  LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-Qt-LGPL-EXCEPTION OR LicenseRef-Qt-Commercial
 
 Files: 3rdparty/qt/modeltest.cpp
 Copyright: 2016 The Qt Company Ltd
@@ -34,15 +34,15 @@ License: GPL-3.0-only OR LicenseRef-Qt-Commercial
 
 Files: 3rdparty/qt/modeltest.h
 Copyright: 2015 The Qt Company Ltd
-License: LGPL-2.1-or-later OR LGPL-3.0-only OR LicenseRef-Qt-LGPL_EXCEPTION OR LicenseRef-Qt-Commercial
+License: LGPL-2.1-or-later OR LGPL-3.0-only OR LicenseRef-Qt-LGPL-EXCEPTION OR LicenseRef-Qt-Commercial
 
 Files: 3rdparty/qt/resourcemodel.*
 Copyright: 2011 Nokia Corporation and/or its subsidiary(-ies)
-License: LGPL-2.1-only OR LicenseRef-Qt-LGPL_EXCEPTION
+License: LGPL-2.1-only OR LicenseRef-Qt-LGPL-EXCEPTION
 
 Files: launcher/ui/processlist.h launcher/ui/processlist_unix.cpp launcher/ui/processlist_win.cpp
 Copyright: 2011 Nokia Corporation and/or its subsidiary(-ies)
-License: LGPL-2.1-only OR LicenseRef-Qt-LGPL_EXCEPTION
+License: LGPL-2.1-only OR LicenseRef-Qt-LGPL-EXCEPTION
 
 Files: compat/qasconst.h
 Copyright: 2016 The Qt Company Ltd
