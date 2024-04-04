@@ -206,7 +206,7 @@ void MetaObjectRegistry::objectAdded(QObject *obj)
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 // Lifted from Qt
-struct MetaTypeCoreHelper : public QMetaTypeModuleHelper
+struct MetaTypeCoreHelper final : public QMetaTypeModuleHelper
 {
     template<typename T, typename LiteralWrapper = std::conditional_t<std::is_same_v<T, QString>, QLatin1String, const char *>>
     static inline bool convertToBool(const T &source)

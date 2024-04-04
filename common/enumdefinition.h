@@ -69,7 +69,7 @@ public:
     /*! Returns the individual elements of this enum.
      *  That is, the key/value pairs of its definition.
      */
-    QVector<EnumDefinitionElement> elements() const;
+    const QVector<EnumDefinitionElement> &elements() const;
 
     //! @cond internal
     void setElements(const QVector<EnumDefinitionElement> &elements);

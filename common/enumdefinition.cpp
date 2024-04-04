@@ -76,7 +76,7 @@ void EnumDefinition::setIsFlag(bool isFlag)
     m_isFlag = isFlag;
 }
 
-QVector<EnumDefinitionElement> EnumDefinition::elements() const
+const QVector<EnumDefinitionElement> &EnumDefinition::elements() const
 {
     return m_elements;
 }

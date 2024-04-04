@@ -150,7 +150,8 @@
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "ON",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
-                "GAMMARAY_MULTI_BUILD": "OFF"
+                "GAMMARAY_MULTI_BUILD": "OFF",
+                "WARNINGS_ARE_ERRORS": "ON"
             },
             "inherits": [
                 "dev"
@@ -165,7 +166,8 @@
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "ON",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
-                "GAMMARAY_MULTI_BUILD": "OFF"
+                "GAMMARAY_MULTI_BUILD": "OFF",
+                "WARNINGS_ARE_ERRORS": "ON"
             },
             "inherits": [
                 "dev6"
@@ -180,7 +182,8 @@
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "OFF",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
-                "GAMMARAY_MULTI_BUILD": "OFF"
+                "GAMMARAY_MULTI_BUILD": "OFF",
+                "WARNINGS_ARE_ERRORS": "ON"
             },
             "inherits": [
                 "dev"
@@ -195,7 +198,8 @@
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "OFF",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
-                "GAMMARAY_MULTI_BUILD": "OFF"
+                "GAMMARAY_MULTI_BUILD": "OFF",
+                "WARNINGS_ARE_ERRORS": "ON"
             },
             "inherits": [
                 "dev6"
