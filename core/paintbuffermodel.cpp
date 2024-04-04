@@ -135,7 +135,7 @@ PaintBuffer PaintBufferModel::buffer() const
 void PaintBufferModel::setCosts(const QVector<double> &costs)
 {
     m_costs = costs;
-    if (rowCount() > 0) {
+    if (rowCount() > 0 && !m_costs.isEmpty()) {
         m_maxCost = *std::max_element(m_costs.constBegin(), m_costs.constEnd());
         emit dataChanged(index(0, 2, QModelIndex()), index(rowCount() - 1, 2, QModelIndex()));
     }
