@@ -45,6 +45,8 @@ public:
 
 private:
     QList<QGraphicsItem *> topLevelItems() const;
+    int rowForItem(QGraphicsItem *item) const;
+
     /// Returns a string type name for the given QGV item type id
     QString typeName(int itemType) const;
 
