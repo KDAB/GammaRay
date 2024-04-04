@@ -1,4 +1,4 @@
-# Doxyfile 1.9.8
+# Doxyfile 1.9.7
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project.
@@ -366,9 +366,9 @@ TOC_INCLUDE_HEADINGS   = 5
 # The MARKDOWN_ID_STYLE tag can be used to specify the algorithm used to
 # generate identifiers for the Markdown headings. Note: Every identifier is
 # unique.
-# Possible values are: DOXYGEN use a fixed 'autotoc_md' string followed by a
-# sequence number starting at 0 and GITHUB use the lower case version of title
-# with any whitespace replaced by '-' and punctuation characters removed.
+# Possible values are: DOXYGEN Use a fixed 'autotoc_md' string followed by a
+# sequence number starting at 0. and GITHUB Use the lower case version of title
+# with any whitespace replaced by '-' and punctations characters removed..
 # The default value is: DOXYGEN.
 # This tag requires that the tag MARKDOWN_SUPPORT is set to YES.
 
@@ -976,12 +976,12 @@ INPUT_FILE_ENCODING    =
 # Note the list of default checked file patterns might differ from the list of
 # default file extension mappings.
 #
-# If left blank the following patterns are tested:*.c, *.cc, *.cxx, *.cxxm,
-# *.cpp, *.cppm, *.c++, *.c++m, *.java, *.ii, *.ixx, *.ipp, *.i++, *.inl, *.idl,
-# *.ddl, *.odl, *.h, *.hh, *.hxx, *.hpp, *.h++, *.ixx, *.l, *.cs, *.d, *.php,
-# *.php4, *.php5, *.phtml, *.inc, *.m, *.markdown, *.md, *.mm, *.dox (to be
-# provided as doxygen C comment), *.py, *.pyw, *.f90, *.f95, *.f03, *.f08,
-# *.f18, *.f, *.for, *.vhd, *.vhdl, *.ucf, *.qsf and *.ice.
+# If left blank the following patterns are tested:*.c, *.cc, *.cxx, *.cpp,
+# *.c++, *.java, *.ii, *.ixx, *.ipp, *.i++, *.inl, *.idl, *.ddl, *.odl, *.h,
+# *.hh, *.hxx, *.hpp, *.h++, *.l, *.cs, *.d, *.php, *.php4, *.php5, *.phtml,
+# *.inc, *.m, *.markdown, *.md, *.mm, *.dox (to be provided as doxygen C
+# comment), *.py, *.pyw, *.f90, *.f95, *.f03, *.f08, *.f18, *.f, *.for, *.vhd,
+# *.vhdl, *.ucf, *.qsf and *.ice.
 
 FILE_PATTERNS          = *.cpp \
                          *.cc \
@@ -1225,6 +1225,46 @@ USE_HTAGS              = NO
 
 VERBATIM_HEADERS       = NO
 
+# If the CLANG_ASSISTED_PARSING tag is set to YES then doxygen will use the
+# clang parser (see:
+# http://clang.llvm.org/) for more accurate parsing at the cost of reduced
+# performance. This can be particularly helpful with template rich C++ code for
+# which doxygen's built-in parser lacks the necessary type information.
+# Note: The availability of this option depends on whether or not doxygen was
+# generated with the -Duse_libclang=ON option for CMake.
+# The default value is: NO.
+
+CLANG_ASSISTED_PARSING = NO
+
+# If the CLANG_ASSISTED_PARSING tag is set to YES and the CLANG_ADD_INC_PATHS
+# tag is set to YES then doxygen will add the directory of each input to the
+# include path.
+# The default value is: YES.
+# This tag requires that the tag CLANG_ASSISTED_PARSING is set to YES.
+
+CLANG_ADD_INC_PATHS    = YES
+
+# If clang assisted parsing is enabled you can provide the compiler with command
+# line options that you would normally use when invoking the compiler. Note that
+# the include paths will already be set by doxygen for the files and directories
+# specified with INPUT and INCLUDE_PATH.
+# This tag requires that the tag CLANG_ASSISTED_PARSING is set to YES.
+
+CLANG_OPTIONS          =
+
+# If clang assisted parsing is enabled you can provide the clang parser with the
+# path to the directory containing a file called compile_commands.json. This
+# file is the compilation database (see:
+# http://clang.llvm.org/docs/HowToSetupToolingForLLVM.html) containing the
+# options used when the source files were built. This is equivalent to
+# specifying the -p option to a clang tool, such as clang-check. These options
+# will then be passed to the parser. Any options specified with CLANG_OPTIONS
+# will be added as well.
+# Note: The availability of this option depends on whether or not doxygen was
+# generated with the -Duse_libclang=ON option for CMake.
+
+CLANG_DATABASE_PATH    =
+
 #---------------------------------------------------------------------------
 # Configuration options related to the alphabetical class index
 #---------------------------------------------------------------------------
@@ -1401,13 +1441,6 @@ HTML_DYNAMIC_MENUS     = YES
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
 HTML_DYNAMIC_SECTIONS  = NO
-
-# If the HTML_CODE_FOLDING tag is set to YES then classes and functions can be
-# dynamically folded and expanded in the generated HTML source code.
-# The default value is: YES.
-# This tag requires that the tag GENERATE_HTML is set to YES.
-
-HTML_CODE_FOLDING      = YES
 
 # With HTML_INDEX_NUM_ENTRIES one can control the preferred number of entries
 # shown in the various tree structured indices initially; the user can expand
@@ -2037,7 +2070,7 @@ PDF_HYPERLINKS         = YES
 
 USE_PDFLATEX           = YES
 
-# The LATEX_BATCHMODE tag signals the behavior of LaTeX in case of an error.
+# The LATEX_BATCHMODE tag ignals the behavior of LaTeX in case of an error.
 # Possible values are: NO same as ERROR_STOP, YES same as BATCH, BATCH In batch
 # mode nothing is printed on the terminal, errors are scrolled as if <return> is
 # hit at every error; missing files that TeX tries to input or request from
@@ -2240,32 +2273,6 @@ DOCBOOK_OUTPUT         = docbook
 GENERATE_AUTOGEN_DEF   = NO
 
 #---------------------------------------------------------------------------
-# Configuration options related to Sqlite3 output
-#---------------------------------------------------------------------------
-
-# If the GENERATE_SQLITE3 tag is set to YES doxygen will generate a Sqlite3
-# database with symbols found by doxygen stored in tables.
-# The default value is: NO.
-
-GENERATE_SQLITE3       = NO
-
-# The SQLITE3_OUTPUT tag is used to specify where the Sqlite3 database will be
-# put. If a relative path is entered the value of OUTPUT_DIRECTORY will be put
-# in front of it.
-# The default directory is: sqlite3.
-# This tag requires that the tag GENERATE_SQLITE3 is set to YES.
-
-SQLITE3_OUTPUT         = sqlite3
-
-# The SQLITE3_OVERWRITE_DB tag is set to YES, the existing doxygen_sqlite3.db
-# database file will be recreated with each doxygen run. If set to NO, doxygen
-# will warn if an a database file is already found and not modify it.
-# The default value is: YES.
-# This tag requires that the tag GENERATE_SQLITE3 is set to YES.
-
-SQLITE3_RECREATE_DB    = YES
-
-#---------------------------------------------------------------------------
 # Configuration options related to the Perl module output
 #---------------------------------------------------------------------------
 
@@ -2415,15 +2422,15 @@ TAGFILES               = @QDOC_TAG_DIR@/qtcore/qtcore.tags=https://doc.qt.io/qt-
 
 GENERATE_TAGFILE       =
 
-# If the ALLEXTERNALS tag is set to YES, all external classes and namespaces
-# will be listed in the class and namespace index. If set to NO, only the
-# inherited external classes will be listed.
+# If the ALLEXTERNALS tag is set to YES, all external class will be listed in
+# the class index. If set to NO, only the inherited external classes will be
+# listed.
 # The default value is: NO.
 
 ALLEXTERNALS           = NO
 
 # If the EXTERNAL_GROUPS tag is set to YES, all external groups will be listed
-# in the topic index. If set to NO, only the current project's groups will be
+# in the modules index. If set to NO, only the current project's groups will be
 # listed.
 # The default value is: YES.
 
@@ -2517,21 +2524,15 @@ CLASS_GRAPH            = YES
 # If the COLLABORATION_GRAPH tag is set to YES then doxygen will generate a
 # graph for each documented class showing the direct and indirect implementation
 # dependencies (inheritance, containment, and class references variables) of the
-# class with other documented classes. Explicit enabling a collaboration graph,
-# when COLLABORATION_GRAPH is set to NO, can be accomplished by means of the
-# command \collaborationgraph. Disabling a collaboration graph can be
-# accomplished by means of the command \hidecollaborationgraph.
+# class with other documented classes.
 # The default value is: YES.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
 COLLABORATION_GRAPH    = NO
 
 # If the GROUP_GRAPHS tag is set to YES then doxygen will generate a graph for
-# groups, showing the direct groups dependencies. Explicit enabling a group
-# dependency graph, when GROUP_GRAPHS is set to NO, can be accomplished by means
-# of the command \groupgraph. Disabling a directory graph can be accomplished by
-# means of the command \hidegroupgraph. See also the chapter Grouping in the
-# manual.
+# groups, showing the direct groups dependencies. See also the chapter Grouping
+# in the manual.
 # The default value is: YES.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
@@ -2591,9 +2592,7 @@ TEMPLATE_RELATIONS     = NO
 # If the INCLUDE_GRAPH, ENABLE_PREPROCESSING and SEARCH_INCLUDES tags are set to
 # YES then doxygen will generate a graph for each documented file showing the
 # direct and indirect include dependencies of the file with other documented
-# files. Explicit enabling an include graph, when INCLUDE_GRAPH is is set to NO,
-# can be accomplished by means of the command \includegraph. Disabling an
-# include graph can be accomplished by means of the command \hideincludegraph.
+# files.
 # The default value is: YES.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
@@ -2602,10 +2601,7 @@ INCLUDE_GRAPH          = NO
 # If the INCLUDED_BY_GRAPH, ENABLE_PREPROCESSING and SEARCH_INCLUDES tags are
 # set to YES then doxygen will generate a graph for each documented file showing
 # the direct and indirect include dependencies of the file with other documented
-# files. Explicit enabling an included by graph, when INCLUDED_BY_GRAPH is set
-# to NO, can be accomplished by means of the command \includedbygraph. Disabling
-# an included by graph can be accomplished by means of the command
-# \hideincludedbygraph.
+# files.
 # The default value is: YES.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
@@ -2645,10 +2641,7 @@ GRAPHICAL_HIERARCHY    = YES
 # If the DIRECTORY_GRAPH tag is set to YES then doxygen will show the
 # dependencies a directory has on other directories in a graphical way. The
 # dependency relations are determined by the #include relations between the
-# files in the directories. Explicit enabling a directory graph, when
-# DIRECTORY_GRAPH is set to NO, can be accomplished by means of the command
-# \directorygraph. Disabling a directory graph can be accomplished by means of
-# the command \hidedirectorygraph.
+# files in the directories.
 # The default value is: YES.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
