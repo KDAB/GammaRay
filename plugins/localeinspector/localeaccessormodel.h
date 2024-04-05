@@ -26,12 +26,12 @@ struct LocaleDataAccessor;
 class LocaleAccessorModel : public QAbstractTableModel
 {
     Q_OBJECT
-    Q_ENUMS(CustomRoles)
 public:
     enum CustomRoles
     {
         AccessorRole = UserRole + 1
     };
+    Q_ENUM(CustomRoles)
 
     explicit LocaleAccessorModel(LocaleDataAccessorRegistry *registry, QObject *parent = nullptr);
 

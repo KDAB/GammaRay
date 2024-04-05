@@ -92,7 +92,7 @@ Launcher::Launcher(const LaunchOptions &options, QObject *parent)
 {
     Q_ASSERT(options.isValid());
 
-    const auto timeout = qgetenv("GAMMARAY_LAUNCHER_TIMEOUT").toInt();
+    const auto timeout = qEnvironmentVariableIntValue("GAMMARAY_LAUNCHER_TIMEOUT");
     d->safetyTimer.setInterval(std::max(60, timeout) * 1000);
     d->safetyTimer.setSingleShot(true);
     connect(&d->safetyTimer, &QTimer::timeout, this, &Launcher::timeout);

@@ -59,7 +59,7 @@ public:
         VisualizeTraces,
     };
 
-    Q_ENUMS(RenderMode)
+    Q_ENUM(RenderMode)
     Q_DECLARE_FLAGS(Features, Feature)
 
     explicit QuickInspectorInterface(QObject *parent = nullptr);

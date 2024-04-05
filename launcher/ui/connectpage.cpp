@@ -76,7 +76,7 @@ void ConnectPage::validateHostAddress(const QString &address)
     handleLocalAddress(stillToParse, correctSoFar);
     handleIPAddress(stillToParse, correctSoFar);
 
-    QRegularExpression re(QStringLiteral("^([a-zA-Z][a-zA-Z0-9\\-\\.]+[a-zA-Z0-9](:[0-9]{1,5})?)$"));
+    static QRegularExpression re(QStringLiteral("^([a-zA-Z][a-zA-Z0-9\\-\\.]+[a-zA-Z0-9](:[0-9]{1,5})?)$"));
     if (re.match(stillToParse).hasMatch())
         handleHostName(stillToParse);
 
@@ -130,13 +130,13 @@ void ConnectPage::handleIPAddress(QString &stillToParse, bool &correctSoFar)
         possibleIPv6Address = QHostAddress(stillToParse);
 
     QHostAddress possibleIPv6BracketAddress;
-    QRegularExpression bracketFormatRE(QStringLiteral(R"(^\[([0-9a-f\:\.]*)\].*$)"));
+    static QRegularExpression bracketFormatRE(QStringLiteral(R"(^\[([0-9a-f\:\.]*)\].*$)"));
     QRegularExpressionMatch bracketMatch = bracketFormatRE.match(stillToParse);
     if (bracketMatch.hasMatch())
         possibleIPv6BracketAddress = QHostAddress(bracketMatch.captured(1));
 
     QHostAddress possibleIPv6InterfaceAddress;
-    QRegularExpression interfaceFormatRE(QStringLiteral(R"(^([^\%]*)(\%[^\:]+)(:[0-9]+)?$)"));
+    static QRegularExpression interfaceFormatRE(QStringLiteral(R"(^([^\%]*)(\%[^\:]+)(:[0-9]+)?$)"));
     QRegularExpressionMatch interfaceMatch = interfaceFormatRE.match(stillToParse);
     if (interfaceMatch.hasMatch())
         possibleIPv6InterfaceAddress = QHostAddress(interfaceMatch.captured(1));
@@ -220,7 +220,7 @@ void ConnectPage::handleAddressAndPort(QString &stillToParse, bool &correctSoFar
 
 void ConnectPage::handlePortString(QString &stillToParse, bool &correctSoFar)
 {
-    QRegularExpression re(QStringLiteral("\\:[0-9]{1,5}"));
+    static QRegularExpression re(QStringLiteral("\\:[0-9]{1,5}"));
     QRegularExpressionMatch match = re.match(stillToParse);
     if (match.hasMatch()) {
         auto portString = match.captured(0);
