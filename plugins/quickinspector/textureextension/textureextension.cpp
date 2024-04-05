@@ -152,7 +152,7 @@ void TextureExtension::textureGrabbed(QSGTexture *tex, const QImage &img)
     m_remoteView->sendFrame(f);
 }
 
-void TextureExtension::textureGrabbed(void *data, const QImage &img)
+void TextureExtension::textureGrabbedUntyped(void *data, const QImage &img)
 {
     if (m_currentMaterial != data || !m_remoteView->isActive())
         return;
@@ -183,10 +183,10 @@ bool GammaRay::TextureExtension::ensureSetup()
         return true;
     if (!QSGTextureGrabber::instance())
         return false;
-    connect(QSGTextureGrabber::instance(), static_cast<void (QSGTextureGrabber::*)(QSGTexture *, const QImage &)>(&QSGTextureGrabber::textureGrabbed),
-            this, static_cast<void (TextureExtension::*)(QSGTexture *, const QImage &)>(&TextureExtension::textureGrabbed));
-    connect(QSGTextureGrabber::instance(), static_cast<void (QSGTextureGrabber::*)(void *, const QImage &)>(&QSGTextureGrabber::textureGrabbed),
-            this, static_cast<void (TextureExtension::*)(void *, const QImage &)>(&TextureExtension::textureGrabbed));
+    connect(QSGTextureGrabber::instance(), &QSGTextureGrabber::textureGrabbed,
+            this, &TextureExtension::textureGrabbed);
+    connect(QSGTextureGrabber::instance(), &QSGTextureGrabber::textureGrabbedUntyped,
+            this, &TextureExtension::textureGrabbedUntyped);
     connect(m_remoteView, &RemoteViewServer::requestUpdate, this, &TextureExtension::triggerGrab);
     return m_connected = true;
 }

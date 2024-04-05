@@ -44,7 +44,7 @@ class RemoteModelServer : public QObject
         Qt::CaseSensitivity filterCaseSensitivity READ proxyFilterCaseSensitivity WRITE setProxyFilterCaseSensitivity)
     Q_PROPERTY(int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn) // clazy:exclude=qproperty-without-notify
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    Q_PROPERTY(QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp)
+    Q_PROPERTY(QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp) // clazy:exclude=qproperty-without-notify
     using RegExpT = QRegExp;
 #else
     Q_PROPERTY(QRegularExpression filterRegularExpression READ proxyFilterRegExp WRITE setProxyFilterRegExp) // clazy:exclude=qproperty-without-notify

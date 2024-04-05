@@ -43,7 +43,7 @@ public:
     }
 
 signals:
-    void destroyed();
+    void destroyed(); // clazy:exclude=overloaded-signal
 
 public slots:
     void unknownParameter(int, UnknownCustomType, int)

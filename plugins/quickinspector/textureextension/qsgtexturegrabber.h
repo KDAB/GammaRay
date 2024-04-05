@@ -45,7 +45,7 @@ public slots:
 
 signals:
     void textureGrabbed(QSGTexture *tex, const QImage &img);
-    void textureGrabbed(void *data, const QImage &img);
+    void textureGrabbedUntyped(void *data, const QImage &img);
 
 private:
     void addQuickWindow(QQuickWindow *window);
