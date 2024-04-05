@@ -207,7 +207,7 @@ bool DebuggerInjector::injectAndDetach(const QString &probeDll, const QString &p
     loadSymbols(probeDll.toUtf8());
     execCmd(QStringLiteral("call (void) %1()").arg(probeFunc).toUtf8());
 
-    if (qgetenv("GAMMARAY_UNITTEST") != "1") {
+    if (qEnvironmentVariableIntValue("GAMMARAY_UNITTEST") != 1) {
         execCmd("detach");
         execCmd("quit");
     } else {
@@ -230,7 +230,7 @@ void DebuggerInjector::loadSymbols(const QByteArray &library)
 void DebuggerInjector::processLog(DebuggerInjector::Orientation orientation, bool isError,
                                   const QString &text)
 {
-    if (qgetenv("GAMMARAY_UNITTEST") == "1") { // clazy:exclude=qgetenv due to Qt4 support
+    if (qEnvironmentVariableIntValue("GAMMARAY_UNITTEST") == 1) {
         const QString output = QString::fromLatin1("%1 [%2] %3: %4")
                                    .arg(orientation == DebuggerInjector::In ? "<<<" : ">>>",
                                         QString::fromLatin1(isError ? "ERROR" : "OUTPUT"), // type

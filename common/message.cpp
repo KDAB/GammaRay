@@ -224,7 +224,7 @@ void Message::write(QIODevice *device) const
 {
     Q_ASSERT(m_objectAddress != Protocol::InvalidObjectAddress);
     Q_ASSERT(m_messageType != Protocol::InvalidMessageType);
-    static const bool compressionEnabled = qgetenv("GAMMARAY_DISABLE_LZ4") != "1";
+    static const bool compressionEnabled = qEnvironmentVariableIntValue("GAMMARAY_DISABLE_LZ4") != 1;
     const int buffSize = m_buffer->data.size();
     auto &compressedData = m_buffer->scratchSpace;
     if (buffSize > minimumUncompressedSize && compressionEnabled)

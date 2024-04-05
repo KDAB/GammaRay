@@ -42,13 +42,13 @@ QStringList InjectorStylePlugin::keys()
 
 void InjectorStylePlugin::inject()
 {
-    const QByteArray probeDllPath = qgetenv("GAMMARAY_STYLEINJECTOR_PROBEDLL");
+    const QString probeDllPath = qEnvironmentVariable("GAMMARAY_STYLEINJECTOR_PROBEDLL");
     if (probeDllPath.isEmpty()) {
         qWarning("No probe DLL specified.");
         return;
     }
 
-    QLibrary probeDll(QString::fromLocal8Bit(probeDllPath));
+    QLibrary probeDll(probeDllPath);
     probeDll.setLoadHints(QLibrary::ResolveAllSymbolsHint);
     if (!probeDll.load()) {
         qWarning() << "Loading probe DLL failed:" << probeDll.errorString();

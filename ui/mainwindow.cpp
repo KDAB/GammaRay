@@ -109,7 +109,7 @@ static const int IDE_SETTING_DEFAULT = -1;
 
 QStyle *gammarayStyleOverride()
 {
-    const auto styleNameOverride = QString::fromLocal8Bit(qgetenv("GAMMARAY_STYLE"));
+    const auto styleNameOverride = qEnvironmentVariable("GAMMARAY_STYLE");
     if (styleNameOverride.isEmpty()) {
         return nullptr;
     }

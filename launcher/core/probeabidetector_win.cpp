@@ -67,7 +67,7 @@ static QStringList dllSearchPaths(const QString &exePath)
     paths.push_back(QDir::currentPath());
 
     // (5) PATH
-    const auto envPaths = QString::fromLocal8Bit(qgetenv("PATH"));
+    const auto envPaths = qEnvironmentVariable("PATH");
     paths += envPaths.split(';');
 
     return paths;
@@ -138,7 +138,7 @@ QString absoluteExecutablePath(const QString &path)
     }
 
     // attempt to appends missing .exe extensions
-    const auto pathExt = QString::fromLocal8Bit(qgetenv("PATHEXT")).toLower().split(QLatin1Char(';'));
+    const auto pathExt = qEnvironmentVariable("PATHEXT").toLower().split(QLatin1Char(';'));
     for (const auto &ext : pathExt) {
         const auto extendedPath = path + ext;
         if (QFile::exists(extendedPath)) {
