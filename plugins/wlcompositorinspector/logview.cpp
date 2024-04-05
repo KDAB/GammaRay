@@ -445,6 +445,7 @@ public:
             int startLine = drawRect.left() / linesSpacing - (rit - it) / m_zoom; // round the starting position so that we have nice numbers'
 
             int s = startLine;
+            // NOLINTNEXTLINE (clang-analyzer-security.FloatLoopCounter)
             for (qreal i = startLine * linesSpacing; i < drawRect.right(); i += linesSpacing, s++) {
                 bool isStep = s % substeps == 0;
                 painter.setPen(isStep ? palette.color(QPalette::Highlight) : palette.color(QPalette::Midlight));
@@ -461,6 +462,7 @@ public:
             // draw the text after having drawn all the lines, so we're sure they don't go over it
             s = startLine;
             painter.setPen(palette.color(QPalette::Highlight));
+            // NOLINTNEXTLINE (clang-analyzer-security.FloatLoopCounter)
             for (qreal i = startLine * linesSpacing; i < drawRect.right(); i += step / substeps, s++) { // krazy:exclude=postfixop
                 bool isStep = s % substeps == 0;
                 if (isStep) {

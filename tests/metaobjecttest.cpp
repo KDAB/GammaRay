@@ -64,6 +64,8 @@ private slots:
         }
 
         QVERIFY(prop);
+        if (!prop) return; // to silence clang-tidy
+
         QCOMPARE(prop->name(), "priority");
         QCOMPARE(prop->typeName(), "QThread::Priority");
 
@@ -87,6 +89,7 @@ private slots:
         }
 
         QVERIFY(prop);
+        if (!prop) return; // to silence clang-tidy
         QCOMPARE(prop->name(), "libraryPaths");
         QCOMPARE(prop->typeName(), "QStringList");
         QCOMPARE(prop->isReadOnly(), true);
