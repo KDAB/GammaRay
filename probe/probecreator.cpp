@@ -39,9 +39,9 @@ ProbeCreator::ProbeCreator(CreateFlags flags)
     QMetaObject::invokeMethod(this, "createProbe", Qt::QueuedConnection);
 
     // don't propagate the probe to child processes
-    if (qgetenv("GAMMARAY_UNSET_PRELOAD") == "1")
+    if (qEnvironmentVariableIntValue("GAMMARAY_UNSET_PRELOAD") == 1)
         qputenv("LD_PRELOAD", "");
-    if (qgetenv("GAMMARAY_UNSET_DYLD") == "1")
+    if (qEnvironmentVariableIntValue("GAMMARAY_UNSET_DYLD") == 1)
         qputenv("DYLD_INSERT_LIBRARIES", "");
 
     // HACK the webinspector plugin does this as well, but if the web view is created

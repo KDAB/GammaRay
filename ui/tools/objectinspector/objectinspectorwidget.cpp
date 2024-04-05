@@ -52,7 +52,7 @@ ObjectInspectorWidget::ObjectInspectorWidget(QWidget *parent)
     connect(selectionModel, &QItemSelectionModel::selectionChanged,
             this, &ObjectInspectorWidget::objectSelectionChanged);
 
-    if (qgetenv("GAMMARAY_TEST_FILTER") == "1") {
+    if (qEnvironmentVariableIntValue("GAMMARAY_TEST_FILTER") == 1) {
         QMetaObject::invokeMethod(ui->objectSearchLine, "setText",
                                   Qt::QueuedConnection,
                                   Q_ARG(QString, QStringLiteral("Object")));

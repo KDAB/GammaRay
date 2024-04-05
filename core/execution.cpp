@@ -342,7 +342,7 @@ namespace Execution {
 
 bool stackTracingAvailable()
 {
-    static const bool disableStackTracing = qgetenv("GAMMARAY_DISABLE_STACKTRACE") == "1";
+    static const bool disableStackTracing = qEnvironmentVariableIntValue("GAMMARAY_DISABLE_STACKTRACE") == 1;
     if (disableStackTracing)
         return false;
     return stackTracingAvailableImpl();

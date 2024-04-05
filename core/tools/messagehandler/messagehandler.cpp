@@ -65,7 +65,7 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
     }
 
     if (!message.backtrace.empty()
-        && (qgetenv("GAMMARAY_UNITTEST") == "1" || type == QtFatalMsg)) {
+        && (qEnvironmentVariableIntValue("GAMMARAY_UNITTEST") == 1 || type == QtFatalMsg)) {
         if (type == QtFatalMsg)
             std::cerr << "QFatal in " << qPrintable(qApp->applicationName()) << " (" << qPrintable(qApp->applicationFilePath()) << ')' << std::endl;
         std::cerr << "START BACKTRACE:" << std::endl;
@@ -75,8 +75,8 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
         std::cerr << "END BACKTRACE" << std::endl;
     }
 
-    if (type == QtFatalMsg && qgetenv("GAMMARAY_GDB") != "1"
-        && qgetenv("GAMMARAY_UNITTEST") != "1") {
+    if (type == QtFatalMsg && qEnvironmentVariableIntValue("GAMMARAY_GDB") != 1
+        && qEnvironmentVariableIntValue("GAMMARAY_UNITTEST") != 1) {
         // Enforce handling on the GUI thread and block until we are done.
         QMetaObject::invokeMethod(static_cast<QObject *>(s_model)->parent(), "handleFatalMessage",
                                   qApp->thread() == QThread::currentThread() ? Qt::DirectConnection : Qt::BlockingQueuedConnection,
