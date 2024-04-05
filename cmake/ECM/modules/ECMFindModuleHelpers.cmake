@@ -103,8 +103,6 @@ The following variables will be set:
 Since pre-1.0.0.
 #]=======================================================================]
 
-include(CMakeParseArguments)
-
 macro(ecm_find_package_version_check module_name)
     if(CMAKE_VERSION VERSION_LESS 3.16.0)
         message(FATAL_ERROR "CMake 3.16.0 is required by Find${module_name}.cmake")
