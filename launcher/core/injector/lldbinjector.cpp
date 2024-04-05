@@ -38,7 +38,7 @@ bool LldbInjector::selfTest()
             const QString output = QString::fromLocal8Bit(process.readAll()).trimmed();
             const auto targetMajor = 3;
             const auto targetMinor = 6;
-            const QRegularExpression rx(QStringLiteral("\\b([\\d]+\\.[\\d]+\\.[\\d]+)\\b")); // lldb version 3.7.0 ( revision )
+            static const QRegularExpression rx(QStringLiteral("\\b([\\d]+\\.[\\d]+\\.[\\d]+)\\b")); // lldb version 3.7.0 ( revision )
             const auto match = rx.match(output);
 
             if (!match.hasMatch()) {
