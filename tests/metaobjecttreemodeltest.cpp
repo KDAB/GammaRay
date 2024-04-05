@@ -30,7 +30,8 @@ class MetaObjectTreeModelTest : public BaseProbeTest
 {
     Q_OBJECT
 signals:
-    void destroyed(); // to trigger the QMO validator
+    // to trigger the QMO validator
+    void destroyed(); // clazy:exclude=overloaded-signal
 
 private slots:
     void modelTest()

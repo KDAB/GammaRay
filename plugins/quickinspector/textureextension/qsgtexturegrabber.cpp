@@ -124,7 +124,7 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow *window)
     if (m_textureId > 0) {
         const auto img = grabTexture(context, m_textureId);
         if (!img.isNull()) {
-            emit textureGrabbed(m_grabData, img);
+            emit textureGrabbedUntyped(m_grabData, img);
         }
         resetRequest();
     }

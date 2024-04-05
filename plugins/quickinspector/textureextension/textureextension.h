@@ -41,7 +41,7 @@ public:
 
 private slots:
     void textureGrabbed(QSGTexture *tex, const QImage &img);
-    void textureGrabbed(void *data, const QImage &img);
+    void textureGrabbedUntyped(void *data, const QImage &img);
 
 private:
     bool ensureSetup();

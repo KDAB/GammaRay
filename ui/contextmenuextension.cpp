@@ -132,7 +132,7 @@ void ContextMenuExtension::populateMenu(QMenu *menu)
                      });
 
     if (canFavorite) {
-        menu->addAction(QStringLiteral("Favorite"), [this] {
+        menu->addAction(QStringLiteral("Favorite"), menu, [this] {
             if (auto iface = ObjectBroker::object<FavoriteObjectInterface *>())
                 iface->markObjectAsFavorite(m_id);
         });

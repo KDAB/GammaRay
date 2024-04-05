@@ -37,7 +37,7 @@ WidgetPaintAnalyzerExtension::WidgetPaintAnalyzerExtension(PropertyController *c
         m_paintAnalyzer = new PaintAnalyzer(aName, controller);
     }
 
-    QObject::connect(m_paintAnalyzer, &PaintAnalyzer::requestUpdate, [this]() { analyze(); });
+    QObject::connect(m_paintAnalyzer, &PaintAnalyzer::requestUpdate, m_paintAnalyzer, [this]() { analyze(); });
 }
 
 WidgetPaintAnalyzerExtension::~WidgetPaintAnalyzerExtension() = default;
