@@ -320,10 +320,10 @@ public:
     void processCommands(const QPaintBuffer &buffer, QPainter *painter, int begin, int end);
 
 protected:
-    QPaintBufferPrivate *d;
+    QPaintBufferPrivate *d = nullptr;
     QTransform m_world_matrix;
 
-    QPainter *painter;
+    QPainter *painter = nullptr;
 
 private:
     Q_DISABLE_COPY(QPainterReplayer)

@@ -355,6 +355,7 @@ void QuickDecorationsDrawer::drawGrid()
     QVector<QLineF> lines;
     lines.reserve((viewRect.width() / gridCellSize.width()) + (viewRect.height() / gridCellSize.height()));
 
+    // NOLINTNEXTLINE (clang-analyzer-security.FloatLoopCounter)
     for (qreal x = viewRect.left() + gridOffset.x(); x < viewRect.right(); x += gridCellSize.width()) {
         if (x < viewRect.left())
             continue;
@@ -363,6 +364,7 @@ void QuickDecorationsDrawer::drawGrid()
                         QPointF(x, viewRect.bottom()) * m_renderInfo->zoom);
     }
 
+    // NOLINTNEXTLINE (clang-analyzer-security.FloatLoopCounter)
     for (qreal y = viewRect.top() + gridOffset.y(); y < viewRect.bottom(); y += gridCellSize.height()) {
         if (y < viewRect.top())
             continue;
