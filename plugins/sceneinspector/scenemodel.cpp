@@ -110,14 +110,13 @@ int SceneModel::rowCount(const QModelIndex &parent) const
 // items' insertion order, calls to QGraphicsItem::stackBefore(), and Z-values
 // That's too prone to change under our feet without telling us, breaking model invariants
 // So always just sort them... by pointer address, for lack of a better idea
-namespace
+namespace {
+QList<QGraphicsItem *> sortedChildItems(QGraphicsItem *parent)
 {
-    QList<QGraphicsItem *> sortedChildItems(QGraphicsItem *parent)
-    {
-        auto items = parent->childItems();
-        std::sort(items.begin(), items.end());
-        return items;
-    }
+    auto items = parent->childItems();
+    std::sort(items.begin(), items.end());
+    return items;
+}
 }
 
 int SceneModel::rowForItem(QGraphicsItem *item) const
