@@ -24,6 +24,9 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         networksupportinterface.h
     )
     if(${QT_VERSION_MAJOR} EQUAL 5 AND TARGET Qt5::Network)
+        message("6 ${QT_VERSION_MAJOR}")
+        message(${QT_VERSION_MAJOR})
+        message(QT_VERSION_MAJOR)
         list(APPEND gammaray_network_srcs networkconfigurationmodel.cpp networkconfigurationmodel.h)
     endif()
     gammaray_add_plugin(

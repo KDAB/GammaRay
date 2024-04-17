@@ -9,6 +9,6 @@
 
 qml_lint(quick-batching.qml)
 
-if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qml_lint(Slider.qml)
 endif()

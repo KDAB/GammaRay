@@ -46,7 +46,7 @@ if(TARGET Qt::Widgets)
     add_dependencies(translator_test translator_test_qm)
 endif()
 
-if(QT_VERSION_MAJOR EQUAL 5 AND Qt5Webkit_FOUND)
+if(${QT_VERSION_MAJOR} EQUAL 5 AND Qt5Webkit_FOUND)
     add_executable(wk1application wk1application.cpp)
     target_link_libraries(
         wk1application
@@ -58,7 +58,7 @@ if(QT_VERSION_MAJOR EQUAL 5 AND Qt5Webkit_FOUND)
     )
 endif()
 
-if(QT_VERSION_MAJOR EQUAL 5
+if(${QT_VERSION_MAJOR} EQUAL 5
    AND Qt5WebKit_FOUND
    AND TARGET Qt::Quick
 )
