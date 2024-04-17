@@ -10,7 +10,7 @@
 add_subdirectory(quick-batching)
 add_subdirectory(quick-event-handling)
 
-if((${QT_VERSION_MAJOR} EQUAL 5) OR (${QT_VERSION_MAJOR} EQUAL 6 AND TARGET Qt6::StateMachine))
+if((${QT_VERSION_MAJOR} EQUAL 5) OR TARGET Qt6::StateMachine)
     add_subdirectory(state-machine)
 endif()
 
