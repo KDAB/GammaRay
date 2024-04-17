@@ -496,7 +496,7 @@ find_package(
     NO_MODULE
     QUIET
 )
-if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     find_package(
         Qt${QT_VERSION_MAJOR}StateMachine
         ${Qt${QT_VERSION_MAJOR}_VERSION}
@@ -511,7 +511,7 @@ if(GAMMARAY_BUILD_DOCS)
     find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
 endif()
 
-if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -564,7 +564,7 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
 if(WARNINGS_ARE_ERRORS)
     if(NOT MSVC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-error=deprecated-declarations")
-        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND QT_VERSION_MAJOR EQUAL 5)
+        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND ${QT_VERSION_MAJOR} EQUAL 5)
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=suggest-override") # Q_OBJECT expansion warnings
         endif()
 
@@ -636,7 +636,7 @@ else()
     set(GAMMARAY_CORE_ONLY_LAUNCHER TRUE)
 endif()
 
-if(QT_VERSION_MAJOR EQUAL 5)
+if(${QT_VERSION_MAJOR} EQUAL 5)
     add_feature_info("QtScript debugger" Qt5ScriptTools_FOUND "Requires QtScript and QtScriptTools.")
 endif()
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
