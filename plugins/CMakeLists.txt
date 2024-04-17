@@ -7,7 +7,7 @@
 # Contact KDAB at <info@kdab.com> for commercial licensing options.
 #
 
-if(TARGET Qt5::Core)
+if(QT_VERSION_MAJOR EQUAL 5 AND TARGET Qt5::Core)
     add_subdirectory(codecbrowser)
 endif()
 if((QT_VERSION_MAJOR EQUAL 5) OR (QT_VERSION_MAJOR EQUAL 6 AND TARGET Qt6::StateMachine))
@@ -35,7 +35,7 @@ if(TARGET Qt::Gui)
     add_subdirectory(guisupport)
     add_subdirectory(textdocumentinspector)
 endif()
-if(TARGET Qt5::Gui OR TARGET Qt6::OpenGL)
+if((QT_VERSION_MAJOR EQUAL 5 AND TARGET Qt5::Gui) OR (QT_VERSION_MAJOR EQUAL 6 AND TARGET Qt6::OpenGL))
     add_subdirectory(openglsupport)
 endif()
 
