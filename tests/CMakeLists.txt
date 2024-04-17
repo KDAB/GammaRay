@@ -445,7 +445,7 @@ target_link_libraries(
     fontdatabasemodeltest Qt::Gui
 )
 
-if(TARGET Qt5::Core)
+if(QT_VERSION_MAJOR EQUAL 5 AND TARGET Qt5::Core)
     gammaray_add_test(
         codecmodeltest codecmodeltest.cpp ${CMAKE_SOURCE_DIR}/plugins/codecbrowser/codecmodel.cpp
         $<TARGET_OBJECTS:modeltestobj>
@@ -518,7 +518,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         )
 
         # only opengl rhi backend is supported atm
-        if(TARGET Qt6::Quick)
+        if(QT_VERSION_MAJOR EQUAL 6 AND TARGET Qt6::Quick)
             set_tests_properties(
                 quickinspectortest PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=rhi;QSG_RHI_BACKEND=opengl"
             )
@@ -528,7 +528,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             quickinspectortest2 quickinspectortest2.cpp quickinspectortest.qrc $<TARGET_OBJECTS:modeltestobj>
         )
         target_link_libraries(quickinspectortest2 gammaray_core gammaray_quickinspector_shared Qt::Quick)
-        if(TARGET Qt6::Quick)
+        if(QT_VERSION_MAJOR EQUAL 6 AND TARGET Qt6::Quick)
             set_tests_properties(
                 quickinspectortest2 PROPERTIES ENVIRONMENT "QT_QUICK_BACKEND=rhi;QSG_RHI_BACKEND=opengl"
             )
