@@ -12,7 +12,7 @@ if(GAMMARAY_WITH_KDSME)
         # Function creates extra scope to keep these variables local
         set(BUILD_DOCS OFF)
         set(BUILD_EXAMPLES OFF)
-        set(BUILD_TESTS ON)
+        set(BUILD_TESTS OFF)
 
         set(KDSME_PACKAGE_NAME KDSME)
         if(QT_VERSION_MAJOR GREATER_EQUAL 6)
