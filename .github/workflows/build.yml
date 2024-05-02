@@ -79,7 +79,7 @@ jobs:
       - name: Configure project
         run: >
           cmake -S . -G Ninja --preset ${{ matrix.config.preset }}
-          -DGAMMARAY_WITH_KDSME=${{ runner.os == 'Linux' && matrix.config.qt_version == "5.15" }}
+          -DGAMMARAY_WITH_KDSME=${{ runner.os == 'Linux' }}
           -DGAMMARAY_BUILD_DOCS=${{ runner.os == 'Linux' }}
 
       - name: Build Project
@@ -104,7 +104,7 @@ jobs:
         # quickmaterialtest|quicktexturetest fails because of QT_QUICK_BACKEND=software AND QT_QPA_PLATFORM=offscreen
         # quickinspectortest|quickinspectortest2 fails at CI, local with 6.2.4 passes
       - name: Run tests on Linux Qt6 (offscreen)
-        if: ${{ runner.os == 'Linux' }}
+        if: ${{ runner.os == 'Linux' && matrix.config.qt_version == "5.15" }}
         run: >
           ctest --test-dir ./build-${{ matrix.config.preset }} --output-on-failure
           --exclude-regex "quickmaterialtest|quicktexturetest|quickinspectortest|quickinspectortest2"
