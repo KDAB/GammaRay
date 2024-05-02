@@ -24,7 +24,6 @@ jobs:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-
         config:
           - preset: ci-dev-client-only-qt5
             qt_version: "5.15"
@@ -32,7 +31,7 @@ jobs:
             tests_with: qt5
 
           - preset: ci-dev-client-only-qt6
-            qt_version: "6.5.*"
+            qt_version: 6.7.1
             qt_modules: qtshadertools qtscxml
             tests_with: qt6
 
@@ -42,7 +41,7 @@ jobs:
             tests_with: qt5
 
           - preset: ci-dev-client-and-ui-qt6
-            qt_version: "6.5.*"
+            qt_version: 6.7.1
             qt_modules: qtscxml
             tests_with: qt6
 
@@ -51,7 +50,7 @@ jobs:
             cmake_osx_architectures: "x86_64"
 
           - preset: ci-dev-probe-only-qt6
-            qt_version: "6.5.*"
+            qt_version: 6.7.1
             qt_modules: qtscxml
 
         # GitHub actions is now powered by AppleSilicon macs
