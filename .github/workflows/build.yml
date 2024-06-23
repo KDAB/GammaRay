@@ -81,10 +81,18 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         run: |
           sudo apt update -qq
-          sudo apt install -y gdb doxygen libgraphviz-dev
+          sudo apt install -y gdb doxygen
+
+      - name: Install Dependencies on macOS
+        if: ${{ runner.os == 'macOS' }}
+        run: brew install bison
 
       - name: Install ninja-build tool (must be after Qt due PATH changes)
         uses: turtlesec-no/get-ninja@main
+
+      - name: Add Bison to PATH (must be after Qt due PATH changes)
+        if: ${{ runner.os == 'macOS' }}
+        run: echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
 
       - name: Make sure MSVC is found when Ninja generator is in use
         if: ${{ runner.os == 'Windows' }}
@@ -94,7 +102,7 @@ jobs:
         run: >
           cmake -S . -G Ninja --preset ${{ matrix.config.preset }}
           -DCMAKE_OSX_ARCHITECTURES=${{ matrix.config.cmake_osx_architectures}}
-          -DGAMMARAY_WITH_KDSME=${{ runner.os == 'Linux' }}
+          -DGAMMARAY_WITH_KDSME=ON
           -DGAMMARAY_BUILD_DOCS=${{ runner.os == 'Linux' }}
 
       - name: Build Project
