@@ -561,23 +561,6 @@ endif()
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
 #add_definitions(-DQT_DEPRECATED_WARNINGS)
 
-if(WARNINGS_ARE_ERRORS)
-    if(NOT MSVC)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-error=deprecated-declarations")
-        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND ${QT_VERSION_MAJOR} EQUAL 5)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=suggest-override") # Q_OBJECT expansion warnings
-        endif()
-
-        if(CMAKE_COMPILER_IS_GNUCXX)
-            # each compiler has its own opinion on when to apply [noreturn]
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=suggest-attribute=noreturn")
-        endif()
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
-        add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
-    endif()
-endif()
-
 if(NOT DEFINED QT_LIBINFIX)
     set(QT_LIBINFIX "")
 endif()
@@ -839,6 +822,25 @@ include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/3rdparty ${CMAKE_BIN
 include(KDQtInstallPaths) #to set QT_INSTALL_FOO variables
 add_subdirectory(cmake)
 add_subdirectory(3rdparty)
+
+# Enable WARNINGS_ARE_ERRORS AFTER 3rdparty modules
+if(WARNINGS_ARE_ERRORS)
+    if(NOT MSVC)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-error=deprecated-declarations")
+        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND ${QT_VERSION_MAJOR} EQUAL 5)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=suggest-override") # Q_OBJECT expansion warnings
+        endif()
+
+        if(CMAKE_COMPILER_IS_GNUCXX)
+            # each compiler has its own opinion on when to apply [noreturn]
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=suggest-attribute=noreturn")
+        endif()
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+        add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+    endif()
+endif()
+
 add_subdirectory(common)
 add_subdirectory(core)
 add_subdirectory(probe)
