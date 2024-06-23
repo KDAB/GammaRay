@@ -384,10 +384,6 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267") #conversion from size_t to int possible loss of data
 endif()
 
-if(WIN32)
-    add_definitions(-DUNICODE -D_UNICODE -D_USING_V110_SDK71_=1)
-endif()
-
 if(QNXNTO)
     add_definitions(-D_QNX_SOURCE)
 endif()
@@ -839,6 +835,10 @@ if(WARNINGS_ARE_ERRORS)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
         add_definitions(-D_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
     endif()
+endif()
+
+if(WIN32)
+    add_definitions(-DUNICODE -D_UNICODE -D_USING_V110_SDK71_=1)
 endif()
 
 add_subdirectory(common)
