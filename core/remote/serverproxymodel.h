@@ -22,6 +22,17 @@
 #include <QVector>
 
 namespace GammaRay {
+
+template<typename BaseProxy> void init(BaseProxy *) {}
+
+template<> inline void init<QSortFilterProxyModel>(QSortFilterProxyModel *proxy)
+{
+    proxy->setRecursiveFilteringEnabled(true);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    proxy->setAutoAcceptChildRows(true);
+#endif
+}
+
 /** Sort/filter proxy model for server-side use to pass through extra roles in itemData().
  *  Every remoted proxy model should be wrapped into this template, unless you already have
  *  a special implementation for itemData() handling this.
@@ -35,6 +46,7 @@ public:
         , m_sourceModel(nullptr)
         , m_active(false)
     {
+        init<BaseProxy>(this);
     }
 
     /** Additional roles used from the source model for transfer to the client. */
