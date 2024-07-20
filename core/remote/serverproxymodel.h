@@ -23,9 +23,13 @@
 
 namespace GammaRay {
 
-template<typename BaseProxy> void init(BaseProxy *) {}
+template<typename BaseProxy>
+void init(BaseProxy *)
+{
+}
 
-template<> inline void init<QSortFilterProxyModel>(QSortFilterProxyModel *proxy)
+template<>
+inline void init<QSortFilterProxyModel>(QSortFilterProxyModel *proxy)
 {
     proxy->setRecursiveFilteringEnabled(true);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
