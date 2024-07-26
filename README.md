@@ -91,6 +91,10 @@ Note that this software relies on 3rd party MIT-licensed projects
 and various other freely distributable files some of which are
 unused only for testing and not part of the application itself.
 
+For convenience, GammaRay source bundles (.tar.gz or .zip files) contain code for
+the [graphviz library](https://gitlab.com/graphviz/graphviz) which is licensed
+according to the [Eclipse Public License v1.0](https://www.eclipse.org/legal/epl/epl-v10.html).
+
 ## About KDAB
 
 GammaRay is supported and maintained by Klarälvdalens Datakonsult AB (KDAB).

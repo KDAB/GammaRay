@@ -8,10 +8,7 @@ Version 3.1.0 (unreleased)
  * Qt IVI is no longer supported
  * Fix inspection of graphics scenes with nested items
  * Support introspection of PySide apps
-
-Version 3.0.1 (unreleased)
---------------------------
- *
+ * Support 3rdparty submodules for KDStateMachineEditor (with graphviz)
 
 Version 3.0.0 (04 September 2023)
 ---------------------------------

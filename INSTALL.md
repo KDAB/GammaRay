@@ -114,7 +114,7 @@ or
 
 ... to remove all forwards
 
-### Additional notes
+### Debug builds
 
 To build a debug version pass `-DCMAKE_BUILD_TYPE=Debug` to cmake.
 
@@ -144,10 +144,21 @@ You can make probe only builds that way:
 
 You can still use any cmake flags you want like `CMAKE_DISABLE_FIND_PACKAGE_<PACKAGE>` etc.
 
+## Building with KDStateMachineEditor
+
+The KDAB library KDStateMachineEditor is required when building the
+State Machine Viewer plugin (-DGAMMARAY_WITH_KDSME=True).
+
+The code for this library (and its dependencies, most notably graphviz)
+is provided with the source bundle in the 3rdparty folder; alternatively,
+developers can git clone the associated submodule into 3rdparty.
+
+Note that additional tools (like Python) may be required to build graphviz.
+
 ## Optional Dependencies
 
 GammaRay relies on optional (FOSS) dependencies to help provide some of its
-functionality, most prominently KDSME (<https://github.com/KDAB/KDStateMachineEditor>).
+functionality.
 
 When you run cmake it will inform you about these missing dependencies.
 
