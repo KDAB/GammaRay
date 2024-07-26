@@ -1,6 +1,10 @@
 Release Highlights
 ==================
 
+Version 3.1.1 (unreleased)
+--------------------------
+ *
+
 Version 3.1.0 (26 July 2024)
 ----------------------------
  * Qt5 versions less than 5.15 are no longer supported

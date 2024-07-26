@@ -81,7 +81,7 @@ cmake_minimum_required(VERSION 3.16.0)
 
 project(
     GammaRay
-    VERSION 3.1.0
+    VERSION 3.1.1
     LANGUAGES CXX C
 )
 
