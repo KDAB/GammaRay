@@ -1,14 +1,19 @@
 Release Highlights
 ==================
 
-Version 3.1.0 (unreleased)
---------------------------
+Version 3.1.0 (26 July 2024)
+----------------------------
  * Qt5 versions less than 5.15 are no longer supported
  * Qt6 versions less that 6.3 are no longer supported
  * Qt IVI is no longer supported
  * Fix inspection of graphics scenes with nested items
- * Support introspection of PySide apps
+ * Fix QQuickWidget support for Qt6
  * Support 3rdparty submodules for KDStateMachineEditor (with graphviz)
+ * Support inspection of QSplitter properties
+ * Support introspection of Qt PySide apps
+ * Show more font properties in the font browser, and allow searching for fonts
+ * Show all timezone name variants in the timezone browser
+ * Make probe settings configurable via AndroidManifest.xml
 
 Version 3.0.0 (04 September 2023)
 ---------------------------------
