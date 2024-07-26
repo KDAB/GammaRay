@@ -58,3 +58,11 @@ repos:
   hooks:
   - id: reuse
     args: [--suppress-deprecation]
+- repo: https://github.com/scop/pre-commit-shfmt
+  rev: v3.8.0-1
+  hooks:
+  - id: shfmt
+- repo: https://github.com/shellcheck-py/shellcheck-py
+  rev: v0.10.0.1
+  hooks:
+  - id: shellcheck
