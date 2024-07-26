@@ -8,9 +8,11 @@ on:
   push:
     branches:
       - master
+      - 3.1
   pull_request:
     branches:
       - master
+      - 3.1
 
 jobs:
   build:
