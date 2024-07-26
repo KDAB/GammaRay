@@ -47,23 +47,23 @@ endif()
 if (QT_MAJOR_VERSION STREQUAL "5")
     # QUIET to accommodate the TRY option
     find_package(Qt${QT_MAJOR_VERSION}Core QUIET)
+    set(_exec_name_text "Qt5 qmake")
     if(TARGET Qt5::qmake)
         get_target_property(_qmake_executable_default Qt5::qmake LOCATION)
 
         set(QUERY_EXECUTABLE ${_qmake_executable_default}
             CACHE FILEPATH "Location of the Qt5 qmake executable")
-        set(_exec_name_text "Qt5 qmake")
         set(_cli_option "-query")
     endif()
 elseif(QT_MAJOR_VERSION STREQUAL "6")
     # QUIET to accommodate the TRY option
     find_package(Qt6 COMPONENTS CoreTools QUIET CONFIG)
+    set(_exec_name_text "Qt6 qtpaths")
     if (TARGET Qt6::qtpaths)
         get_target_property(_qtpaths_executable Qt6::qtpaths LOCATION)
 
         set(QUERY_EXECUTABLE ${_qtpaths_executable}
             CACHE FILEPATH "Location of the Qt6 qtpaths executable")
-        set(_exec_name_text "Qt6 qtpaths")
         set(_cli_option "--query")
     endif()
 endif()
