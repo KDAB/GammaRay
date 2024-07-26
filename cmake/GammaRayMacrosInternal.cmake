@@ -136,11 +136,11 @@ endmacro()
 # Check if some required submodule is initialized
 function(gammaray_ensure_submodule_exists submodule)
     if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${submodule}/.git")
-        if(EXISTS "${appframework_SOURCE_DIR}/.git")
+        if(EXISTS "${CMAKE_SOURCE_DIR}/.git")
             message(
                 FATAL_ERROR
                     "The git submodule ${submodule} is not initialized.\n"
-                    "Please run the following command in the source directory (${appframework_SOURCE_DIR}):\n"
+                    "Please run the following command in the source directory (${CMAKE_SOURCE_DIR}):\n"
                     "    git submodule update --init --recursive ${CMAKE_CURRENT_SOURCE_DIR}/${submodule}\n"
             )
         else()
