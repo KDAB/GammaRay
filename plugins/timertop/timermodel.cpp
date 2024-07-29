@@ -38,7 +38,7 @@
 using namespace GammaRay;
 using namespace std;
 
-static QPointer<TimerModel> s_timerModel;
+Q_GLOBAL_STATIC(QPointer<TimerModel>, s_timerModel)
 static const char s_qmlTimerClassName[] = "QQmlTimer";
 static const int s_maxTimeoutEvents = 1000;
 static const int s_maxTimeSpan = 10000;
@@ -300,12 +300,13 @@ bool TimerModel::eventNotifyCallback(void *data[])
         }
 
         {
-            QMutexLocker locker(&s_timerModel->m_mutex);
+            auto timerModel = s_timerModel->data();
+            QMutexLocker locker(&timerModel->m_mutex);
             const TimerId id(timerEvent->timerId(), receiver);
-            auto it = s_timerModel->m_gatheredTimersData.find(id);
+            auto it = timerModel->m_gatheredTimersData.find(id);
 
-            if (it == s_timerModel->m_gatheredTimersData.end()) {
-                it = s_timerModel->m_gatheredTimersData.insert(id, TimerIdData());
+            if (it == timerModel->m_gatheredTimersData.end()) {
+                it = timerModel->m_gatheredTimersData.insert(id, TimerIdData());
             }
 
             const TimeoutEvent timeoutEvent(QTime::currentTime(), -1);
@@ -313,8 +314,8 @@ bool TimerModel::eventNotifyCallback(void *data[])
             it.value().update(id, receiver);
             it.value().addEvent(timeoutEvent);
 
-            s_timerModel->checkDispatcherStatus(receiver);
-            s_timerModel->m_triggerPushChangesMethod.invoke(s_timerModel, Qt::QueuedConnection);
+            timerModel->checkDispatcherStatus(receiver);
+            timerModel->m_triggerPushChangesMethod.invoke(timerModel, Qt::QueuedConnection);
         }
     }
 
@@ -337,11 +338,12 @@ bool TimerModel::isInitialized()
 
 TimerModel *TimerModel::instance()
 {
-    if (!s_timerModel)
-        s_timerModel = new TimerModel;
+    if (s_timerModel->isNull()) {
+        *s_timerModel = new TimerModel;
+    }
 
     Q_ASSERT(s_timerModel);
-    return s_timerModel;
+    return s_timerModel->data();
 }
 
 void TimerModel::preSignalActivate(QObject *caller, int methodIndex)

@@ -87,13 +87,13 @@ private:
     }
 };
 
-// We need random colors, but we also want the item
-// to keep its random color during scene changes to avoid
-// flickering due to color change.
-static QHash<QQuickItem *, QColor> s_itemsColor;
-
 static QColor colorForItem(QQuickItem *item)
 {
+    // We need random colors, but we also want the item
+    // to keep its random color during scene changes to avoid
+    // flickering due to color change.
+    static QHash<QQuickItem *, QColor> s_itemsColor;
+
     QColor color = s_itemsColor.value(item, QColor());
 
     if (!color.isValid()) {

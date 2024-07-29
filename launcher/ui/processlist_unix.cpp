@@ -40,7 +40,7 @@
 
 #include <algorithm>
 
-static GammaRay::ProbeABIDetector s_abiDetector;
+Q_GLOBAL_STATIC(GammaRay::ProbeABIDetector, s_abiDetector)
 
 static bool isUnixProcessId(const QString &procname)
 {
@@ -108,7 +108,7 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
             if (it != previous.constEnd())
                 procData.abi = it->abi;
             else
-                procData.abi = s_abiDetector.abiForProcess(procData.ppid.toLongLong());
+                procData.abi = s_abiDetector->abiForProcess(procData.ppid.toLongLong());
             rc.push_back(procData);
         }
     }
@@ -164,7 +164,7 @@ struct ProcIdToProcData
         if (it != previous.constEnd())
             proc.abi = it->abi;
         else
-            proc.abi = s_abiDetector.abiForProcess(proc.ppid.toLongLong());
+            proc.abi = s_abiDetector->abiForProcess(proc.ppid.toLongLong());
 
         return proc;
     }

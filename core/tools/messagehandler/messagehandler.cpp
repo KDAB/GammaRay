@@ -40,7 +40,7 @@ static MessageHandlerCallback (*const installMessageHandler)(MessageHandlerCallb
 static MessageModel *s_model = nullptr;
 static MessageHandlerCallback s_handler = nullptr;
 static bool s_handlerDisabled = false;
-static QRecursiveMutex s_mutex;
+Q_GLOBAL_STATIC(QRecursiveMutex, s_mutex)
 
 static void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -86,7 +86,7 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
     // reset msg handler so the app still works as usual
     // but make sure we don't let other threads bypass our
     // handler during that time
-    QMutexLocker lock(&s_mutex);
+    QMutexLocker lock(s_mutex());
     s_handlerDisabled = true;
     if (s_handler) { // try a direct call to the previous handler first, that avoids triggering the recursion detection in Qt5
         s_handler(type, context, msg);
@@ -139,7 +139,7 @@ MessageHandler::MessageHandler(Probe *probe, QObject *parent)
 
 MessageHandler::~MessageHandler()
 {
-    QMutexLocker lock(&s_mutex);
+    QMutexLocker lock(s_mutex());
 
     s_model = nullptr;
     MessageHandlerCallback oldHandler = installMessageHandler(s_handler);
@@ -157,7 +157,7 @@ void MessageHandler::generateFullTrace()
 
 void MessageHandler::ensureHandlerInstalled()
 {
-    QMutexLocker lock(&s_mutex);
+    QMutexLocker lock(s_mutex());
 
     if (s_handlerDisabled)
         return;
