@@ -558,9 +558,11 @@ void UIStateManager::headerSectionCountChanged()
     // Delay the call to restoreHeaderState to avoid multiple changes in flight at the QAIM level
     // E.g. we might be here because of columnsInserted() (which just finished, but not all receivers were told yet)
     // and restoring will sort() the model, which will emit layoutChanged(). Separate the two so QAbstractItemModelTester doesn't abort.
-    // clang-format off
-    QMetaObject::invokeMethod(this, "restoreHeaderState", Qt::QueuedConnection, Q_ARG(QHeaderView *, headerView));
-    // clang-format on
+    QMetaObject::invokeMethod(
+        this, [this, headerView] {
+            restoreHeaderState(headerView);
+        },
+        Qt::QueuedConnection);
 }
 
 void UIStateManager::widgetResized(QWidget *widget)
