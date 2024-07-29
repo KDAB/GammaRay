@@ -26,4 +26,4 @@ public:
     }
 };
 
-static HitMeBabyOneMoreTime britney;
+static HitMeBabyOneMoreTime britney; // clazy:exclude=non-pod-global-static
