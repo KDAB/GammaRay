@@ -14,13 +14,17 @@
 #include "baseprobetest.h"
 #include "testhelpers.h"
 
+#include "common/objectbroker.h"
 #include <core/objectmethodmodel.h>
 #include <ui/tools/objectinspector/clientmethodmodel.h>
 #include <common/tools/objectinspector/methodmodel.h>
+#include <common/tools/objectinspector/methodsextensioninterface.h>
+#include <core/tools/objectinspector/methodsextension.h>
 
 #include <3rdparty/qt/modeltest.h>
 
 #include <QDebug>
+#include <QItemSelectionModel>
 
 #ifndef Q_MOC_RUN
 #define MY_TAG
@@ -47,6 +51,15 @@ public slots:
     {
     }
 #endif
+
+    void bumpI()
+    {
+        // printf("Bump Idx Called\n");
+        i++;
+    }
+
+private:
+    int i = 0;
 
 private slots:
     void modelTest()
@@ -113,6 +126,27 @@ private slots:
         for (int i = 0; i < model.columnCount(); ++i) {
             QVERIFY(idx.sibling(idx.row(), i).data(Qt::ToolTipRole).toString().contains(toolTip));
         }
+    }
+
+    void testInvokeMethod()
+    {
+        auto iface = ObjectBroker::object<MethodsExtensionInterface *>("com.kdab.GammaRay.ObjectInspector.methodsExtension");
+        auto model = ObjectBroker::model("com.kdab.GammaRay.ObjectInspector.methods");
+        auto selModel = ObjectBroker::selectionModel(model);
+
+        static_cast<MethodsExtension *>(iface)->setQObject(this);
+
+        QVERIFY(model->rowCount() > 0);
+
+        auto idx = searchContainsIndex(model, "bumpI()");
+        QVERIFY(idx.isValid());
+
+        selModel->select(idx, QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
+
+        iface->activateMethod();
+        iface->invokeMethod(Qt::AutoConnection);
+
+        QCOMPARE(i, 1);
     }
 };
 
