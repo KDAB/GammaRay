@@ -139,8 +139,8 @@ fi
 #TODO
 
 # Update doxyfile
-#CI uses 1.9.8 at this time
-export PATH=/usr/local/opt/doxygen-1.9.8/bin:$PATH
+#CI uses 1.12.0 at this time
+export PATH=/usr/local/opt/doxygen-1.12.0/bin:$PATH
 echo -n "Ensuring Doxyfile.cmake is up-to-date: "
 doxygen -u docs/api/Doxyfile.cmake >/dev/null 2>&1
 set +e
