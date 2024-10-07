@@ -101,7 +101,7 @@ void LocaleDataAccessorRegistry::init()
 
     LOCALE_SIMPLE_ACCESSOR(TextDirection,
                            return locale.textDirection() == Qt::LeftToRight ? QStringLiteral(
-                                      "LTR")
+                                                                                  "LTR")
                                                                             : QStringLiteral("RTL");)
 
     LOCALE_SIMPLE_DEFAULT_ACCESSOR(TimeFormatLong,
@@ -167,8 +167,7 @@ void LocaleDataAccessorRegistry::init()
         const auto wds = locale.weekdays();
         QStringList resultList;
         resultList.reserve(wds.size());
-        for (Qt::DayOfWeek dayNumber
-             : wds) {
+        for (Qt::DayOfWeek dayNumber : wds) {
             resultList << QLocale().dayName(dayNumber);
         } return QLocale()
             .createSeparatedList(resultList);)
@@ -213,7 +212,7 @@ void LocaleDataAccessorRegistry::init()
                                    return locale.measurementSystem()
                                            == QLocale::ImperialSystem
                                        ? QStringLiteral(
-                                           "Imperial")
+                                             "Imperial")
                                        : QStringLiteral("Metric");)
 
     LOCALE_SIMPLE_DEFAULT_ACCESSOR(FloatFormat,

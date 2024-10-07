@@ -80,7 +80,7 @@ struct LocaleDataAccessor
     {                                                                         \
         explicit Locale##NAME##Accessor(LocaleDataAccessorRegistry *registry) \
             : LocaleDataAccessor(                                             \
-                registry)                                                     \
+                  registry)                                                   \
         {                                                                     \
         }                                                                     \
         QString accessorName() override                                       \
@@ -95,7 +95,7 @@ struct LocaleDataAccessor
     {                                                                         \
         explicit Locale##NAME##Accessor(LocaleDataAccessorRegistry *registry) \
             : LocaleDataAccessor(                                             \
-                registry, true)                                               \
+                  registry, true)                                             \
         {                                                                     \
         }                                                                     \
                                                                               \
