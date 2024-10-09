@@ -41,7 +41,7 @@ UiIntegration *UiIntegration::instance()
 void UiIntegration::requestNavigateToCode(const QUrl &url, int lineNumber, int columnNumber)
 {
     if (UiIntegration::instance())
-        emit UiIntegration::instance() -> navigateToCode(url, lineNumber, columnNumber);
+        emit UiIntegration::instance()->navigateToCode(url, lineNumber, columnNumber);
 }
 
 bool UiIntegration::hasDarkUI()
