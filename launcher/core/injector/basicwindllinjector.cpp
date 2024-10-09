@@ -28,7 +28,7 @@
     do {                                                \
     } while (false)
 #define ERROR_CHECK(condition) ERROR_ASSERT( \
-    condition, do {} while (false));
+    condition, do { } while (false));
 
 BOOL BasicWinDllInjector::addDllDirectory(HANDLE destProcess, wchar_t *dllDirPath)
 {

@@ -26,7 +26,7 @@ using namespace GammaRay;
 
 ConnectionsExtension::ConnectionsExtension(PropertyController *controller)
     : ConnectionsExtensionInterface(
-        controller->objectBaseName() + ".connectionsExtension", controller)
+          controller->objectBaseName() + ".connectionsExtension", controller)
     , PropertyControllerExtension(controller->objectBaseName() + ".connections")
 {
     m_inboundModel = new InboundConnectionsModel(controller);

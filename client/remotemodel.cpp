@@ -232,7 +232,7 @@ QVariant RemoteModel::requestCreationDeclarationLocation(const QModelIndex &inde
 
     QEventLoop loop;
 
-    auto conn = connect(this, &RemoteModel::declarationCreationLocationsReceived, this, [&creationLoc, &declarationLoc, &loop](const QVariant &d, const QVariant &c) {
+    auto conn = connect(this, &RemoteModel::declarationCreationLocationsReceived, this, [&creationLoc, &declarationLoc, &loop](const QVariant &d, const QVariant &c) { // clazy:exclude=lambda-in-connect
         if (d.isValid())
             declarationLoc = d;
         if (c.isValid())

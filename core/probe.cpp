@@ -503,6 +503,8 @@ QRecursiveMutex *Probe::objectLock()
  */
 void Probe::objectAdded(QObject *obj, bool fromCtor)
 {
+    if (obj == nullptr)
+        return;
     QMutexLocker lock(s_lock());
 
     // attempt to ignore objects created by GammaRay itself, especially short-lived ones

@@ -69,9 +69,9 @@ QGeoPositionInfoSource *GeoPositionInfoSourceFactory::positionInfoSource(QObject
         const auto rData = metaData.at(rhs).toCbor();
         return lData.value(QStringLiteral("Priority")).toInteger() > rData.value(QStringLiteral("Priority")).toInteger();
 #else
-            const auto lData = metaData.at(lhs).value(QStringLiteral("MetaData")).toObject();
-            const auto rData = metaData.at(rhs).value(QStringLiteral("MetaData")).toObject();
-            return lData.value(QStringLiteral("Priority")).toInt() > rData.value(QStringLiteral("Priority")).toInt();
+        const auto lData = metaData.at(lhs).value(QStringLiteral("MetaData")).toObject();
+        const auto rData = metaData.at(rhs).value(QStringLiteral("MetaData")).toObject();
+        return lData.value(QStringLiteral("Priority")).toInt() > rData.value(QStringLiteral("Priority")).toInt();
 #endif
     });
 

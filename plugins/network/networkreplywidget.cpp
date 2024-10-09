@@ -121,14 +121,14 @@ NetworkReplyWidget::NetworkReplyWidget(QWidget *parent)
         }
 #else
 
-            QTextCodec::ConverterState state;
-            QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-            const QString text = codec->toUnicode(response.constData(), response.size(), &state);
-            if (state.invalidChars > 0) {
-                ui->responseTextEdit->setPlainText(tr("%1: Unable to show response preview").arg(qApp->applicationName()));
-            } else {
-                ui->responseTextEdit->setPlainText(text);
-            }
+        QTextCodec::ConverterState state;
+        QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+        const QString text = codec->toUnicode(response.constData(), response.size(), &state);
+        if (state.invalidChars > 0) {
+            ui->responseTextEdit->setPlainText(tr("%1: Unable to show response preview").arg(qApp->applicationName()));
+        } else {
+            ui->responseTextEdit->setPlainText(text);
+        }
 #endif
     });
     ui->responseTextEdit->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
