@@ -91,8 +91,10 @@ static inline ProcessInfo processInfo(DWORD processId)
         pi.imageName = QString::fromUtf16(reinterpret_cast<const ushort *>(buffer));
 
     HANDLE processTokenHandle = NULL;
-    if (!OpenProcessToken(handle, TOKEN_READ, &processTokenHandle) || !processTokenHandle)
+    if (!OpenProcessToken(handle, TOKEN_READ, &processTokenHandle) || !processTokenHandle) {
+        CloseHandle(handle);
         return pi;
+    }
 
     DWORD size = 0;
     GetTokenInformation(processTokenHandle, TokenUser, NULL, 0, &size);
