@@ -1,0 +1,116 @@
+version = 1
+SPDX-PackageName = "GammaRay"
+SPDX-PackageSupplier = "<info@kdab.com>"
+SPDX-PackageDownloadLocation = "https://www.github.com/KDAB/GammaRay"
+
+#misc source code
+[[annotations]]
+path = ["**.ui", "**.qrc", "**.qrc.in", "**.json", "CMakePresets.json", "GammaRay.desktop", "app/Info.plist.in", "client/Info.plist.in", "launcher/app/Info.plist.in", "launcher/cli/Info.plist.in", "com.kdab.GammaRay.metainfo.xml", "resources/gammaray/authors", "docs/collection/about.txt", "**.frag", "**.geom", "**.vert", "**.ts", "**.qm", "**.map", "cmake/gammaray.rc.cmake"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+#misc documentation
+[[annotations]]
+path = ["CHANGES", "CONTRIBUTORS.txt", "INSTALL.md", "README.md", "docs/manual/style/**", "ui/resources/gammaray/ui/icons/classes/**/**", "docs/api/**.dox", "docs/api/**.html", "docs/man/**.pod", "docs/**.pdf"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+#misc config files
+[[annotations]]
+path = ["3rdparty/**/qt_attribution.json", ".clang-format", ".clang-tidy", ".clangd", ".clazy", ".cmake-format.py", ".codespellrc", ".emacs-dirvars", ".git-blame-ignore-revs", ".gitattributes", ".gitignore", ".kateconfig", ".krazy", ".mdlrc", ".mdlrc.rb", ".pep8", ".pre-commit-config.yaml", ".pylintrc", ".qmake.conf", ".editorconfig", ".shellcheckrc", ".tag", "distro/**", "format.config.uncrustify.4_spaces", "**.qdocconf", "format_sources", "docs/collection/gammaray.qhcp.cmake", "examples/yocto/gammaray_git**.bb", "probe/gammaray_probe-android-dependencies.xml", "docs/api/Doxyfile.cmake", ".github/**", "REUSE.toml"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+#artwork
+[[annotations]]
+path = ["ui/resources/gammaray/**.png", "plugins/guisupport/images/**.png", "ui/resources/gammaray/ui/icons/classes/**/**.png", "ui/resources/gammaray/ui/**/**/**.png", "docs/manual/**/**.png", "docs/api/**.png", "tests/manual/**.png", "plugins/positioning/**.png", "plugins/quickinspector/textureextension/resources/**.png", "launcher/ui/resources/launcher/**.png", "ui/resources/svg/**.svg", "ui/resources/svg/**.svgz", "plugins/positioning/direction_marker.svg", "ui/resources/gammaray/GammaRay.icns", "ui/resources/gammaray/GammaRay.ico"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>"
+SPDX-License-Identifier = "GPL-2.0-or-later"
+
+#3rdparty from Qt
+[[annotations]]
+path = "3rdparty/qt/5.5/private/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2014 Digia Plc and/or its subsidiary(-ies)"
+SPDX-License-Identifier = "LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-Qt-LGPL-EXCEPTION OR LicenseRef-Qt-Commercial"
+
+[[annotations]]
+path = "3rdparty/qt/modeltest.cpp"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2016 The Qt Company Ltd"
+SPDX-License-Identifier = "GPL-3.0-only OR LicenseRef-Qt-Commercial"
+
+[[annotations]]
+path = "3rdparty/qt/modeltest.h"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2015 The Qt Company Ltd"
+SPDX-License-Identifier = "LGPL-2.1-or-later OR LGPL-3.0-only OR LicenseRef-Qt-LGPL-EXCEPTION OR LicenseRef-Qt-Commercial"
+
+[[annotations]]
+path = "3rdparty/qt/resourcemodel.**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2011 Nokia Corporation and/or its subsidiary(-ies)"
+SPDX-License-Identifier = "LGPL-2.1-only OR LicenseRef-Qt-LGPL-EXCEPTION"
+
+[[annotations]]
+path = ["launcher/ui/processlist.h", "launcher/ui/processlist_unix.cpp", "launcher/ui/processlist_win.cpp"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2011 Nokia Corporation and/or its subsidiary(-ies)"
+SPDX-License-Identifier = "LGPL-2.1-only OR LicenseRef-Qt-LGPL-EXCEPTION"
+
+[[annotations]]
+path = "compat/qasconst.h"
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["2016 The Qt Company Ltd", "2016 Intel Corporation"]
+SPDX-License-Identifier = "LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-or-later OR LicenseRef-Qt-Commercial"
+
+#3rdparty StackWalker
+[[annotations]]
+path = "3rdparty/StackWalker/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2005-2019, Jochen Kalmbach"
+SPDX-License-Identifier = "BSD-2-Clause"
+
+#3rdparty lz4
+[[annotations]]
+path = "3rdparty/lz4/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2011-2020, Yann Collet"
+SPDX-License-Identifier = "BSD-2-Clause"
+
+#3rdparty backward-cpp
+[[annotations]]
+path = "3rdparty/backward-cpp/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2013-2017 Google Inc"
+SPDX-License-Identifier = "MIT"
+
+#3rdparty from KDE
+[[annotations]]
+path = ["cmake/ECM/modules/**", "cmake/ECM/find-modules/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "The KDE Project"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+[[annotations]]
+path = "3rdparty/kde/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "The KDE Project"
+SPDX-License-Identifier = "LGPL-2.0-or-later"
+
+[[annotations]]
+path = "3rdparty/kuserfeedback/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2017 Volker Krause <vkrause@kde.org>"
+SPDX-License-Identifier = "MIT"
+
+# doxygen awesome
+[[annotations]]
+path = "docs/api/doxygen-awesome.css"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2021 - 2023 jothepro"
+SPDX-License-Identifier = "MIT"
