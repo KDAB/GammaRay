@@ -301,15 +301,10 @@ void RenderModeRequest::apply()
     if (connection)
         disconnect(connection);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    // crashes in qrhigles2..bindShaderResources sometimes
-    return;
-#endif
-
-    if (window && window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
-        return;
-
     if (window) {
+        if (window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
+            return;
+
         emit aboutToCleanSceneGraph();
         const QByteArray mode = renderModeToString(RenderModeRequest::mode);
         QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(window);
