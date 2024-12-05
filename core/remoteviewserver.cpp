@@ -188,7 +188,7 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
     const QEventPoint::States states(touchPointStates);
     QTouchEvent event(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), states, touchPoints);
 
-    auto *mut = QMutableTouchEvent::from(&event);
+    auto *mut = static_cast<QMutableTouchEvent *>(&event);
     mut->setTarget(m_eventReceiver);
 #else
     if (!m_touchDevice) {
