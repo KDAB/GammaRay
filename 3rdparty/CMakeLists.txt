@@ -10,14 +10,14 @@
 if(GAMMARAY_WITH_KDSME)
     function(add_ksme_subdirectory)
         # Function creates extra scope to keep these variables local
-        set(BUILD_DOCS OFF)
-        set(BUILD_EXAMPLES OFF)
-        set(BUILD_TESTS OFF)
+        set(KDSME_DOCS OFF)
+        set(KDSME_EXAMPLES OFF)
+        set(BUILD_TESTING OFF)
 
         set(KDSME_PACKAGE_NAME KDSME)
         if(QT_VERSION_MAJOR GREATER_EQUAL 6)
             set(KDSME_PACKAGE_NAME KDSME-qt6)
-            set(BUILD_QT6 ON)
+            set(KDSME_QT6 ON)
         endif()
         set_package_properties(
             ${KDSME_PACKAGE_NAME} PROPERTIES
