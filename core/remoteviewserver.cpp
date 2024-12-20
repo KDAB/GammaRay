@@ -188,8 +188,12 @@ void RemoteViewServer::sendTouchEvent(int type, int touchDeviceType, int deviceC
     const QEventPoint::States states(touchPointStates);
     QTouchEvent event(QEvent::Type(type), m_touchDevice.get(), Qt::KeyboardModifiers(modifiers), states, touchPoints);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 9, 0))
+    QMutableTouchEvent::setTarget(&event, m_eventReceiver);
+#else
     auto *mut = QMutableTouchEvent::from(&event);
     mut->setTarget(m_eventReceiver);
+#endif
 #else
     if (!m_touchDevice) {
         // create our own touch device, the system may not have one already, or it may not have
