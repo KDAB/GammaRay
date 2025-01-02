@@ -633,14 +633,19 @@ void OpenGLScreenGrabber::windowAfterRendering()
             const auto viewportHeight = viewport[3];
             yOff = viewportHeight - windowBottom;
 #else
-            const auto windowBottom = m_renderInfo.windowSize.height();
             const auto rc = QQuickWindowPrivate::get(m_window)->renderControl;
             QPoint offset;
             rc->renderWindow(&offset);
 
-            const auto viewportHeight = viewport[3];
-            yOff = viewportHeight - windowBottom - offset.y();
             xOff = offset.x();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+            yOff = 0;
+            xOff = static_cast<int>(std::floor(xOff * m_renderInfo.dpr));
+#else
+            const auto viewportHeight = viewport[3];
+            const auto windowBottom = m_renderInfo.windowSize.height();
+            yOff = viewportHeight - windowBottom - offset.y();
+#endif
 #endif
         }
 #endif
