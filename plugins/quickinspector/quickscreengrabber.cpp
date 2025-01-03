@@ -822,14 +822,15 @@ UnsupportedScreenGrabber::~UnsupportedScreenGrabber()
 void UnsupportedScreenGrabber::requestGrabWindow(const QRectF & /*userViewport*/)
 {
     m_grabbedFrame.image = m_window->grabWindow();
-    m_grabbedFrame.image.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
 
     int alpha = 120;
     if (m_grabbedFrame.image.isNull()) {
-        m_grabbedFrame.image = QImage(m_window->size(), QImage::Format_ARGB32);
+        m_grabbedFrame.image = QImage(m_window->size() * m_window->effectiveDevicePixelRatio(), QImage::Format_ARGB32);
         m_grabbedFrame.image.fill(Qt::black);
         alpha = 200;
     }
+
+    m_grabbedFrame.image.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
 
     QPainter p(&m_grabbedFrame.image);
     p.setRenderHint(QPainter::TextAntialiasing);
