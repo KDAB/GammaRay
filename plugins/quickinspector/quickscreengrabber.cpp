@@ -233,14 +233,12 @@ std::unique_ptr<AbstractScreenGrabber> AbstractScreenGrabber::get(QQuickWindow *
     case RenderInfo::Software:
         return std::unique_ptr<AbstractScreenGrabber>(new SoftwareScreenGrabber(window));
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    case RenderInfo::Vulkan:
-    case RenderInfo::Direct3D11:
-    case RenderInfo::OpenVG:
-    case RenderInfo::Metal:
+    default:
         return std::unique_ptr<AbstractScreenGrabber>(new UnsupportedScreenGrabber(window));
-#endif
+#else
     default:
         return nullptr;
+#endif
     }
 }
 
