@@ -1013,7 +1013,7 @@ void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
     if (m_interactionMode != NoInteraction
         && m_interactionMode != ViewInteraction
         && event->buttons() & Qt::LeftButton
-        && event->modifiers() & Qt::ControlModifier) {
+        && event->modifiers() == Qt::ControlModifier) {
 
         pan();
     } else {
@@ -1125,7 +1125,7 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
 
     if (m_interactionMode != NoInteraction
         && event->buttons() & Qt::LeftButton
-        && event->modifiers() & Qt::ControlModifier) {
+        && event->modifiers() == Qt::ControlModifier) {
 
         pan();
     } else {
