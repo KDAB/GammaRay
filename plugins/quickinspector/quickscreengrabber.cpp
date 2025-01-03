@@ -827,6 +827,7 @@ void UnsupportedScreenGrabber::requestGrabWindow(const QRectF & /*userViewport*/
     int alpha = 120;
     if (m_grabbedFrame.image.isNull()) {
         m_grabbedFrame.image = QImage(m_window->size(), QImage::Format_ARGB32);
+        m_grabbedFrame.image.fill(Qt::black);
         alpha = 200;
     }
 
