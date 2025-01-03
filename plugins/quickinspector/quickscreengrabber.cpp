@@ -821,7 +821,14 @@ UnsupportedScreenGrabber::~UnsupportedScreenGrabber()
 
 void UnsupportedScreenGrabber::requestGrabWindow(const QRectF & /*userViewport*/)
 {
+    const qreal ratio = m_window->effectiveDevicePixelRatio();
+    const int width = m_window->width(),
+              height = m_window->height();
     m_grabbedFrame.image = m_window->grabWindow();
+    if (ratio == 1.0)
+        m_grabbedFrame.image = m_grabbedFrame.image.copy(0, 0, width, height);
+    else
+        m_grabbedFrame.image = m_grabbedFrame.image.copy(0, 0, width, height).scaledToHeight(height * ratio);
 
     int alpha = 120;
     if (m_grabbedFrame.image.isNull()) {
@@ -830,20 +837,19 @@ void UnsupportedScreenGrabber::requestGrabWindow(const QRectF & /*userViewport*/
         alpha = 200;
     }
 
-    m_grabbedFrame.image.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
-
     QPainter p(&m_grabbedFrame.image);
     p.setRenderHint(QPainter::TextAntialiasing);
     QColor gray(Qt::black);
     gray.setAlpha(alpha);
-    p.fillRect(QRect(QPoint {}, m_window->size()), gray);
+    auto textBoxRect = QRect(QPoint(4, 4), m_window->size() - QSize(8, 8));
+    p.fillRect(textBoxRect, gray);
     p.setPen(Qt::white);
     auto font = qApp->font();
     font.setPointSize(font.pointSize() + 1);
     p.setFont(font);
     QString backend = VariantHandler::displayString(QVariant::fromValue(m_window->graphicsApi()));
     QString txt = QLatin1String("%1 is not supported yet, please use the OpenGL (QSG_RHI_BACKEND=opengl) or Software backend (QT_QUICK_BACKEND=software)").arg(backend);
-    p.drawText(QRect { QPoint(0, 0), m_window->size() }, Qt::AlignCenter | Qt::TextWordWrap, txt);
+    p.drawText(textBoxRect, Qt::AlignCenter | Qt::TextWordWrap, txt);
 
     emit sceneGrabbed(m_grabbedFrame);
 }
