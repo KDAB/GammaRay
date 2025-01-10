@@ -301,25 +301,24 @@ void RenderModeRequest::apply()
     if (connection)
         disconnect(connection);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    // crashes in qrhigles2..bindShaderResources sometimes
-    return;
-#endif
-
     if (window && window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
         return;
 
     if (window) {
-        emit aboutToCleanSceneGraph();
         const QByteArray mode = renderModeToString(RenderModeRequest::mode);
         QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(window);
-        QMetaObject::invokeMethod(window, "cleanupSceneGraph", Qt::DirectConnection);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        winPriv->visualizationMode = mode;
+        QObject::connect(window.get(), &QQuickWindow::beforeSynchronizing, this, [this, winPriv, mode]() {
+            emit aboutToCleanSceneGraph();
+            QMetaObject::invokeMethod(window, "cleanupSceneGraph", Qt::DirectConnection);
+            winPriv->visualizationMode = mode;
+            emit sceneGraphCleanedUp(); }, static_cast<Qt::ConnectionType>(Qt::DirectConnection | Qt::SingleShotConnection));
 #else
+        emit aboutToCleanSceneGraph();
+        QMetaObject::invokeMethod(window, "cleanupSceneGraph", Qt::DirectConnection);
         winPriv->customRenderMode = mode;
-#endif
         emit sceneGraphCleanedUp();
+#endif
     }
 
     QMetaObject::invokeMethod(this, "preFinished", Qt::QueuedConnection);
