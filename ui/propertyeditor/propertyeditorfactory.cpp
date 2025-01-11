@@ -79,6 +79,7 @@ QWidget *PropertyEditorFactory::createEditor(TypeId type, QWidget *parent) const
 
     // the read-only view is still in the background usually, so transparency is not a good choice here
     w->setAutoFillBackground(true);
+    w->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
     return w;
 }
 
