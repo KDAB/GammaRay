@@ -301,10 +301,21 @@ void RenderModeRequest::apply()
     if (connection)
         disconnect(connection);
 
-    if (window && window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
-        return;
-
     if (window) {
+        switch(window->rendererInterface()->graphicsApi()) {
+        case QSGRendererInterface::OpenGL:
+        case QSGRendererInterface::Vulkan:
+        case QSGRendererInterface::Software:
+        case QSGRendererInterface::OpenVG:
+        case QSGRendererInterface::Direct3D11:
+        case QSGRendererInterface::Metal:
+        case QSGRendererInterface::Direct3D12:
+            break;
+        case QSGRendererInterface::Unknown:
+        case QSGRendererInterface::Null:
+            return;
+        }
+
         const QByteArray mode = renderModeToString(RenderModeRequest::mode);
         QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(window);
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
