@@ -26,7 +26,7 @@
    <item>
     <widget class="QSplitter" name="mainSplitter">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <widget class="QWidget" name="widget" native="true">
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -88,7 +88,10 @@
           <item>
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Point Size:</string>
+             <string>Point size:</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -97,29 +100,47 @@
           </item>
           <item>
            <widget class="QCheckBox" name="boldBox">
+            <property name="minimumSize">
+             <size>
+              <width>28</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
-             <string>Bold</string>
+             <string>&amp;Bold</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="italicBox">
+            <property name="minimumSize">
+             <size>
+              <width>28</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
-             <string>Italic</string>
+             <string>&amp;Italic</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="underlineBox">
+            <property name="minimumSize">
+             <size>
+              <width>28</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
-             <string>Underline</string>
+             <string>&amp;Underline</string>
             </property>
            </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
