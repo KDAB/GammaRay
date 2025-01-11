@@ -124,8 +124,8 @@ void ModelInspectorWidget::cellDataChanged()
 {
     const auto cellData = m_interface->currentCellData();
     ui->indexLineEdit->setText(cellData.row != -1
-                                ? tr("Row: %1 Column: %2").arg(cellData.row).arg(cellData.column)
-                                : tr("Invalid"));
+                                   ? tr("Row: %1 Column: %2").arg(cellData.row).arg(cellData.column)
+                                   : tr("Invalid"));
     ui->internalIdLineEdit->setText(cellData.internalId);
     ui->internalPtrLineEdit->setText(cellData.internalPtr);
     ui->flagsPlainTextEdit->selectAll();
