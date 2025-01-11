@@ -17,7 +17,7 @@
    <item>
     <widget class="GammaRay::DeferredTreeView" name="propertyView">
      <property name="contextMenuPolicy">
-      <enum>Qt::CustomContextMenu</enum>
+      <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
      </property>
      <property name="rootIsDecorated">
       <bool>false</bool>
@@ -25,15 +25,15 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="newPropertyBar" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="margin">
-       <number>0</number>
-      </property>
+    <widget class="QWidget" name="horizontalWidget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
          <string>&amp;New Dynamic Property:</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
         <property name="buddy">
          <cstring>newPropertyName</cstring>
@@ -47,8 +47,23 @@
         </property>
        </widget>
       </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="newPropertyBar" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="margin" stdset="0">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>&amp;Type:</string>
         </property>
@@ -58,23 +73,36 @@
        </widget>
       </item>
       <item>
-       <widget class="QComboBox" name="newPropertyType"/>
+       <widget class="QComboBox" name="newPropertyType">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="newPropertyValueLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>&amp;Value:</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="newPropertyButton">
-        <property name="text">
-         <string>Add</string>
-        </property>
-       </widget>
-      </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="newPropertyButton">
+     <property name="text">
+      <string>Add</string>
+     </property>
     </widget>
    </item>
   </layout>
