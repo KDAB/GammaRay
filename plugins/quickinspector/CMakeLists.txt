@@ -73,6 +73,18 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         ${gammaray_quickinspector_srcs}
     )
 
+    if((${QT_VERSION_MAJOR} EQUAL 6) AND (${QT_VERSION_MINOR} GREATER_EQUAL 8))
+        qt_add_shaders(gammaray_quickinspector "gammaray_quickinspector_shaders"
+            PRECOMPILE
+            #OPTIMIZED
+            PREFIX
+                "/gammaray_quickinspector_shaders/"
+            FILES
+                "shaders/rhi_inspector_decorations.vert"
+                "shaders/rhi_inspector_decorations.frag"
+        )
+    endif()
+
     if(TARGET Qt${QT_VERSION_MAJOR}::Quick)
         target_sources(
             gammaray_quickinspector PUBLIC ${CMAKE_CURRENT_LIST_DIR}/quickimplicitbindingdependencyprovider.cpp

@@ -470,6 +470,7 @@ find_package(
         Qml
         Quick
         QuickWidgets
+        ShaderTools
         Svg
         Test
         WebEngineWidgets

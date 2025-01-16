@@ -29,6 +29,10 @@ class QQuickWindow;
 class QOpenGLPaintDevice;
 #endif
 class QSGSoftwareRenderer;
+class QRhiGraphicsPipeline;
+class QRhiShaderResourceBindings;
+class QRhiTexture;
+class QRhiSampler;
 QT_END_NAMESPACE
 
 namespace GammaRay {
@@ -245,6 +249,34 @@ private:
     QPointF m_lastItemPosition;
 };
 #endif
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+class RhiScreenGrabber : public AbstractScreenGrabber
+{
+    Q_OBJECT
+public:
+    explicit RhiScreenGrabber(QQuickWindow *window);
+    ~RhiScreenGrabber() override;
+
+    void requestGrabWindow(const QRectF &userViewport) override;
+    void drawDecorations() override;
+
+private:
+    void setGrabbingMode(bool isGrabbingMode, const QRectF &userViewport);
+    void windowAfterSynchronizing();
+    void windowBeforeRendering();
+    void windowAfterRenderPassRecording();
+    void windowAfterRendering();
+
+    bool m_isGrabbing = false;
+    QMutex m_mutex;
+
+    QRhiGraphicsPipeline *m_pipeline = nullptr;
+    QRhiShaderResourceBindings *m_srb = nullptr;
+    QRhiTexture *m_texture = nullptr;
+    QRhiSampler *m_sampler = nullptr;
+};
+#endif // QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
 
 }
 

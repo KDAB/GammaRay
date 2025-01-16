@@ -39,6 +39,11 @@
 #include <QQuickOpenGLUtils>
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+#include <rhi/qrhi.h>
+#include <rhi/qshader.h>
+#endif
+
 #include <algorithm>
 #include <functional>
 #include <cmath>
@@ -232,7 +237,10 @@ std::unique_ptr<AbstractScreenGrabber> AbstractScreenGrabber::get(QQuickWindow *
 #endif
     case RenderInfo::Software:
         return std::unique_ptr<AbstractScreenGrabber>(new SoftwareScreenGrabber(window));
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    default:
+        return std::unique_ptr<AbstractScreenGrabber>(new RhiScreenGrabber(window));
+#elif QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     default:
         return std::unique_ptr<AbstractScreenGrabber>(new UnsupportedScreenGrabber(window));
 #else
@@ -857,3 +865,261 @@ void UnsupportedScreenGrabber::updateOverlay()
 }
 
 #endif // QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+RhiScreenGrabber::RhiScreenGrabber(QQuickWindow *window)
+    : AbstractScreenGrabber(window)
+{
+    connect(m_window.data(), &QQuickWindow::afterSynchronizing,
+            this, &RhiScreenGrabber::windowAfterSynchronizing, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::beforeRendering,
+            this, &RhiScreenGrabber::windowBeforeRendering, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::afterRenderPassRecording,
+            this, &RhiScreenGrabber::windowAfterRenderPassRecording, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::afterRendering,
+            this, &RhiScreenGrabber::windowAfterRendering, Qt::DirectConnection);
+}
+
+RhiScreenGrabber::~RhiScreenGrabber() = default;
+
+void RhiScreenGrabber::requestGrabWindow(const QRectF &userViewport)
+{
+    setGrabbingMode(true, userViewport);
+}
+
+void RhiScreenGrabber::setGrabbingMode(bool isGrabbing, const QRectF &userViewport)
+{
+    QMutexLocker locker(&m_mutex);
+
+    if (m_isGrabbing == isGrabbing)
+        return;
+
+    m_isGrabbing = isGrabbing;
+    m_userViewport = userViewport;
+
+    emit grabberReadyChanged(!m_isGrabbing);
+
+    if (m_isGrabbing)
+        updateOverlay();
+}
+
+void RhiScreenGrabber::windowAfterSynchronizing()
+{
+    // We are in the rendering thread at this point
+    // And the gui thread is locked
+    gatherRenderInfo();
+}
+
+void RhiScreenGrabber::windowBeforeRendering()
+{
+    qDebug() << "BEFORE RENDERING";
+
+    // We are in the rendering thread at this point
+    // And the gui thread is NOT locked
+
+    QMutexLocker locker(&m_mutex);
+
+    // FIXME there's no swap chain with QQuickRenderControl
+    // no idea how to tackle that yet
+    // which also is a problem for QQuickWidget
+    QRhi *rhi = m_window->rhi();
+    QRhiSwapChain *swapChain = m_window->swapChain();
+
+    // FIXME
+    // is this `if` meaningful? Shouldn't we init everything no matter what?
+    if (m_isGrabbing) {
+
+        // FIXME: need to handle RHI losses / scenegraph re-init.
+        if (!m_pipeline) {
+            const auto getShader = [](const QString &fileName) -> QShader
+            {
+                QFile file(fileName);
+                if (file.open(QIODevice::ReadOnly))
+                    return QShader::fromSerialized(file.readAll());
+
+                return QShader();
+            };
+
+            QShader vertexShader = getShader(":/gammaray_quickinspector_shaders/shaders/rhi_inspector_decorations.vert.qsb");
+            if (!vertexShader.isValid())
+                qFatal("Could not load vertex shader");
+            QShader fragmentShader = getShader(":/gammaray_quickinspector_shaders/shaders/rhi_inspector_decorations.frag.qsb");
+            if (!fragmentShader.isValid())
+                qFatal("Could not load fragment shader");
+
+            // FIXME: also need to handle window resizes
+            m_texture = rhi->newTexture(QRhiTexture::BGRA8, m_renderInfo.windowSize);
+            m_texture->create();
+
+            m_sampler = rhi->newSampler(
+                QRhiSampler::Nearest,
+                QRhiSampler::Nearest,
+                QRhiSampler::None,
+                QRhiSampler::Repeat,
+                QRhiSampler::Repeat,
+                QRhiSampler::Repeat
+            );
+            m_sampler->create();
+
+            m_srb = rhi->newShaderResourceBindings();
+            m_srb->setBindings({
+                QRhiShaderResourceBinding::sampledTexture(
+                    0,
+                    QRhiShaderResourceBinding::FragmentStage,
+                    m_texture,
+                    m_sampler
+                )
+            });
+            m_srb->create();
+
+            m_pipeline = rhi->newGraphicsPipeline();
+            m_pipeline->setTopology(QRhiGraphicsPipeline::TriangleStrip);
+
+            QRhiGraphicsPipeline::TargetBlend blend;
+            blend.enable = true;
+            m_pipeline->setTargetBlends({ blend });
+
+            m_pipeline->setShaderStages({
+                { QRhiShaderStage::Vertex, vertexShader },
+                { QRhiShaderStage::Fragment, fragmentShader }
+            });
+
+            m_pipeline->setShaderResourceBindings(m_srb);
+            m_pipeline->setRenderPassDescriptor(swapChain->currentFrameRenderTarget()->renderPassDescriptor());
+            m_pipeline->create();
+        }
+    }
+
+    // FIXME this looks sketchy, mutex wise
+    // if (m_decorationsEnabled) {
+    if (m_isGrabbing) {
+        QRhiCommandBuffer *cb = swapChain->currentFrameCommandBuffer();
+        QRhiResourceUpdateBatch *resourceUpdates = rhi->nextResourceUpdateBatch();
+
+        QImage decorations(m_renderInfo.windowSize, QImage::Format_ARGB32_Premultiplied);
+        decorations.fill(Qt::transparent);
+
+        QPainter p(&decorations);
+        doDrawDecorations(p);
+        p.end();
+
+        qDebug() << "  Preparing an upload of" << decorations;
+        resourceUpdates->uploadTexture(m_texture, decorations);
+        cb->resourceUpdate(resourceUpdates);
+    }
+}
+
+void RhiScreenGrabber::windowAfterRenderPassRecording()
+{
+    // We are in the rendering thread at this point
+    // And the gui thread is NOT locked
+
+    QMutexLocker locker(&m_mutex);
+
+    // FIXME: m_decorationsEnabled is read from the render thread,
+    // but it doesn't look like it's mutex-protected in the other codepaths!
+    // if (m_decorationsEnabled) {
+    if (m_isGrabbing) {
+        qDebug() << "AFTER RENDER PASS RECORDING";
+
+        QRhiSwapChain *swapChain = m_window->swapChain();
+        QRhiCommandBuffer *cb = swapChain->currentFrameCommandBuffer();
+        const QSize outputPixelSize = swapChain->currentFrameRenderTarget()->pixelSize();
+        qDebug() << "  Viewport set to" << outputPixelSize;
+        cb->setViewport({ 0.0f, 0.0f, float(outputPixelSize.width()), float(outputPixelSize.height()) });
+        cb->setGraphicsPipeline(m_pipeline);
+        cb->setShaderResources();
+        cb->draw(4);
+    }
+}
+
+void RhiScreenGrabber::windowAfterRendering()
+{
+    QMutexLocker locker(&m_mutex);
+
+    // We are in the rendering thread at this point
+    // And the gui thread is NOT locked
+
+    if (m_isGrabbing) {
+        qDebug() << "AFTER RENDERING";
+
+        QRhi *rhi = m_window->rhi();
+        QRhiSwapChain *swapChain = m_window->swapChain();
+        QRhiCommandBuffer *cb = swapChain->currentFrameCommandBuffer();
+        QRhiResourceUpdateBatch *resourceUpdates = rhi->nextResourceUpdateBatch();
+
+        qDebug() << "  Got rhi" << rhi;
+        qDebug() << "  Got sc" << swapChain;
+        qDebug() << "  Got cb" << cb;
+        qDebug() << "  Got ubatch" << resourceUpdates;
+
+        // FIXME
+        // This is too late, as it would also include the decorations
+        // that we have overlaid (by adding drawing commands to the render pass).
+        // I'm not sure how to do this BEFORE I add the overlay.
+        // I can't add the overlay *here* because it would mean
+        // starting a new pass, and that will wipe the render target.
+
+        QRhiReadbackResult result;
+        QRhiTexture *src = nullptr; // the texture to read, nullptr means backbuffer
+        QRhiReadbackDescription readbackDesc(src);
+        resourceUpdates->readBackTexture(readbackDesc, &result);
+        cb->resourceUpdate(resourceUpdates);
+
+        rhi->finish();
+
+        const QImage::Format imageFormat = [&]() {
+            // Can't handle all the possible formats...
+            switch (result.format) {
+            case QRhiTexture::BGRA8:
+                // TODO big endian?
+                return QImage::Format_ARGB32_Premultiplied;
+            case QRhiTexture::RGBA8:
+                return QImage::Format_RGBA8888_Premultiplied;
+            default:
+                return QImage::Format_Invalid;
+            }
+        }();
+
+        qDebug() << "Got image format" << result.format << imageFormat;
+        qDebug() << "Got size" << result.pixelSize;
+
+        if (imageFormat != QImage::Format_Invalid) {
+            m_grabbedFrame.image = QImage(
+                reinterpret_cast<const uchar *>(result.data.constData()),
+                result.pixelSize.width(),
+                result.pixelSize.height(),
+                imageFormat
+            ).copy();
+
+            m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
+
+            m_grabbedFrame.transform.reset();
+            if (rhi->isYUpInFramebuffer())
+                m_grabbedFrame.transform.scale(1.0, -1.0);
+
+            emit sceneGrabbed(m_grabbedFrame);
+        }
+    }
+
+    // FIXME: here OpenGL draws its decorations.
+    // But we can't do it with RHI: there isn't a RHI QPaintDevice
+    // yet. And this is too late: we're in afterRendering, meaning the
+    // pass in the command buffer has already ended...
+    // drawDecorations();
+
+    if (m_isGrabbing) {
+        locker.unlock();
+        setGrabbingMode(false, QRectF());
+    } else {
+        emit sceneChanged();
+    }
+}
+
+void RhiScreenGrabber::drawDecorations()
+{
+    // FIXME, not sure why this is a pure virtual?
+    // I'm not using it directly
+
+}
+#endif
