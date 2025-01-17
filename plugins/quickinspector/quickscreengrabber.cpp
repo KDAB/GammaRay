@@ -567,8 +567,18 @@ OpenGLScreenGrabber::OpenGLScreenGrabber(QQuickWindow *window)
     // Force DirectConnection else Auto lead to Queued which is not good.
     connect(m_window.data(), &QQuickWindow::afterSynchronizing,
             this, &OpenGLScreenGrabber::windowAfterSynchronizing, Qt::DirectConnection);
-    connect(m_window.data(), &QQuickWindow::afterRendering,
-            this, &OpenGLScreenGrabber::windowAfterRendering, Qt::DirectConnection);
+
+    connect(
+        m_window.data(),
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        &QQuickWindow::afterRenderPassRecording,
+#else
+        &QQuickWindow::afterRendering,
+#endif
+        this,
+        &OpenGLScreenGrabber::windowAfterRendering,
+        Qt::DirectConnection
+    );
 }
 
 OpenGLScreenGrabber::~OpenGLScreenGrabber() = default;
@@ -608,6 +618,10 @@ void OpenGLScreenGrabber::windowAfterRendering()
     // We are in the rendering thread at this point
     // And the gui thread is NOT locked
     Q_ASSERT(QOpenGLContext::currentContext() == m_window->rendererInterface()->getResource(m_window, QSGRendererInterface::OpenGLContextResource));
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    m_window->beginExternalCommands();
+#endif
 
     if (m_isGrabbing) {
         const auto window = QRectF(QPoint(0, 0), m_renderInfo.windowSize);
@@ -695,6 +709,10 @@ void OpenGLScreenGrabber::windowAfterRendering()
     } else {
         emit sceneChanged();
     }
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    m_window->endExternalCommands();
+#endif
 }
 
 void OpenGLScreenGrabber::drawDecorations()
