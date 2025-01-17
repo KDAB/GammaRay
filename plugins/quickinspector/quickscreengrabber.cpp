@@ -577,8 +577,7 @@ OpenGLScreenGrabber::OpenGLScreenGrabber(QQuickWindow *window)
 #endif
         this,
         &OpenGLScreenGrabber::windowAfterRendering,
-        Qt::DirectConnection
-    );
+        Qt::DirectConnection);
 }
 
 OpenGLScreenGrabber::~OpenGLScreenGrabber() = default;
