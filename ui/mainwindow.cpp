@@ -83,9 +83,7 @@ struct IdeSettings
 };
 
 static const IdeSettings ideSettings[] = {
-#if defined(Q_OS_WIN) || defined(Q_OS_OSX)
-    { "", "", "", "" } // Dummy content, because we can't have empty arrays.
-#else
+#if !defined(Q_OS_WIN) && !defined(Q_OS_OSX)
     { "kdevelop", "%f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KDevelop"), "kdevelop" },
     { "kate", "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Kate"),
       "kate" },
@@ -95,14 +93,12 @@ static const IdeSettings ideSettings[] = {
       nullptr },
     { "gvim", "%f +%l", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "gvim"),
       nullptr },
-    { "qtcreator", "-client %f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr }
 #endif
+    { "qtcreator", "-client %f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr },
+    { "code", "-g %f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Visual Studio Code"), nullptr },
+    { "codium", "-g %f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "VSCodium"), nullptr },
 };
-#if defined(Q_OS_WIN) || defined(Q_OS_OSX) // Remove this #if branch when adding real data to ideSettings for Windows/OSX.
-static const int ideSettingsSize = 0;
-#else
 static const int ideSettingsSize = sizeof(ideSettings) / sizeof(IdeSettings);
-#endif
 
 static const int IDE_SETTING_CUSTOM = -2;
 static const int IDE_SETTING_DEFAULT = -1;
