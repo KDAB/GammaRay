@@ -83,7 +83,6 @@ struct IdeSettings
 };
 
 static const IdeSettings ideSettings[] = {
-#if !defined(Q_OS_WIN) && !defined(Q_OS_OSX)
     { "kdevelop", "%f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "KDevelop"), "kdevelop" },
     { "kate", "%f --line %l --column %c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Kate"),
       "kate" },
@@ -93,7 +92,6 @@ static const IdeSettings ideSettings[] = {
       nullptr },
     { "gvim", "%f +%l", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "gvim"),
       nullptr },
-#endif
     { "qtcreator", "-client %f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Qt Creator"), nullptr },
     { "code", "-g %f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "Visual Studio Code"), nullptr },
     { "codium", "-g %f:%l:%c", QT_TRANSLATE_NOOP("GammaRay::MainWindow", "VSCodium"), nullptr },
@@ -522,14 +520,11 @@ void MainWindow::navigateToCode(const QUrl &url, int lineNumber, int columnNumbe
         const auto ideIdx = settings.value(QStringLiteral("IDE"), IDE_SETTING_DEFAULT).toInt();
 
         QString command;
-#if !defined(Q_OS_WIN) && !defined(Q_OS_OSX) // Remove this #if branch when adding real data to ideSettings for Windows/OSX.
         if (ideIdx >= 0 && ideIdx < ideSettingsSize) {
             command += ideSettings[ideIdx].app;
             command += ' ';
             command += ideSettings[ideIdx].args;
-        } else
-#endif
-            if (ideIdx == IDE_SETTING_CUSTOM) {
+        } else if (ideIdx == IDE_SETTING_CUSTOM) {
             command = settings.value(QStringLiteral("CustomCommand")).toString();
         } else {
             QDesktopServices::openUrl(QUrl(url));
