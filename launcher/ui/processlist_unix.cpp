@@ -74,6 +74,9 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
 #ifdef Q_OS_MAC
     // command goes last, otherwise it is cut off
     static const char formatC[] = "pid state user command";
+#elif defined(Q_OS_FREEBSD)
+    // command goes last, otherwise it is cut off
+    static const char formatC[] = "pid state user comm";
 #else
     static const char formatC[] = "pid,state,user,cmd";
 #endif
@@ -179,7 +182,9 @@ private:
 ProcDataList processList(const ProcDataList &previous)
 {
     const QDir procDir(QStringLiteral("/proc/"));
+#ifndef Q_OS_FREEBSD
     if (!procDir.exists())
+#endif
         return unixProcessListPS(previous);
 
     ProcDataList rc;
