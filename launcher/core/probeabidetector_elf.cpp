@@ -52,7 +52,11 @@ QString ProbeABIDetector::qtCoreForExecutable(const QString &path)
 
 static bool qtCoreFromProc(qint64 pid, QString &path)
 {
+#ifdef Q_OS_LINUX
     const QString mapsPath = QStringLiteral("/proc/%1/maps").arg(pid);
+#elif defined(Q_OS_FREEBSD)
+    const QString mapsPath = QStringLiteral("/proc/%1/map").arg(pid);
+#endif
     QFile f(mapsPath);
     if (!f.open(QFile::ReadOnly)) {
         path.clear();
@@ -64,10 +68,17 @@ static bool qtCoreFromProc(qint64 pid, QString &path)
         if (line.isEmpty())
             break;
         if (ProbeABIDetector::containsQtCore(line)) {
-            const int pos = line.indexOf('/');
+            int pos = line.indexOf('/');
             if (pos <= 0)
                 continue;
             path = QString::fromLocal8Bit(line.mid(pos).trimmed());
+#ifdef Q_OS_FREEBSD
+            // With FreeBSD procfs we end up with "/usr/local/lib/qt6/libQt6Core.so.6.8.2 NCH -1"
+            // so chop it further
+            pos = path.indexOf(' ');
+            if (pos > 0)
+                path = path.left(pos);
+#endif
             return true;
         }
     }
