@@ -414,6 +414,16 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
             Qt::Network
         )
 
+        gammaray_add_test(launcheruiprocesslisttest launcheruiprocesslisttest.cpp)
+        target_link_libraries(
+            launcheruiprocesslisttest
+            gammaray_launcher_ui
+            gammaray_common
+            Qt::Gui
+            Qt::Widgets
+            Qt::Network
+        )
+
         gammaray_add_test(
             remotemodeltest remotemodeltest.cpp $<TARGET_OBJECTS:modeltestobj> ../core/remote/remotemodelserver.cpp
         )
