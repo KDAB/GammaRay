@@ -31,7 +31,7 @@ private slots:
 
         QVERIFY(!newList.isEmpty());
 
-        const auto& proc = newList[0];
+        const auto &proc = newList[0];
         QVERIFY(proc.ppid != 0);
         QVERIFY(!proc.name.isEmpty());
         QVERIFY(!proc.state.isEmpty());
