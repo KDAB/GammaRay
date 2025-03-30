@@ -126,7 +126,7 @@ ProcData ProcessModel::dataForRow(int row) const
 QModelIndex ProcessModel::indexForPid(const QString &pid) const
 {
     for (int i = 0; i < m_data.size(); ++i) {
-        if (m_data.at(i).ppid == pid)
+        if (QString::number(m_data.at(i).ppid) == pid)
             return index(i, 0);
     }
     return {};
@@ -167,9 +167,9 @@ QVariant ProcessModel::data(const QModelIndex &index, int role) const
             return data.user;
     } else if (role == Qt::ToolTipRole) {
         const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(data.abi, m_availableABIs);
-        return tr("Name: %1\nPID: %2\nOwner: %3\nQt ABI: %4\nProbe available: %5").arg(data.image.isEmpty() ? data.name : data.image, data.ppid, data.user, data.abi.displayString(), bestABI.isValid() ? tr("yes") : tr("no"));
+        return tr("Name: %1\nPID: %2\nOwner: %3\nQt ABI: %4\nProbe available: %5").arg(data.image.isEmpty() ? data.name : data.image, QString::number(data.ppid), data.user, data.abi.displayString(), bestABI.isValid() ? tr("yes") : tr("no"));
     } else if (role == PIDRole) {
-        return data.ppid.toInt(); // why is this a QString in the first place!?
+        return data.ppid;
     } else if (role == NameRole) {
         return data.image.isEmpty() ? data.name : data.image;
     } else if (role == StateRole) {
