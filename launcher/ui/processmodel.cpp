@@ -102,8 +102,7 @@ void ProcessModel::mergeProcesses(const ProcDataList &processes)
         }
     }
 
-    while (m_data.size() != sortedProcesses.size())
-    {
+    while (m_data.size() != sortedProcesses.size()) {
         int i = m_data.size() - 1;
         beginRemoveRows(QModelIndex(), i, i);
         m_data.removeAt(i);
