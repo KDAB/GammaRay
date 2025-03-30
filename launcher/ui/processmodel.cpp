@@ -102,6 +102,14 @@ void ProcessModel::mergeProcesses(const ProcDataList &processes)
         }
     }
 
+    while (m_data.size() != sortedProcesses.size())
+    {
+        int i = m_data.size() - 1;
+        beginRemoveRows(QModelIndex(), i, i);
+        m_data.removeAt(i);
+        endRemoveRows();
+    }
+
     // make sure the new data is properly inserted
     Q_ASSERT(m_data == sortedProcesses);
 }
