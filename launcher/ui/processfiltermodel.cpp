@@ -46,7 +46,7 @@ using namespace GammaRay;
 ProcessFilterModel::ProcessFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
-    m_currentProcId = QString::number(qApp->applicationPid());
+    m_currentProcId = qApp->applicationPid();
     m_currentUser = qGetLogin();
 #ifndef Q_OS_WIN
     if (m_currentUser == QLatin1String("root")) {

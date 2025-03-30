@@ -30,7 +30,7 @@ public:
 
 private:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
-    QString m_currentProcId;
+    qint64 m_currentProcId;
     QString m_currentUser;
 };
 }

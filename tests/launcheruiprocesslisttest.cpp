@@ -32,7 +32,7 @@ private slots:
         QVERIFY(!newList.isEmpty());
 
         const auto& proc = newList[0];
-        QVERIFY(!proc.ppid.isEmpty());
+        QVERIFY(proc.ppid != 0);
         QVERIFY(!proc.name.isEmpty());
         QVERIFY(!proc.state.isEmpty());
         QVERIFY(!proc.user.isEmpty());

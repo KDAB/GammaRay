@@ -53,7 +53,7 @@ static bool isUnixProcessId(const QString &procname)
 
 struct PidAndNameMatch
 {
-    explicit PidAndNameMatch(const QString &ppid, const QString &name)
+    explicit PidAndNameMatch(qint64 ppid, const QString &name)
         : m_ppid(ppid)
         , m_name(name)
     {
@@ -64,7 +64,7 @@ struct PidAndNameMatch
         return p.ppid == m_ppid && m_name == p.name;
     }
 
-    const QString m_ppid;
+    const qint64 m_ppid;
     const QString m_name;
 };
 
@@ -102,7 +102,7 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
         const auto endOfUser = line.indexOf(blank, endOfState + 1);
         if (endOfPid >= 0 && endOfState >= 0 && endOfUser >= 0) {
             ProcData procData;
-            procData.ppid = line.left(endOfPid);
+            procData.ppid = line.left(endOfPid).toULongLong();
             procData.state = line.mid(endOfPid + 1, endOfState - endOfPid - 1);
             procData.user = line.mid(endOfState + 1, endOfUser - endOfState - 1);
             procData.name = line.right(line.size() - endOfUser - 1);
@@ -111,7 +111,7 @@ static ProcDataList unixProcessListPS(const ProcDataList &previous)
             if (it != previous.constEnd())
                 procData.abi = it->abi;
             else
-                procData.abi = s_abiDetector->abiForProcess(procData.ppid.toLongLong());
+                procData.abi = s_abiDetector->abiForProcess(procData.ppid);
             rc.push_back(procData);
         }
     }
@@ -141,7 +141,7 @@ struct ProcIdToProcData
 
         const QStringList data = QString::fromLocal8Bit(file.readAll()).split(' ');
 
-        proc.ppid = procId;
+        proc.ppid = procId.toULongLong();
         proc.name = data.at(1);
         if (proc.name.startsWith(QLatin1Char('(')) && proc.name.endsWith(QLatin1Char(')'))) {
             proc.name.truncate(proc.name.size() - 1);
@@ -167,7 +167,7 @@ struct ProcIdToProcData
         if (it != previous.constEnd())
             proc.abi = it->abi;
         else
-            proc.abi = s_abiDetector->abiForProcess(proc.ppid.toLongLong());
+            proc.abi = s_abiDetector->abiForProcess(proc.ppid);
 
         return proc;
     }
@@ -199,7 +199,7 @@ ProcDataList processList(const ProcDataList &previous)
 
     // Filter out invalid entries
     rc.erase(std::remove_if(rc.begin(), rc.end(), [](const ProcData &pd) {
-                 return pd.ppid.isEmpty();
+                 return pd.ppid == 0;
              }),
              rc.end());
 
