@@ -14,11 +14,11 @@
    <item>
     <widget class="QSplitter" name="mainSplitter">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <widget class="QSplitter" name="modelSplitter">
       <property name="orientation">
-       <enum>Qt::Vertical</enum>
+       <enum>Qt::Orientation::Vertical</enum>
       </property>
       <widget class="QWidget" name="layoutWidget_3">
        <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -28,7 +28,7 @@
            <string>Models</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
@@ -38,7 +38,7 @@
         <item>
          <widget class="GammaRay::DeferredTreeView" name="modelView">
           <property name="contextMenuPolicy">
-           <enum>Qt::CustomContextMenu</enum>
+           <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
           </property>
           <property name="uniformRowHeights">
            <bool>true</bool>
@@ -47,7 +47,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QLabel" name="label_6">
@@ -55,14 +55,14 @@
            <string>Selection Models</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
          </widget>
         </item>
         <item>
          <widget class="GammaRay::DeferredTreeView" name="selectionModelsView">
           <property name="contextMenuPolicy">
-           <enum>Qt::CustomContextMenu</enum>
+           <enum>Qt::ContextMenuPolicy::CustomContextMenu</enum>
           </property>
           <property name="rootIsDecorated">
            <bool>false</bool>
@@ -75,7 +75,7 @@
        </layout>
       </widget>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QLabel" name="label">
@@ -83,20 +83,20 @@
           <string>Model Content</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item>
         <widget class="GammaRay::DeferredTreeView" name="modelContentView">
          <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectItems</enum>
+          <enum>QAbstractItemView::SelectionBehavior::SelectItems</enum>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QLabel" name="label_2">
@@ -104,7 +104,7 @@
           <string>Cell Content</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -112,55 +112,137 @@
         <layout class="QFormLayout" name="formLayout_2">
          <item row="0" column="0">
           <widget class="QLabel" name="label_8">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
-            <string>Model Index:</string>
+            <string>Model index:</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLabel" name="indexLabel">
+          <widget class="QLineEdit" name="indexLineEdit">
+           <property name="minimumSize">
+            <size>
+             <width>72</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>Invalid</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_4">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
-            <string>Internal Id:</string>
+            <string>Internal id:</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLabel" name="internalIdLabel">
-           <property name="text">
-            <string/>
+          <widget class="QLineEdit" name="internalIdLineEdit">
+           <property name="minimumSize">
+            <size>
+             <width>72</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="label_5">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
-            <string>Internal Pointer:</string>
+            <string>Internal pointer:</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QLabel" name="internalPtrLabel">
-           <property name="text">
-            <string/>
+          <widget class="QLineEdit" name="internalPtrLineEdit">
+           <property name="minimumSize">
+            <size>
+             <width>72</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="3" column="0">
           <widget class="QLabel" name="label_7">
+           <property name="minimumSize">
+            <size>
+             <width>55</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>Flags:</string>
            </property>
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QLabel" name="flagsLabel"/>
+          <widget class="QPlainTextEdit" name="flagsPlainTextEdit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>72</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="acceptDrops">
+            <bool>false</bool>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
+           </property>
+           <property name="undoRedoEnabled">
+            <bool>false</bool>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="plainText">
+            <string notr="true"/>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

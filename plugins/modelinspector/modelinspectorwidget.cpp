@@ -123,12 +123,13 @@ static const MetaEnum::Value<Qt::ItemFlag> item_flag_table[] = {
 void ModelInspectorWidget::cellDataChanged()
 {
     const auto cellData = m_interface->currentCellData();
-    ui->indexLabel->setText(cellData.row != -1
-                                ? tr("Row: %1 Column: %2").arg(cellData.row).arg(cellData.column)
-                                : tr("Invalid"));
-    ui->internalIdLabel->setText(cellData.internalId);
-    ui->internalPtrLabel->setText(cellData.internalPtr);
-    ui->flagsLabel->setText(MetaEnum::flagsToString(cellData.flags, item_flag_table));
+    ui->indexLineEdit->setText(cellData.row != -1
+                                   ? tr("Row: %1 Column: %2").arg(cellData.row).arg(cellData.column)
+                                   : tr("Invalid"));
+    ui->internalIdLineEdit->setText(cellData.internalId);
+    ui->internalPtrLineEdit->setText(cellData.internalPtr);
+    ui->flagsPlainTextEdit->selectAll();
+    ui->flagsPlainTextEdit->insertPlainText(MetaEnum::flagsToString(cellData.flags, item_flag_table));
 }
 
 void ModelInspectorWidget::objectRegistered(const QString &objectName)
