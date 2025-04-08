@@ -97,7 +97,6 @@ if(GAMMARAY_STATIC_PROBE)
         gammaray_probe
         Qt::Widgets
         gammaray_actioninspector_plugin
-        gammaray_codecbrowser_plugin
         gammaray_eventmonitor_plugin
         gammaray_guisupport
         gammaray_fontbrowser_plugin
@@ -113,4 +112,7 @@ if(GAMMARAY_STATIC_PROBE)
         #    gammaray_quickinspector
         #    gammaray_webinspector_plugin
     )
+    if(${QT_VERSION_MAJOR} EQUAL 5 AND TARGET Qt5::Core)
+        target_link_libraries(staticinjectiontest gammaray_codecbrowser_plugin)
+    endif()
 endif()
