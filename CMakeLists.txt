@@ -518,6 +518,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         # prevent 'file too big' and 'too many sections' errors with Qt6
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
     endif()
+    if (Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
+        find_package(Qt6WidgetsPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+    endif()
 endif()
 
 # these need to included after the last Qt-related find_package() call
