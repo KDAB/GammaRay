@@ -141,7 +141,7 @@ ProcDataList processList(const ProcDataList & /*previous*/)
          hasNext;
          hasNext = Process32Next(snapshot, &pe)) {
         ProcData procData;
-        procData.ppid = QString::number(pe.th32ProcessID).toInt();
+        procData.ppid = pe.th32ProcessID;
         procData.name = QString::fromUtf16(reinterpret_cast<ushort *>(pe.szExeFile));
         const ProcessInfo processInf = processInfo(pe.th32ProcessID);
         procData.image = processInf.imageName;
