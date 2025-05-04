@@ -100,6 +100,12 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         uses: ilammy/msvc-dev-cmd@v1
 
+      # Don't make graphviz find wrong libgd
+      - name: Remove Strawberry from PATH
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          Remove-Item "C:/Strawberry" -Recurse -Force
+
       - name: Configure project
         run: >
           cmake -S . -G Ninja --preset ${{ matrix.config.preset }}
