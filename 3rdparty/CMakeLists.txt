@@ -18,6 +18,8 @@ if(GAMMARAY_WITH_KDSME)
         if(QT_VERSION_MAJOR GREATER_EQUAL 6)
             set(KDSME_PACKAGE_NAME KDSME-qt6)
             set(KDSME_QT6 ON)
+        else()
+            set(KDSME_QT6 OFF)
         endif()
         set_package_properties(
             ${KDSME_PACKAGE_NAME} PROPERTIES
