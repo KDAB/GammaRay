@@ -42,7 +42,7 @@
 
 struct ProcData
 {
-    qint64 ppid;
+    qint64 ppid = 0;
     QString name;
     QString image;
     QString state;
