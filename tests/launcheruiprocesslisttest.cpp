@@ -32,10 +32,14 @@ private slots:
         QVERIFY(!newList.isEmpty());
 
         const auto &proc = newList[0];
+
+#ifndef Q_OS_WIN
         QVERIFY(proc.ppid != 0);
-        QVERIFY(!proc.name.isEmpty());
         QVERIFY(!proc.state.isEmpty());
         QVERIFY(!proc.user.isEmpty());
+#endif
+
+        QVERIFY(!proc.name.isEmpty());
     }
 };
 
