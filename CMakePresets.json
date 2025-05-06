@@ -19,7 +19,7 @@
             "displayName": "dev",
             "cacheVariables": {
                 "QT_VERSION_MAJOR": "5",
-                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
                 "GAMMARAY_USE_PCH": "ON"
             }
         },
@@ -28,7 +28,7 @@
             "inherits": "base",
             "cacheVariables": {
                 "QT_VERSION_MAJOR": "6",
-                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
                 "GAMMARAY_USE_PCH": "ON"
             }
         },
