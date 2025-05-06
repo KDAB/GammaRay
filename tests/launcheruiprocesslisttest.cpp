@@ -28,8 +28,13 @@ private slots:
     {
         ProcDataList previousList;
         ProcDataList newList = processList(previousList);
+        qWarning() << newList.size();
 
         QVERIFY(!newList.isEmpty());
+
+        for (const auto &p : newList) {
+            qWarning() << p.ppid << p.name;
+        }
 
         const auto &proc = newList[0];
         QVERIFY(proc.ppid != 0);
