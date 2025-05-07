@@ -1,0 +1,47 @@
+# SPDX-FileCopyrightText: 2024 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#
+# SPDX-License-Identifier: MIT
+
+on:
+  workflow_dispatch:
+    inputs:
+      submodule:
+        type: choice
+        description: "Select an option"
+        options:
+          - "Only print current and available versions"
+          - KDStateMachineEditor
+
+name: bump submodules
+jobs:
+  dependency-bump:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Checkout submodules
+        run: |
+          git submodule update --init --force --recursive -- 3rdparty/*
+          git clone https://github.com/KDABLabs/ci-release-tools.git
+
+      - name: Configure Git committer
+        run: |
+          git config --global user.name "KDAB GitHub Actions"
+          git config --global user.email "gh@kdab"
+
+      - name: Print current and available versions
+        if: inputs.submodule == 'Only print current and available versions'
+        run: |
+          python3 ./ci-release-tools/src/update_dependencies.py --print-dependency-versions --proj-name GammaRay --repo-path .
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Bump submodule
+        if: inputs.submodule != 'Only print current and available versions'
+        run: |
+          python3 ./ci-release-tools/src/update_dependencies.py --update-dependency ${{inputs.submodule}} --proj-name GammaRay --repo-path .
+        env:
+          GH_TOKEN: ${{ github.token }}
