@@ -3,7 +3,12 @@ Release Highlights
 
 Version 3.2.0 (unreleased)
 --------------------------
- *
+ * Source tarballs no longer ship 60MB of KDStateMachineEditor/Graphviz Windows dll binaries
+   If you're a packager using source tarballs then package and add KDStateMachineEditor as optional dependency.
+   If you're not a packager, then build from git, which has the submodule.
+ * Bump KDStateMachineEditor submodule from 2.0.0 to 2.1.0
+ * Build fixes regarding Qt 6.9
+ * Build fixes regarding new Windows SDK versions
 
 Version 3.1.0 (26 July 2024)
 ----------------------------
