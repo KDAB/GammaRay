@@ -9,6 +9,10 @@ Version 3.2.0 (unreleased)
  * Bump KDStateMachineEditor submodule from 2.0.0 to 2.1.0
  * Build fixes regarding Qt 6.9
  * Build fixes regarding new Windows SDK versions
+ * Support for Qt versions upto Qt 6.9
+ * Improved ux for small window size by making better use of available space
+ * FreeBSD support
+ * Re-enable ability to switch render modes under Qt 6
 
 Version 3.1.0 (26 July 2024)
 ----------------------------
