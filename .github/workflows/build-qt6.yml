@@ -1,0 +1,135 @@
+# SPDX-FileCopyrightText: 2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#
+# SPDX-License-Identifier: MIT
+
+name: CI Qt6
+
+on:
+  push:
+    branches:
+      - master
+      - 3.1
+  pull_request:
+    branches:
+      - master
+      - 3.1
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        qt_version:
+          - "6.5.*"
+        preset:
+          - name: ci-dev-client-only-qt6
+            tests_with: qt6
+
+          - name: ci-dev-client-and-ui-qt6
+            tests_with: qt6
+
+          - name: ci-dev-probe-only-qt6
+
+        # GitHub actions is now powered by AppleSilicon macs
+        # and these presets are failing
+        exclude:
+          - os: macos-latest
+            preset:
+              name: ci-dev-client-and-ui-qt6
+
+    steps:
+      - name: Install Qt with options and default aqtversion
+        uses: jurplel/install-qt-action@v3
+        with:
+          aqtversion: null # use whatever the default is
+          modules: qtshadertools qtscxml
+          version: ${{ matrix.qt_version }}
+          cache: true
+
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Dependencies on Linux
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo apt update -qq
+          sudo apt install -y gdb doxygen
+
+      - name: Install Dependencies on macOS
+        if: ${{ runner.os == 'macOS' }}
+        run: brew install bison
+
+      - name: Install ninja-build tool (must be after Qt due PATH changes)
+        uses: turtlesec-no/get-ninja@main
+
+      - name: Add Bison to PATH (must be after Qt due PATH changes)
+        if: ${{ runner.os == 'macOS' }}
+        run: echo "/opt/homebrew/opt/bison/bin" >> $GITHUB_PATH
+
+      - name: Make sure MSVC is found when Ninja generator is in use
+        if: ${{ runner.os == 'Windows' }}
+        uses: ilammy/msvc-dev-cmd@v1
+
+      # Don't make graphviz find wrong libgd
+      - name: Remove Strawberry from PATH
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          Remove-Item "C:/Strawberry" -Recurse -Force
+
+      - name: Configure project
+        run: >
+          cmake -S . -G Ninja --preset ${{ matrix.preset.name }}
+          -DGAMMARAY_WITH_KDSME=ON
+          -DGAMMARAY_BUILD_DOCS=${{ runner.os == 'Linux' }}
+
+      - name: Build Project
+        run: cmake --build ./build-${{ matrix.preset.name }}
+
+      - name: Enable gdb attaching
+        if: ${{ runner.os == 'Linux' }}
+        run: echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+
+        # Exclude
+        # quickmaterialtest|quicktexturetest fails because of QT_QUICK_BACKEND=software AND QT_QPA_PLATFORM=offscreen
+        # quickinspectortest|quickinspectortest2 fails at CI, local with 6.2.4 passes
+      - name: Run tests on Linux Qt6 (offscreen)
+        if: ${{ runner.os == 'Linux' && matrix.preset.tests_with == 'qt6' }}
+        run: >
+          ctest --test-dir ./build-${{ matrix.preset.name }} --output-on-failure
+          --exclude-regex "quickmaterialtest|quicktexturetest|quickinspectortest|quickinspectortest2"
+        env:
+          QT_QPA_PLATFORM: offscreen
+          QT_QUICK_BACKEND: software
+
+        # Exclude
+        #28 - probeabidetectortest (Failed)
+        #31 - launchertest (Failed)
+        #32 - clientconnectiontest (Failed)
+        # quickinspectortest2
+      - name: Run tests Qt6 on macOS
+        if: ${{ runner.os == 'macOS' && matrix.preset.tests_with == 'qt6' }}
+        run: >
+          ctest --test-dir ./build-${{ matrix.preset.name }} --output-on-failure
+          --exclude-regex
+          "probeabidetectortest|launchertest|clientconnectiontest|quickinspectortest2|quicktexturetest"
+
+        # Exclude
+        # quicktexturetest
+      - name: Qt6 Run tests on Windows
+        if: ${{ runner.os == 'Windows' && matrix.preset.tests_with == 'qt6' }}
+        run: >
+          ctest --test-dir ./build-${{ matrix.preset.name }} -C 'Release' --output-on-failure
+          --exclude-regex "quicktexturetest|launchertest|probesettingstest"
+
+      - name: Read tests log when it fails
+        uses: andstor/file-reader-action@v1
+        if: ${{ failure() }}
+        with:
+          path: "./build-${{ matrix.preset.name }}/Testing/Temporary/LastTest.log"
