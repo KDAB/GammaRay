@@ -1,8 +1,8 @@
 Release Highlights
 ==================
 
-Version 3.2.0 (unreleased)
---------------------------
+Version 3.2.0
+-------------
  * Source tarballs no longer ship 60MB of KDStateMachineEditor/Graphviz Windows dll binaries
    If you're a packager using source tarballs then package and add KDStateMachineEditor as optional dependency.
    If you're not a packager, then build from git, which has the submodule.
@@ -14,8 +14,8 @@ Version 3.2.0 (unreleased)
  * FreeBSD support
  * Re-enable ability to switch render modes under Qt 6
 
-Version 3.1.0 (26 July 2024)
-----------------------------
+Version 3.1.0
+-------------
  * Qt5 versions less than 5.15 are no longer supported
  * Qt6 versions less that 6.3 are no longer supported
  * Qt IVI is no longer supported
@@ -28,8 +28,8 @@ Version 3.1.0 (26 July 2024)
  * Show all timezone name variants in the timezone browser
  * Make probe settings configurable via AndroidManifest.xml
 
-Version 3.0.0 (04 September 2023)
----------------------------------
+Version 3.0.0
+-------------
  * Port to Qt6.
  * Network operations now optionally allow capturing HTTP response body.
  * Objects can now be favorited via context menu. A favorited object appears in a separate item view above the main itemview
