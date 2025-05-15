@@ -12,7 +12,7 @@ from conans import ConanFile, CMake, tools
 
 class GammaRayConan(ConanFile):
     name = "GammaRay"
-    version = "3.2.0"
+    version = "3.2.1"
     license = "https://raw.githubusercontent.com/KDAB/GammaRay/{0}/LICENSE.txt".format(version)
     author = "Klaralvdalens Datakonsult AB (KDAB) info@kdab.com"
     url = "https://github.com/KDAB/GammaRay.git"
