@@ -26,6 +26,7 @@ jobs:
           - macos-latest
         qt_version:
           - "6.5.*"
+          - "6.9.0" # bump to latest Qt freely
         preset:
           - name: ci-dev-client-only-qt6
             tests_with: qt6
@@ -44,7 +45,7 @@ jobs:
 
     steps:
       - name: Install Qt with options and default aqtversion
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           aqtversion: null # use whatever the default is
           modules: qtshadertools qtscxml
