@@ -19,7 +19,7 @@ SPDX-License-Identifier = "GPL-2.0-or-later"
 
 #misc config files
 [[annotations]]
-path = ["3rdparty/**/qt_attribution.json", ".clang-format", ".clang-tidy", ".clangd", ".clazy", ".cmake-format.py", ".codespellrc", ".emacs-dirvars", ".git-blame-ignore-revs", ".gitattributes", ".gitignore", ".kateconfig", ".krazy", ".mdlrc", ".mdlrc.rb", ".pep8", ".pre-commit-config.yaml", ".pylintrc", ".qmake.conf", ".editorconfig", ".shellcheckrc", ".tag", "distro/**", "format.config.uncrustify.4_spaces", "**.qdocconf", "format_sources", "docs/collection/gammaray.qhcp.cmake", "examples/yocto/gammaray_git**.bb", "probe/gammaray_probe-android-dependencies.xml", "docs/api/Doxyfile.cmake", ".github/**", "REUSE.toml"]
+path = ["version.txt", "3rdparty/**/qt_attribution.json", ".clang-format", ".clang-tidy", ".clangd", ".clazy", ".cmake-format.py", ".codespellrc", ".emacs-dirvars", ".git-blame-ignore-revs", ".gitattributes", ".gitignore", ".kateconfig", ".krazy", ".mdlrc", ".mdlrc.rb", ".pep8", ".pre-commit-config.yaml", ".pylintrc", ".qmake.conf", ".editorconfig", ".shellcheckrc", ".tag", "distro/**", "format.config.uncrustify.4_spaces", "**.qdocconf", "format_sources", "docs/collection/gammaray.qhcp.cmake", "examples/yocto/gammaray_git**.bb", "probe/gammaray_probe-android-dependencies.xml", "docs/api/Doxyfile.cmake", ".github/**", "REUSE.toml"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>"
 SPDX-License-Identifier = "BSD-3-Clause"
