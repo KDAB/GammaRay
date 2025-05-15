@@ -836,6 +836,11 @@ if(WARNINGS_ARE_ERRORS)
         if(CMAKE_COMPILER_IS_GNUCXX)
             # each compiler has its own opinion on when to apply [noreturn]
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=suggest-attribute=noreturn")
+
+            if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13.0)
+                # QTBUG-135486
+                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=array-bounds")
+            endif()
         endif()
     else()
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
