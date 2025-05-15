@@ -1,6 +1,10 @@
 Release Highlights
 ==================
 
+Version 3.3.0
+-------------
+ *
+
 Version 3.2.0
 -------------
  * Source tarballs no longer ship 60MB of KDStateMachineEditor/Graphviz Windows dll binaries
