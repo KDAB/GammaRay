@@ -147,7 +147,7 @@ static Execution::ResolvedFrame toResolvedFrame(const backward::ResolvedTrace &r
 static QString maybeDemangleName(char *name)
 {
 #ifdef HAVE_CXA_DEMANGLE
-#if defined(Q_OS_OSX)
+#if defined(Q_OS_MACOS)
     const char MANGLED_START[] = " _Z";
     const char MANGLED_END[] = " ";
 #else

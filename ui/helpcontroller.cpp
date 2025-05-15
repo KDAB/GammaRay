@@ -79,7 +79,7 @@ Q_GLOBAL_STATIC(HelpControllerPrivate, s_helpController)
 
 static QString assistantExecutableName()
 {
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     return QStringLiteral("Assistant.app");
 #else
     return QStringLiteral("assistant");
