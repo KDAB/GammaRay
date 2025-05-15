@@ -270,7 +270,7 @@ MainWindow::MainWindow(QWidget *parent)
     group->addAction(action);
     menu->addAction(action);
 
-#if defined(Q_OS_WIN) || defined(Q_OS_OSX)
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
     // This is a workaround for the cases, where we can't safely do assumptions
     // about the install location of the IDE
     action = new QAction(menu);
