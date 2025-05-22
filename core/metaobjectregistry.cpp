@@ -256,13 +256,13 @@ void MetaObjectRegistry::scanMetaTypes()
     for (int mtId = 0; mtId <= QMetaType::User; ++mtId) {
         if (!isTypeIdRegistered(mtId))
             continue;
-        if (const QMetaObject *mt = QMetaType::metaObjectForType(mtId)) {
+        if (const QMetaObject *mt = QMetaType(mtId).metaObject()) {
             addMetaObject(mt);
         }
     }
 
     for (int mtId = QMetaType::User + 1; QMetaType::isRegistered(mtId); ++mtId) {
-        if (const QMetaObject *mt = QMetaType::metaObjectForType(mtId))
+        if (const QMetaObject *mt = QMetaType(mtId).metaObject())
             addMetaObject(mt);
     }
     addMetaObject(&Qt::staticMetaObject);

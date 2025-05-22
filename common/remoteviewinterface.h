@@ -60,8 +60,7 @@ public slots:
     virtual void sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta,
                                 int buttons, int modifiers) = 0;
 
-    virtual void sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
-                                int touchPointStates,
+    virtual void sendTouchEvent(const QString &deviceName, int deviceSystemId, int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
                                 const QList<QTouchEvent::TouchPoint> &touchPoints) = 0;
 
     virtual void sendUserViewport(const QRectF &userViewport) = 0;

@@ -186,17 +186,17 @@ QString LaunchOptions::workingDirectory() const
 void LaunchOptions::setProbeSetting(const QString &key, const QVariant &value)
 {
     QByteArray v;
-    switch (value.type()) {
-    case QVariant::String:
+    switch (value.typeId()) {
+    case QMetaType::QString:
         v = value.toString().toUtf8();
         break;
-    case QVariant::Bool:
+    case QMetaType::Bool:
         v = value.toBool() ? "true" : "false";
         break;
-    case QVariant::Int:
-    case QVariant::UInt:
-    case QVariant::LongLong:
-    case QVariant::ULongLong:
+    case QMetaType::Int:
+    case QMetaType::UInt:
+    case QMetaType::LongLong:
+    case QMetaType::ULongLong:
         v = QByteArray::number(value.toInt());
         break;
     default:

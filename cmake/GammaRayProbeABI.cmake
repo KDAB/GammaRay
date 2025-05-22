@@ -12,7 +12,7 @@
 # This contains all properties that define ABI compatibility of a probe with a target
 
 # Qt version
-set(GAMMARAY_PROBE_ABI "qt${QtCore_VERSION_MAJOR}_${QtCore_VERSION_MINOR}")
+set(GAMMARAY_PROBE_ABI "qt${QT_VERSION_MAJOR}_${QtCore_VERSION_MINOR}")
 if(NOT ANDROID)
     set(ANDROID_ABI "")
 endif()

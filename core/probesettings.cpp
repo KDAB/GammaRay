@@ -239,12 +239,12 @@ QVariant ProbeSettings::value(const QString &key, const QVariant &defaultValue)
     if (v.isEmpty())
         return defaultValue;
 
-    switch (defaultValue.type()) {
-    case QVariant::String:
+    switch (defaultValue.typeId()) {
+    case QMetaType::QString:
         return QString::fromUtf8(v);
-    case QVariant::Bool:
+    case QMetaType::Bool:
         return v == "true" || v == "1" || v == "TRUE";
-    case QVariant::Int:
+    case QMetaType::Int:
         return v.toInt();
     default:
         return v;

@@ -33,10 +33,11 @@ static const QMetaObject *metaObjectForClass(const QByteArray &name)
 {
     if (name.isEmpty())
         return nullptr;
-    auto mo = QMetaType::metaObjectForType(QMetaType::type(name));
+    auto mo = QMetaType::fromName(name).metaObject();
+    // auto mo = QMetaType::metaObjectForType(QMetaType::type(name));
     if (mo)
         return mo;
-    mo = QMetaType::metaObjectForType(QMetaType::type(name + '*')); // try pointer version, more likely for QObjects
+    mo = QMetaType::fromName(name+ '*').metaObject(); // try pointer version, more likely for QObjects
     return mo;
 }
 
@@ -105,7 +106,7 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
         mo = metaObject;
         enumIndex = mo->indexOfEnumerator(enumTypeName);
     }
-    if (enumIndex < 0 && (mo = QMetaType::metaObjectForType(QMetaType::type(fullTypeName)))) {
+    if (enumIndex < 0 && (mo = QMetaType::fromName(fullTypeName).metaObject())) {
         enumIndex = mo->indexOfEnumerator(enumTypeName);
     }
     if (enumIndex < 0 && (mo = metaObjectForClass(className))) {
@@ -135,7 +136,7 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
 int EnumUtil::enumToInt(const QVariant &value, const QMetaEnum &metaEnum)
 {
     // QVariant has no implicit QFlag to int conversion as of Qt 5.7
-    if (metaEnum.isFlag() && QMetaType::sizeOf(value.userType()) == sizeof(int)) // int should be enough, QFlag has that hardcoded
+    if (metaEnum.isFlag() && QMetaType(value.userType()).sizeOf() == sizeof(int)) // int should be enough, QFlag has that hardcoded
         return value.constData() ? *static_cast<const int *>(value.constData()) : 0;
     return value.toInt();
 }

@@ -46,27 +46,6 @@ if(TARGET Qt::Widgets)
     add_dependencies(translator_test translator_test_qm)
 endif()
 
-if(${QT_VERSION_MAJOR} EQUAL 5 AND Qt5Webkit_FOUND)
-    add_executable(wk1application wk1application.cpp)
-    target_link_libraries(
-        wk1application
-        Qt::Core
-        Qt::Gui
-        Qt::Widgets
-        Qt5::Webkit
-        Qt5::WebkitWidgets
-    )
-endif()
-
-if(${QT_VERSION_MAJOR} EQUAL 5
-   AND Qt5WebKit_FOUND
-   AND TARGET Qt::Quick
-)
-    set(wk2application_srcs wk2application.cpp wk2application.qrc)
-    add_executable(wk2application ${wk2application_srcs})
-    target_link_libraries(wk2application Qt::Quick)
-endif()
-
 add_executable(
     signalmonitortest
     signalmonitortest.cpp
@@ -112,7 +91,4 @@ if(GAMMARAY_STATIC_PROBE)
         #    gammaray_quickinspector
         #    gammaray_webinspector_plugin
     )
-    if(${QT_VERSION_MAJOR} EQUAL 5 AND TARGET Qt5::Core)
-        target_link_libraries(staticinjectiontest gammaray_codecbrowser_plugin)
-    endif()
 endif()

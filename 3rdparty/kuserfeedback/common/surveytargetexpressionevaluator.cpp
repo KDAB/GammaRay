@@ -65,10 +65,10 @@ bool SurveyTargetExpressionEvaluator::evaluate(SurveyTargetExpression* expressio
     // comparisson operations:
     const auto lhs = value(expression->left());
     const auto rhs = value(expression->right());
-    if (lhs.type() == QVariant::Invalid || rhs.type() == QVariant::Invalid) // invalid element access can never succeed
+    if (lhs.typeId() == QMetaType::UnknownType || rhs.typeId() == QMetaType::UnknownType) // invalid element access can never succeed
         return false;
-    if ((lhs.type() == QVariant::String && rhs.type() != QVariant::String)
-        || (lhs.type() != QVariant::String && rhs.type() == QVariant::String))
+    if ((lhs.typeId() == QMetaType::QString && rhs.typeId() != QMetaType::QString)
+        || (lhs.typeId() != QMetaType::QString && rhs.typeId() == QMetaType::QString))
         return false; // strings can only be compared to strings
 
     switch (expression->type()) {

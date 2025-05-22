@@ -420,12 +420,12 @@ void UIStateManager::restoreSplitterState(QSplitter *splitter)
                 sizes.reserve(defaultSizes.count());
 
                 for (const QVariant &size : defaultSizes) {
-                    switch (size.type()) {
-                    case QVariant::Int: // Pixels
+                    switch (size.typeId()) {
+                    case QMetaType::Int: // Pixels
                         sizes << size.toInt();
                         break;
 
-                    case QVariant::String: { // Percent
+                    case QMetaType::QString: { // Percent
                         int value = percentToInt(size.toString());
                         if (value == -1)
                             sizes << value;
@@ -490,12 +490,12 @@ void UIStateManager::restoreHeaderState(QHeaderView *header)
                      ++it) {
                     int size = 0;
 
-                    switch ((*it).type()) {
-                    case QVariant::Int: // Pixels
+                    switch ((*it).typeId()) {
+                    case QMetaType::Int: // Pixels
                         size = (*it).toInt();
                         break;
 
-                    case QVariant::String: // Percent
+                    case QMetaType::QString: // Percent
                         size = percentToInt((*it).toString());
                         if (size == -1) {
                         } else if (header->orientation() == Qt::Horizontal) {

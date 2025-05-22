@@ -50,10 +50,10 @@ void RemoteViewClient::sendWheelEvent(const QPoint &localPos, QPoint pixelDelta,
     Endpoint::instance()->invokeObject(name(), "sendWheelEvent", QVariantList() << QVariant::fromValue(localPos) << QVariant::fromValue(pixelDelta) << QVariant::fromValue(angleDelta) << QVariant::fromValue(buttons) << QVariant::fromValue(modifiers));
 }
 
-void RemoteViewClient::sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
-                                      int touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
+void RemoteViewClient::sendTouchEvent(const QString &deviceName, int deviceSystemId, int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
+                                      const QList<QTouchEvent::TouchPoint> &touchPoints)
 {
-    Endpoint::instance()->invokeObject(name(), "sendTouchEvent", QVariantList() << QVariant::fromValue(type) << QVariant::fromValue(touchDeviceType) << QVariant::fromValue(deviceCaps) << QVariant::fromValue(touchDeviceMaxTouchPoints) << QVariant::fromValue(modifiers) << QVariant::fromValue(touchPointStates) << QVariant::fromValue(touchPoints));
+    Endpoint::instance()->invokeObject(name(), "sendTouchEvent", QVariantList() << QVariant::fromValue(deviceName) << QVariant::fromValue(deviceSystemId) << QVariant::fromValue(type) << QVariant::fromValue(touchDeviceType) << QVariant::fromValue(deviceCaps) << QVariant::fromValue(touchDeviceMaxTouchPoints) << QVariant::fromValue(modifiers) << QVariant::fromValue(touchPoints));
 }
 
 void RemoteViewClient::setViewActive(bool active)

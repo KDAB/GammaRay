@@ -292,7 +292,7 @@ void ProviderPrivate::submitFinished(QNetworkReply *reply)
     if (it != obj.end() && surveyInterval >= 0) {
         const auto a = it.value().toArray();
         qCDebug(Log) << "received" << a.size() << "surveys";
-        foreach(const auto &s, a) {
+        for(const auto &s : a) {
             const auto survey = SurveyInfo::fromJson(s.toObject());
             if (selectSurvey(survey))
                 break;

@@ -19,7 +19,7 @@ using namespace GammaRay;
 
 struct location_info_t
 {
-    QLibraryInfo::LibraryLocation loc;
+    QLibraryInfo::LibraryPath loc;
     const char *name;
 };
 
@@ -77,7 +77,7 @@ QVariant LibraryInfoModel::data(const QModelIndex &index, int role) const
         case 0:
             return locInfoTable[index.row()].name;
         case 1:
-            return QLibraryInfo::location(locInfoTable[index.row()].loc);
+            return QLibraryInfo::path(locInfoTable[index.row()].loc);
         }
     }
 

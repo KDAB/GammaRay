@@ -33,26 +33,23 @@ PropertyEditorFactory::PropertyEditorFactory()
 {
     initBuiltInTypes();
 
-    addEditor(QVariant::Color, new QStandardItemEditorCreator<PropertyColorEditor>());
-    addEditor(QVariant::ByteArray, new QStandardItemEditorCreator<PropertyByteArrayEditor>(), true);
-    addEditor(QVariant::Font, new QStandardItemEditorCreator<PropertyFontEditor>());
-    addEditor(QVariant::Palette, new QStandardItemEditorCreator<PropertyPaletteEditor>(), true);
-    addEditor(QVariant::Point, new QStandardItemEditorCreator<PropertyPointEditor>());
-    addEditor(QVariant::PointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
-    addEditor(QVariant::Rect, new QStandardItemEditorCreator<PropertyRectEditor>());
-    addEditor(QVariant::RectF, new QStandardItemEditorCreator<PropertyRectFEditor>());
-    addEditor(QVariant::Size, new QStandardItemEditorCreator<PropertySizeEditor>());
-    addEditor(QVariant::SizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
-    addEditor(QVariant::String, new QStandardItemEditorCreator<PropertyTextEditor>(), true);
-    addEditor(QVariant::Transform, new QStandardItemEditorCreator<PropertyMatrixEditor>());
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    addEditor(QVariant::Matrix, new QStandardItemEditorCreator<PropertyMatrixEditor>());
-#endif
-    addEditor(QVariant::Matrix4x4, new QStandardItemEditorCreator<PropertyMatrixEditor>());
-    addEditor(QVariant::Vector2D, new QStandardItemEditorCreator<PropertyMatrixEditor>());
-    addEditor(QVariant::Vector3D, new QStandardItemEditorCreator<PropertyMatrixEditor>());
-    addEditor(QVariant::Vector4D, new QStandardItemEditorCreator<PropertyMatrixEditor>());
-    addEditor(QVariant::Quaternion, new QStandardItemEditorCreator<PropertyMatrixEditor>());
+    addEditor(QMetaType::QColor, new QStandardItemEditorCreator<PropertyColorEditor>());
+    addEditor(QMetaType::QByteArray, new QStandardItemEditorCreator<PropertyByteArrayEditor>(), true);
+    addEditor(QMetaType::QFont, new QStandardItemEditorCreator<PropertyFontEditor>());
+    addEditor(QMetaType::QPalette, new QStandardItemEditorCreator<PropertyPaletteEditor>(), true);
+    addEditor(QMetaType::QPoint, new QStandardItemEditorCreator<PropertyPointEditor>());
+    addEditor(QMetaType::QPointF, new QStandardItemEditorCreator<PropertyPointFEditor>());
+    addEditor(QMetaType::QRect, new QStandardItemEditorCreator<PropertyRectEditor>());
+    addEditor(QMetaType::QRectF, new QStandardItemEditorCreator<PropertyRectFEditor>());
+    addEditor(QMetaType::QSize, new QStandardItemEditorCreator<PropertySizeEditor>());
+    addEditor(QMetaType::QSizeF, new QStandardItemEditorCreator<PropertySizeFEditor>());
+    addEditor(QMetaType::QString, new QStandardItemEditorCreator<PropertyTextEditor>(), true);
+    addEditor(QMetaType::QTransform, new QStandardItemEditorCreator<PropertyMatrixEditor>());
+    addEditor(QMetaType::QMatrix4x4, new QStandardItemEditorCreator<PropertyMatrixEditor>());
+    addEditor(QMetaType::QVector2D, new QStandardItemEditorCreator<PropertyMatrixEditor>());
+    addEditor(QMetaType::QVector3D, new QStandardItemEditorCreator<PropertyMatrixEditor>());
+    addEditor(QMetaType::QVector4D, new QStandardItemEditorCreator<PropertyMatrixEditor>());
+    addEditor(QMetaType::QQuaternion, new QStandardItemEditorCreator<PropertyMatrixEditor>());
 
     registerEditor(static_cast<TypeId>(qMetaTypeId<EnumValue>()), new QStandardItemEditorCreator<PropertyEnumEditor>());
 
@@ -70,7 +67,7 @@ QWidget *PropertyEditorFactory::createEditor(TypeId type, QWidget *parent) const
 {
     if (type == QMetaType::Float) {
         /* coverity[mixed_enums] */
-        type = QVariant::Double;
+        type = QMetaType::Double;
     }
 
     QWidget *w = QItemEditorFactory::createEditor(type, parent);
@@ -91,13 +88,13 @@ QVector<int> PropertyEditorFactory::supportedTypes()
 void PropertyEditorFactory::initBuiltInTypes()
 {
     m_supportedTypes
-        << QVariant::Bool
-        << QVariant::Double
-        << QVariant::Int
-        << QVariant::UInt
-        << QVariant::Date
-        << QVariant::DateTime
-        << QVariant::Time;
+        << QMetaType::Bool
+        << QMetaType::Double
+        << QMetaType::Int
+        << QMetaType::UInt
+        << QMetaType::QDate
+        << QMetaType::QDateTime
+        << QMetaType::QTime;
 
     m_supportedTypes << QMetaType::Float;
 }

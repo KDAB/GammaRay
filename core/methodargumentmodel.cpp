@@ -28,7 +28,9 @@ void MethodArgumentModel::setMethod(const QMetaMethod &method)
     m_arguments.resize(method.parameterTypes().size());
     for (int i = 0; i < m_arguments.size(); ++i) {
         const QByteArray typeName = method.parameterTypes().at(i);
-        const QVariant::Type variantType = QVariant::nameToType(typeName);
+
+        int metaTypeId = QMetaType::fromName(typeName).id();
+        const auto variantType = metaTypeId <= int(QMetaType::User) ? metaTypeId : QMetaType::User;
         m_arguments[i] = QVariant(variantType);
     }
     endResetModel();

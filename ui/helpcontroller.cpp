@@ -92,7 +92,7 @@ bool HelpController::isAvailable()
     if (!d->assistantPath.isEmpty() && !d->qhcPath.isEmpty())
         return true;
 
-    d->assistantPath = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator() + assistantExecutableName();
+    d->assistantPath = QLibraryInfo::path(QLibraryInfo::BinariesPath) + QDir::separator() + assistantExecutableName();
     QFileInfo assistFile(d->assistantPath);
     if (!assistFile.isExecutable()) {
         qDebug() << "Qt Assistant not found in QT_INSTALL_BINS. Looking in standard Path next.";

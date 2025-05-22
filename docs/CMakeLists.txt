@@ -9,11 +9,8 @@
 
 # qdoc toolchain
 find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help)
-if(${QT_VERSION_MAJOR} EQUAL 5)
-    find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS AttributionsScannerTools)
-elseif(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS ToolsTools)
-endif()
+
+find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS ToolsTools)
 
 if(TARGET Qt::qdoc)
     set(QDOC_EXECUTABLE "$<TARGET_FILE:Qt::qdoc>")

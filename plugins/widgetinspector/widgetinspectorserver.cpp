@@ -220,7 +220,7 @@ bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
         QMouseEvent *mouseEv = static_cast<QMouseEvent *>(event);
         if (mouseEv->button() == Qt::LeftButton
             && mouseEv->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
-            QWidget *widget = QApplication::widgetAt(mouseEv->globalPos());
+            QWidget *widget = QApplication::widgetAt(mouseEv->globalPosition().toPoint());
             if (widget) {
                 // also select the corresponding model if a view was selected
                 if (QAbstractItemView *view = Util::findParentOfType<QAbstractItemView>(object))
@@ -232,7 +232,7 @@ bool WidgetInspectorServer::eventFilter(QObject *object, QEvent *event)
                         m_probe->selectObject(toolButton->defaultAction());
                 }
 
-                m_probe->selectObject(widget, widget->mapFromGlobal(mouseEv->globalPos()));
+                m_probe->selectObject(widget, widget->mapFromGlobal(mouseEv->globalPosition().toPoint()));
                 widgetSelected(widget);
             }
         }

@@ -240,7 +240,7 @@ static EventData createEventData(QObject *receiver, QEvent *event)
                     void **argv = metaCallEvent->args();
                     if (argv) { // nullptr e.g. for QDBusCallDeliveryEvent
                         if (method.returnType() != QMetaType::Void) {
-                            void *returnValueCopy = QMetaType::create(method.returnType(), argv[0]);
+                            void *returnValueCopy = QMetaType(method.returnType()).create(argv[0]);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
                             eventData.attributes << QPair<const char *, QVariant> { "[return value]", QVariant(method.returnType(), returnValueCopy) };
 #else
@@ -251,7 +251,7 @@ static EventData createEventData(QObject *receiver, QEvent *event)
                         QVariantMap vargs;
                         for (int i = 0; i < argc; ++i) {
                             int type = method.parameterType(i);
-                            void *argumentDataCopy = QMetaType::create(type, argv[i + 1]);
+                            void *argumentDataCopy = QMetaType(type).create(argv[i + 1]);
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
                             vargs.insert(method.parameterNames().at(i), QVariant(type, argumentDataCopy));
 #else

@@ -891,7 +891,7 @@ QTouchEvent::TouchPoint RemoteViewWidget::mapToSource(const QTouchEvent::TouchPo
 #define SET_POINT_VALUE(func, val) \
     QMutableEventPoint::func(p, (val))
 
-    SET_POINT_VALUE(setScenePosition, mapToSource(point.scenePos()));
+    SET_POINT_VALUE(setScenePosition, mapToSource(point.scenePosition()));
     SET_POINT_VALUE(setGlobalGrabPosition, mapToSource(point.globalGrabPosition()));
     SET_POINT_VALUE(setGlobalLastPosition, mapToSource(point.globalGrabPosition()));
     SET_POINT_VALUE(setGlobalPosition, mapToSource(point.globalPosition()));
@@ -1117,8 +1117,8 @@ void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
     m_currentMousePosition = mapToSource(QPointF(event->pos()));
 
     auto pan = [this, event]() {
-        m_x = event->x() - m_mouseDownPosition.x();
-        m_y = event->y() - m_mouseDownPosition.y();
+        m_x = event->pos().x() - m_mouseDownPosition.x();
+        m_y = event->pos().y() - m_mouseDownPosition.y();
         clampPanPosition();
         updateUserViewport();
     };
@@ -1423,14 +1423,14 @@ void RemoteViewWidget::sendTouchEvent(QTouchEvent *event)
     }
 
     QList<QTouchEvent::TouchPoint> touchPoints;
-    foreach (const QTouchEvent::TouchPoint &point, event->touchPoints()) {
+    foreach (const QTouchEvent::TouchPoint &point, event->points()) {
         touchPoints << mapToSource(point);
     }
 
     QInputDevice::Capabilities caps = pointingDevice->capabilities();
     caps.setFlag(QInputDevice::Capability::Velocity, false);
-    m_interface->sendTouchEvent(event->type(), ( int )event->deviceType(), caps, pointingDevice->maximumPoints(),
-                                ( int )event->modifiers(), ( int )event->touchPointStates(), touchPoints);
+    m_interface->sendTouchEvent(pointingDevice->name(), pointingDevice->systemId(), event->type(), ( int )event->deviceType(), caps, pointingDevice->maximumPoints(),
+                                ( int )event->modifiers(), touchPoints);
 
 #else
     QList<QTouchEvent::TouchPoint> touchPoints;

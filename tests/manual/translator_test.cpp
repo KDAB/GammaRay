@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
 
     loadTranslation(app.applicationDirPath() + "/translation.qm",
                     QStringLiteral("App translator"));
-    loadTranslation(QLibraryInfo::location(QLibraryInfo::TranslationsPath)
+    loadTranslation(QLibraryInfo::path(QLibraryInfo::TranslationsPath)
                         + QStringLiteral("/qt_sv.qm"),
                     QStringLiteral("Qt translator"));
 

@@ -120,7 +120,7 @@ public:
 
     const char *typeName() const override
     {
-        return QMetaType::typeName(qMetaTypeId<ValueType>());
+        return QMetaType(qMetaTypeId<ValueType>()).name();
     }
 
 private:
@@ -157,7 +157,7 @@ public:
 
     const char *typeName() const override
     {
-        return QMetaType::typeName(qMetaTypeId<ValueType>());
+        return QMetaType(qMetaTypeId<ValueType>()).name();
     }
 
 private:
@@ -189,7 +189,7 @@ public:
 
     const char *typeName() const override
     {
-        return QMetaType::typeName(qMetaTypeId<ValueType>());
+        return QMetaType(qMetaTypeId<ValueType>()).name();
     }
 
 private:
@@ -219,7 +219,7 @@ public:
 
     const char *typeName() const override
     {
-        return QMetaType::typeName(qMetaTypeId<ValueType>());
+        return QMetaType(qMetaTypeId<ValueType>()).name();
     }
 
 private:

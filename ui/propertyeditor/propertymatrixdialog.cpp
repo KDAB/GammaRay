@@ -38,28 +38,23 @@ void PropertyMatrixDialog::setMatrix(const QVariant &matrix)
     m_model->setMatrix(matrix);
 
     QString windowTitle = tr("Edit Matrix");
-    switch (matrix.type()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    case QVariant::Matrix:
-        windowTitle = tr("Edit Matrix");
-        break;
-#endif
-    case QVariant::Matrix4x4:
+    switch (matrix.typeId()) {
+    case QMetaType::QMatrix4x4:
         windowTitle = tr("Edit 4x4 Matrix");
         break;
-    case QVariant::Transform:
+    case QMetaType::QTransform:
         windowTitle = tr("Edit Transform");
         break;
-    case QVariant::Vector2D:
+    case QMetaType::QVector2D:
         windowTitle = tr("Edit 2D Vector");
         break;
-    case QVariant::Vector3D:
+    case QMetaType::QVector3D:
         windowTitle = tr("Edit 3D Vector");
         break;
-    case QVariant::Vector4D:
+    case QMetaType::QVector4D:
         windowTitle = tr("Edit 4D Vector");
         break;
-    case QVariant::Quaternion:
+    case QMetaType::QQuaternion:
         windowTitle = tr("Edit Quaternion");
         break;
     default:

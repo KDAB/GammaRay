@@ -399,7 +399,7 @@ bool StyleHintModel::setData(const QModelIndex &index, const QVariant &value, in
         return false;
 
     int i = value.toInt();
-    if (value.type() == QVariant::Color)
+    if (value.typeId() == QMetaType::QColor)
         i = value.value<QColor>().rgba();
     else if (value.userType() == qMetaTypeId<EnumValue>())
         i = value.value<EnumValue>().value();
