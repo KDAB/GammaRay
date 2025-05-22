@@ -23,11 +23,9 @@
 #include <QTimer>
 #include <QWindow>
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qeventpoint_p.h>
 #include <private/qevent_p.h>
 #include <private/qpointingdevice_p.h>
-#endif
 
 using namespace GammaRay;
 

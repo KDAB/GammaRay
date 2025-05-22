@@ -11,8 +11,6 @@
   Contact KDAB at <info@kdab.com> for commercial licensing options.
 */
 
-#include <3rdparty/qt/modeltest.h>
-
 #include <common/networkselectionmodel.h>
 #include <common/message.h>
 #include <common/endpoint.h>

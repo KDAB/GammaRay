@@ -27,7 +27,6 @@
 #include <algorithm>
 #include <cassert>
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QBitArray>
 #include <QEasingCurve>
 #include <QUuid>
@@ -39,7 +38,6 @@
 #include <QCborMap>
 #include <QModelIndex>
 #include <private/qmetatype_p.h>
-#endif
 
 using namespace GammaRay;
 
@@ -204,7 +202,6 @@ void MetaObjectRegistry::objectAdded(QObject *obj)
     }
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 // Lifted from Qt
 struct MetaTypeCoreHelper final : public QMetaTypeModuleHelper
 {
@@ -248,11 +245,9 @@ bool MetaObjectRegistry::isTypeIdRegistered(int type)
         return moduleHelper->interfaceForType(type) != nullptr;
     return false;
 }
-#endif
 
 void MetaObjectRegistry::scanMetaTypes()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     for (int mtId = 0; mtId <= QMetaType::User; ++mtId) {
         if (!isTypeIdRegistered(mtId))
             continue;
@@ -266,16 +261,6 @@ void MetaObjectRegistry::scanMetaTypes()
             addMetaObject(mt);
     }
     addMetaObject(&Qt::staticMetaObject);
-#else
-    for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
-        if (!QMetaType::isRegistered(mtId))
-            continue;
-        const auto *mt = QMetaType::metaObjectForType(mtId);
-        if (mt)
-            addMetaObject(mt);
-    }
-    addMetaObject(&staticQtMetaObject);
-#endif
 }
 
 const QMetaObject *MetaObjectRegistry::addMetaObject(const QMetaObject *metaObject, bool mergeDynamic)

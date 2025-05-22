@@ -18,9 +18,7 @@
 #include <common/remoteviewframe.h>
 #include <QWindow>
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qeventpoint_p.h>
-#endif
 #include <QPainterPath>
 Q_DECLARE_METATYPE(QPainterPath) // needed for Qt5
 
@@ -42,20 +40,6 @@ QDataStream &operator>>(QDataStream &s, GammaRay::RemoteViewInterface::TouchPoin
 }
 
 // Not available in Qt6, has QPointingDevice::PointerType instead
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-QDataStream &operator<<(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags flags)
-{
-    return s << ( int )flags;
-}
-
-QDataStream &operator>>(QDataStream &s, QTouchEvent::TouchPoint::InfoFlags &flags)
-{
-    int f;
-    s >> f;
-    flags = QTouchEvent::TouchPoint::InfoFlags(f);
-    return s;
-}
-#else
 QDataStream &operator<<(QDataStream &s, QPointingDeviceUniqueId id)
 {
     return s << id.numericId();
@@ -68,14 +52,12 @@ QDataStream &operator>>(QDataStream &s, QPointingDeviceUniqueId &id)
     id = QPointingDeviceUniqueId::fromNumericId(devId);
     return s;
 }
-#endif
 
 QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &points)
 {
     // The (int) is fkn important!
     s << ( int )points.count();
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     for (const auto &p : points) {
         s << p.id();
         s << p.state();
@@ -95,32 +77,9 @@ QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &po
         s << ( quint64 )p.pressTimestamp();
         s << ( quint64 )p.timestamp();
     }
-#else
-    for (const auto &p : points) {
-        s << p.id();
-        s << p.state();
-        s << p.rect() << p.sceneRect() << p.screenRect();
-        s << p.normalizedPos();
-        s << p.startPos() << p.startScenePos() << p.startScreenPos() << p.startNormalizedPos();
-        s << p.lastPos() << p.lastScenePos() << p.lastScreenPos() << p.lastNormalizedPos();
-        s << p.pressure();
-        s << p.velocity();
-        s << p.flags();
-        s << p.rawScreenPositions();
-    }
-#endif
     return s;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-template<class T, class TouchPoint>
-void setPointValue(QDataStream &s, TouchPoint &p, void (TouchPoint::*func)(T))
-{
-    typename std::decay<T>::type value;
-    s >> value;
-    (p.*func)(value);
-}
-#else
 template<class T>
 void setPointValue(QDataStream &s, QEventPoint &p, void (*func)(QEventPoint &, T))
 {
@@ -128,7 +87,6 @@ void setPointValue(QDataStream &s, QEventPoint &p, void (*func)(QEventPoint &, T
     s >> value;
     (func)(p, value);
 }
-#endif
 
 QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
 {
@@ -136,7 +94,6 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
     s >> count;
     points.reserve(count);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     for (int i = 0; i < count; ++i) {
         QEventPoint p;
 
@@ -165,38 +122,6 @@ QDataStream &operator>>(QDataStream &s, QList<QTouchEvent::TouchPoint> &points)
 
         points.append(p);
     }
-#else
-    for (int i = 0; i < count; ++i) {
-        QTouchEvent::TouchPoint p;
-
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setId);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setState);
-
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setRect);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setSceneRect);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setScreenRect);
-
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setNormalizedPos);
-
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setStartPos);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setStartScenePos);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setStartScreenPos);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setStartNormalizedPos);
-
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setLastPos);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setLastScenePos);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setLastScreenPos);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setLastNormalizedPos);
-
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setPressure);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setVelocity);
-
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setFlags);
-        setPointValue(s, p, &QTouchEvent::TouchPoint::setRawScreenPositions);
-
-        points.append(p);
-    }
-#endif
     return s;
 }
 
@@ -217,11 +142,7 @@ RemoteViewInterface::RemoteViewInterface(const QString &name, QObject *parent)
     StreamOperators::registerOperators<GammaRay::RemoteViewFrame>();
     StreamOperators::registerOperators<RemoteViewInterface::TouchPointStates>();
     StreamOperators::registerOperators<QList<QTouchEvent::TouchPoint>>();
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
     StreamOperators::registerOperators<QPointingDevice::PointerType>();
-#else
-    StreamOperators::registerOperators<QTouchEvent::TouchPoint::InfoFlags>();
-#endif
 }
 
 QString RemoteViewInterface::name() const

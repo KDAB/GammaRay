@@ -75,12 +75,6 @@ Q_DECLARE_METATYPE(QFlags<Qt::MouseEventFlag>)
 Q_DECLARE_METATYPE(QTouchEvent::TouchPoint)
 Q_DECLARE_METATYPE(QList<QTouchEvent::TouchPoint>)
 Q_DECLARE_METATYPE(Qt::TouchPointState)
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-Q_DECLARE_METATYPE(QFlags<QTouchEvent::TouchPoint::InfoFlag>)
-Q_DECLARE_METATYPE(QFlags<QTouchDevice::CapabilityFlag>)
-Q_DECLARE_METATYPE(QTouchDevice *)
-Q_DECLARE_METATYPE(const QTouchDevice *)
-#endif
 Q_DECLARE_METATYPE(QScrollEvent::ScrollState)
 Q_DECLARE_METATYPE(QList<QInputMethodEvent::Attribute>)
 Q_DECLARE_METATYPE(QContextMenuEvent::Reason)
@@ -199,9 +193,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QPaintDevice, colorCount);
     MO_ADD_PROPERTY_RO(QPaintDevice, depth);
     MO_ADD_PROPERTY_RO(QPaintDevice, devicePixelRatio);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     MO_ADD_PROPERTY_RO(QPaintDevice, devicePixelRatioF);
-#endif
     MO_ADD_PROPERTY_RO(QPaintDevice, height);
     MO_ADD_PROPERTY_RO(QPaintDevice, heightMM);
     MO_ADD_PROPERTY_RO(QPaintDevice, logicalDpiX);
@@ -215,11 +207,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QImage, QPaintDevice);
     MO_ADD_PROPERTY_RO(QImage, allGray);
     MO_ADD_PROPERTY_RO(QImage, bitPlaneCount);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     MO_ADD_PROPERTY_RO(QImage, sizeInBytes)
-#else
-    MO_ADD_PROPERTY_RO(QImage, byteCount);
-#endif
     MO_ADD_PROPERTY_RO(QImage, bytesPerLine);
     MO_ADD_PROPERTY_RO(QImage, cacheKey);
     MO_ADD_PROPERTY(QImage, dotsPerMeterX, setDotsPerMeterX);
@@ -256,7 +244,6 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSurface, surfaceClass);
     MO_ADD_PROPERTY_RO(QSurface, surfaceType);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0) // not a gadget previously
     MO_ADD_METAOBJECT0(QSurfaceFormat);
     MO_ADD_PROPERTY(QSurfaceFormat, alphaBufferSize, setAlphaBufferSize);
     MO_ADD_PROPERTY(QSurfaceFormat, blueBufferSize, setBlueBufferSize);
@@ -275,7 +262,6 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY(QSurfaceFormat, stereo, setStereo);
     MO_ADD_PROPERTY(QSurfaceFormat, swapBehavior, setSwapBehavior);
     MO_ADD_PROPERTY(QSurfaceFormat, swapInterval, setSwapInterval);
-#endif
 
     MO_ADD_METAOBJECT2(QWindow, QObject, QSurface);
     MO_ADD_PROPERTY(QWindow, baseSize, setBaseSize);
@@ -373,9 +359,7 @@ void GuiSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT0(QIcon);
     MO_ADD_PROPERTY_RO(QIcon, cacheKey);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     MO_ADD_PROPERTY(QIcon, isMask, setIsMask);
-#endif
     MO_ADD_PROPERTY_RO(QIcon, isNull);
     MO_ADD_PROPERTY_RO(QIcon, name);
     MO_ADD_PROPERTY_RO(QIcon, themeName);
@@ -432,10 +416,8 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QDragMoveEvent, answerRect);
 
     MO_ADD_METAOBJECT1(QInputEvent, QEvent);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_PROPERTY_RO(QInputEvent, device);
     MO_ADD_PROPERTY_RO(QInputEvent, deviceType);
-#endif
     MO_ADD_PROPERTY_RO(QInputEvent, modifiers);
     MO_ADD_PROPERTY_RO(QInputEvent, timestamp);
 
@@ -444,7 +426,6 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QContextMenuEvent, pos);
     MO_ADD_PROPERTY_RO(QContextMenuEvent, reason);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT1(QPointerEvent, QInputEvent);
     MO_ADD_PROPERTY_RO(QPointerEvent, allPointsAccepted);
     MO_ADD_PROPERTY_RO(QPointerEvent, allPointsGrabbed);
@@ -462,61 +443,28 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QSinglePointEvent, isUpdateEvent);
     MO_ADD_PROPERTY_RO(QSinglePointEvent, position);
     MO_ADD_PROPERTY_RO(QSinglePointEvent, scenePosition);
-#endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_METAOBJECT1(QMouseEvent, QInputEvent);
-    MO_ADD_PROPERTY_RO(QMouseEvent, button);
-    MO_ADD_PROPERTY_RO(QMouseEvent, buttons);
-    MO_ADD_PROPERTY_RO(QMouseEvent, globalPos);
-    MO_ADD_PROPERTY_RO(QMouseEvent, pos);
-#else
     MO_ADD_METAOBJECT1(QMouseEvent, QSinglePointEvent);
-#endif
     MO_ADD_PROPERTY_RO(QMouseEvent, flags);
     MO_ADD_PROPERTY_RO(QMouseEvent, pos);
     MO_ADD_PROPERTY_RO(QMouseEvent, globalPosition);
     MO_ADD_PROPERTY_RO(QMouseEvent, source);
     MO_ADD_PROPERTY_RO(QMouseEvent, scenePosition);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_METAOBJECT1(QHoverEvent, QInputEvent);
-    MO_ADD_PROPERTY_RO(QHoverEvent, posF);
-#else
     MO_ADD_METAOBJECT1(QHoverEvent, QSinglePointEvent);
-#endif
     MO_ADD_PROPERTY_RO(QHoverEvent, oldPosF);
 
 #if QT_CONFIG(wheelevent)
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_METAOBJECT1(QWheelEvent, QInputEvent);
-    MO_ADD_PROPERTY_RO(QWheelEvent, buttons);
-    MO_ADD_PROPERTY_RO(QWheelEvent, delta);
-    MO_ADD_PROPERTY_RO(QWheelEvent, orientation);
-    MO_ADD_PROPERTY_RO(QWheelEvent, posF);
-    MO_ADD_PROPERTY_RO(QWheelEvent, globalPosF);
-#else
     MO_ADD_METAOBJECT1(QWheelEvent, QSinglePointEvent);
-#endif
     MO_ADD_PROPERTY_RO(QWheelEvent, pixelDelta);
     MO_ADD_PROPERTY_RO(QWheelEvent, angleDelta);
     MO_ADD_PROPERTY_RO(QWheelEvent, phase);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     MO_ADD_PROPERTY_RO(QWheelEvent, inverted);
-#endif
     MO_ADD_PROPERTY_RO(QWheelEvent, source);
 #endif
 
 #if QT_CONFIG(tabletevent)
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_METAOBJECT1(QTabletEvent, QInputEvent);
-    MO_ADD_PROPERTY_RO(QTabletEvent, device);
-    MO_ADD_PROPERTY_RO(QTabletEvent, pointerType);
-    MO_ADD_PROPERTY_RO(QTabletEvent, posF);
-    MO_ADD_PROPERTY_RO(QTabletEvent, globalPosF);
-#else
     MO_ADD_METAOBJECT1(QTabletEvent, QSinglePointEvent);
-#endif
     MO_ADD_PROPERTY_RO(QTabletEvent, pressure);
     MO_ADD_PROPERTY_RO(QTabletEvent, z);
     MO_ADD_PROPERTY_RO(QTabletEvent, tangentialPressure);
@@ -527,19 +475,13 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QTabletEvent, buttons);
 #endif
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_METAOBJECT1(QNativeGestureEvent, QInputEvent);
-#else
     MO_ADD_METAOBJECT1(QNativeGestureEvent, QSinglePointEvent);
-#endif
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, gestureType);
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, value);
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, position);
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, scenePosition);
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, globalPosition);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, device);
-#endif
 
     MO_ADD_METAOBJECT1(QKeyEvent, QInputEvent);
     MO_ADD_PROPERTY_RO(QKeyEvent, key);
@@ -588,51 +530,12 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QWindowStateChangeEvent, oldState);
     MO_ADD_PROPERTY_RO(QWindowStateChangeEvent, isOverride);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_METAOBJECT1(QTouchEvent, QInputEvent);
-    MO_ADD_PROPERTY_RO(QTouchEvent, device);
-    MO_ADD_PROPERTY_RO(QTouchEvent, window);
-#else
     MO_ADD_METAOBJECT1(QTouchEvent, QPointerEvent);
-#endif
     MO_ADD_PROPERTY_RO(QTouchEvent, target);
     MO_ADD_PROPERTY_RO(QTouchEvent, points);
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_METAOBJECT0(QTouchEvent::TouchPoint);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, id);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, state);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, pos);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, startPos);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, lastPos);
-    // TODO: add other pos values?
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, pressure);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, velocity);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, flags);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rawScreenPositions);
-#if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rect);
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, uniqueId);
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, rotation);
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
-    MO_ADD_PROPERTY_RO(QTouchEvent::TouchPoint, ellipseDiameters);
-#endif
-
-    MO_ADD_METAOBJECT0(QTouchDevice);
-    MO_ADD_PROPERTY_RO(QTouchDevice, capabilities);
-    MO_ADD_PROPERTY_RO(QTouchDevice, maximumTouchPoints);
-    MO_ADD_PROPERTY_RO(QTouchDevice, name);
-    MO_ADD_PROPERTY_RO(QTouchDevice, type);
-#endif
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT0(QTouchEvent::TouchPoint);
     MO_ADD_METAOBJECT0(QPointingDevice);
     MO_ADD_METAOBJECT0(QPointingDeviceUniqueId);
-#endif
 
     MO_ADD_METAOBJECT1(QScrollPrepareEvent, QEvent);
     MO_ADD_PROPERTY_RO(QScrollPrepareEvent, startPos);
@@ -660,13 +563,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QApplicationStateChangeEvent, QEvent);
     MO_ADD_PROPERTY_RO(QApplicationStateChangeEvent, applicationState);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_METAOBJECT1(QEnterEvent, QEvent);
-    MO_ADD_PROPERTY_RO(QEnterEvent, globalPos);
-    MO_ADD_PROPERTY_RO(QEnterEvent, pos);
-#else
     MO_ADD_METAOBJECT1(QEnterEvent, QSinglePointEvent);
-#endif
     MO_ADD_PROPERTY_RO(QEnterEvent, position);
     MO_ADD_PROPERTY_RO(QEnterEvent, scenePosition);
     MO_ADD_PROPERTY_RO(QEnterEvent, globalPosition);
@@ -728,12 +625,8 @@ static const MetaEnum::Value<QSurface::SurfaceType> surface_type_table[] = {
     E(RasterSurface),
     E(OpenGLSurface),
     E(RasterGLSurface),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
     E(OpenVGSurface),
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     E(VulkanSurface)
-#endif
 };
 #undef E
 
@@ -890,14 +783,7 @@ static const MetaEnum::Value<QPainter::RenderHint> painter_render_hint_table[] =
     E(Antialiasing),
     E(TextAntialiasing),
     E(SmoothPixmapTransform),
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    E(HighQualityAntialiasing),
-    E(NonCosmeticDefaultPen),
-    E(Qt4CompatiblePainting),
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
     E(LosslessImageRendering),
-#endif
 };
 #undef E
 
@@ -1023,35 +909,6 @@ static const MetaEnum::Value<QPixelFormat::YUVLayout> pixelformat_yuvlayout_tabl
 };
 #undef E
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#define E(x)                           \
-    {                                  \
-        QTouchEvent::TouchPoint::x, #x \
-    }
-static const MetaEnum::Value<QTouchEvent::TouchPoint::InfoFlags> touch_point_info_flag_table[] = {
-    E(Pen),
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
-    E(Token)
-#endif
-};
-#undef E
-
-#define E(x)                \
-    {                       \
-        QTouchDevice::x, #x \
-    }
-static const MetaEnum::Value<QTouchDevice::Capabilities> touch_device_capabilitites_flag_table[] = {
-    E(Position),
-    E(Area),
-    E(Pressure),
-    E(Velocity),
-    E(RawPositions),
-    E(NormalizedPosition),
-    E(MouseEmulation)
-};
-#undef E
-#endif
-
 static QString brushToString(const QBrush &b)
 {
     return VariantHandler::displayString(b.color()) + QLatin1String(", ") + EnumUtil::enumToString(QVariant::fromValue(b.style()));
@@ -1086,7 +943,6 @@ static QString regionToString(const QRegion &region)
         return QStringLiteral("<null>");
     if (region.isEmpty())
         return QStringLiteral("<empty>");
-#if QT_VERSION > QT_VERSION_CHECK(5, 8, 0)
     if (region.rectCount() == 1)
         return VariantHandler::displayString(*region.begin());
 
@@ -1096,9 +952,6 @@ static QString regionToString(const QRegion &region)
         rects.push_back(VariantHandler::displayString(r));
 
     return GuiSupport::tr("[%1]: %2").arg(VariantHandler::displayString(region.boundingRect()), rects.join(QLatin1String("; ")));
-#else
-    return GuiSupport::tr("<%1 elements>").arg(region.rectCount());
-#endif
 }
 
 template<typename Margins>
@@ -1171,11 +1024,6 @@ void GuiSupport::registerVariantHandler()
     ER_REGISTER_ENUM(QPixelFormat, ColorModel, pixelformat_colormodel_table);
     ER_REGISTER_ENUM(QPixelFormat, TypeInterpretation, pixelformat_typeinterpretation_table);
     ER_REGISTER_ENUM(QPixelFormat, YUVLayout, pixelformat_yuvlayout_table);
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    ER_REGISTER_FLAGS(QTouchEvent::TouchPoint, InfoFlags, touch_point_info_flag_table);
-    ER_REGISTER_FLAGS(QTouchDevice, Capabilities, touch_device_capabilitites_flag_table);
-#endif
 }
 
 QObject *GuiSupport::targetObject(QObject *object)
@@ -1228,16 +1076,11 @@ QIcon GuiSupport::createIcon(const QIcon &oldIcon, QWindow *w)
         return oldIcon;
     }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    const bool highDpiEnabled = qApp->testAttribute(Qt::AA_UseHighDpiPixmaps);
-#else
-    const bool highDpiEnabled = true;
-#endif
     QIcon newIcon;
     foreach (const QSize &size, gammarayIcon.availableSizes()) {
         QPixmap pix = oldIcon.pixmap(oldIcon.actualSize(size));
         if (pix.isNull()) {
-            const qreal ratio = highDpiEnabled ? (w ? w->devicePixelRatio() : qApp->devicePixelRatio()) : 1.0;
+            const qreal ratio = w ? w->devicePixelRatio() : qApp->devicePixelRatio();
             pix = QPixmap(size * ratio);
             pix.setDevicePixelRatio(ratio);
             pix.fill(Qt::transparent);

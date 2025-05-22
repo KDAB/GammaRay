@@ -83,33 +83,17 @@ PropertyData QMetaPropertyAdaptor::propertyMetaData(int propertyIndex) const
     PropertyModel::PropertyFlags f(PropertyModel::None);
     if (prop.isConstant())
         f |= PropertyModel::Constant;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     if (prop.isDesignable())
-#else
-    if (prop.isDesignable(object().qtObject()))
-#endif
         f |= PropertyModel::Designable;
     if (prop.isFinal())
         f |= PropertyModel::Final;
     if (prop.isResettable())
         f |= PropertyModel::Resetable;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     if (prop.isScriptable())
-#else
-    if (prop.isScriptable(object().qtObject()))
-#endif
         f |= PropertyModel::Scriptable;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     if (prop.isStored())
-#else
-    if (prop.isStored(object().qtObject()))
-#endif
         f |= PropertyModel::Stored;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     if (prop.isUser())
-#else
-    if (prop.isUser(object().qtObject()))
-#endif
         f |= PropertyModel::User;
     if (prop.isWritable())
         f |= PropertyModel::Writable;

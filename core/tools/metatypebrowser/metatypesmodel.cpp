@@ -61,17 +61,10 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
     l.push_back(QStringLiteral(#x))
             F(NeedsConstruction);
             F(NeedsDestruction);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             F(RelocatableType);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 2, 0)
             F(IsConst);
-#endif
             F(IsQmlList);
             F(IsUnsignedEnumeration);
-#else
-            F(MovableType);
-            F(WasDeclaredAsMetaType);
-#endif
             F(PointerToQObject);
             F(IsEnumeration);
             F(SharedPointerToQObject);
@@ -83,12 +76,8 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
             return l.join(QStringLiteral(", "));
         }
         case 5: {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             auto mt = QMetaType(metaTypeId);
             return mt.isEqualityComparable() && mt.isOrdered();
-#else
-            return QMetaType::hasRegisteredComparators(metaTypeId);
-#endif
         }
         case 6:
             return QMetaType(metaTypeId).hasRegisteredDebugStreamOperator();
@@ -121,7 +110,6 @@ void MetaTypesModel::scanMetaTypes()
 {
     QVector<int> metaTypes;
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     for (int mtId = 0; mtId <= QMetaType::User; ++mtId) {
         if (!MetaObjectRegistry::isTypeIdRegistered(mtId))
             continue;
@@ -134,15 +122,6 @@ void MetaTypesModel::scanMetaTypes()
         if (strstr(name, "GammaRay::") != name)
             metaTypes.push_back(mtId);
     }
-#else
-    for (int mtId = 0; mtId <= QMetaType::User || QMetaType::isRegistered(mtId); ++mtId) {
-        if (!QMetaType::isRegistered(mtId))
-            continue;
-        const auto name = QMetaType::typeName(mtId);
-        if (strstr(name, "GammaRay::") != name)
-            metaTypes.push_back(mtId);
-    }
-#endif
 
     auto itOld = m_metaTypes.constBegin();
     auto itNew = metaTypes.constBegin();

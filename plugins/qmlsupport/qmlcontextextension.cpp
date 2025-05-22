@@ -24,9 +24,7 @@
 #include <QQmlContext>
 #include <private/qqmlcontext_p.h>
 #include <private/qqmldata_p.h>
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
 #include <private/qqmlcontextdata_p.h>
-#endif
 
 #include <QItemSelectionModel>
 

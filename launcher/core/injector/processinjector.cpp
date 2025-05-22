@@ -27,12 +27,7 @@ ProcessInjector::ProcessInjector()
 {
     m_proc.setInputChannelMode(QProcess::ForwardedInputChannel);
     connect(&m_proc, &QProcess::errorOccurred, this, &ProcessInjector::processFailed);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     connect(&m_proc, &QProcess::finished, this, &ProcessInjector::processFinished);
-#else
-    connect(&m_proc, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-            this, &ProcessInjector::processFinished);
-#endif
     connect(&m_proc, &QProcess::readyReadStandardError, this, &ProcessInjector::readStdErr);
     connect(&m_proc, &QProcess::readyReadStandardOutput, this, &ProcessInjector::readStdOut);
 }

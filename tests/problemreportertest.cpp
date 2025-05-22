@@ -17,10 +17,10 @@
 #include <common/problem.h>
 #include <common/sourcelocation.h>
 #include <common/objectbroker.h>
-#include <3rdparty/qt/modeltest.h>
 
 #include <common/tools/problemreporter/problemmodelroles.h>
 
+#include <QAbstractItemModelTester>
 #include <QDebug>
 #include <QTest>
 #include <QObject>
@@ -105,15 +105,15 @@ class ProblemReporterTest : public BaseProbeTest
         ProblemCollector::addProblem(p2);
     }
 
-    std::unique_ptr<ModelTest> problemModelTest;
-    std::unique_ptr<ModelTest> availableCheckersModelTest;
+    std::unique_ptr<QAbstractItemModelTester> problemModelTest;
+    std::unique_ptr<QAbstractItemModelTester> availableCheckersModelTest;
 
 private slots:
     void initTestCase()
     {
         createProbe();
-        problemModelTest.reset(new ModelTest(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ProblemModel"))));
-        availableCheckersModelTest.reset(new ModelTest(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.AvailableProblemCheckersModel"))));
+        problemModelTest.reset(new QAbstractItemModelTester(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ProblemModel"))));
+        availableCheckersModelTest.reset(new QAbstractItemModelTester(ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.AvailableProblemCheckersModel"))));
     }
 
     static void cleanup()
@@ -281,35 +281,7 @@ private slots:
 #ifdef QT_QML_LIB
     static void testBindingLoopChecker()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         QSKIP("Binding Loop detection doesn't work on Qt6 yet");
-#endif
-
-        QQmlEngine engine;
-        QQmlComponent c(&engine);
-        c.setData("import QtQml 2.0\n"
-                  "QtObject{id: root\n"
-                  "  property list<QtObject> children: [\n"
-                  "  QtObject {id: a; objectName: b.objectName },\n"
-                  "  QtObject {id: b; objectName: a.objectName }\n"
-                  "  ]\n"
-                  "}",
-                  QUrl());
-
-        std::unique_ptr<QObject> obj(c.create());
-        QTest::qWait(1);
-        QVERIFY(static_cast<bool>(obj));
-
-        QVERIFY(ProblemCollector::instance()->isCheckerRegistered("com.kdab.GammaRay.ObjectInspector.BindingLoopScan"));
-
-        ProblemCollector::instance()->requestScan();
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 10, 0)
-        QEXPECT_FAIL("", "Can't find QML bindings with Qt < 5.10.", Abort);
-#endif
-        const auto &problems = ProblemCollector::instance()->problems();
-        QVERIFY(std::any_of(problems.begin(), problems.end(),
-                            [](const Problem &p) { return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.BindingLoopScan"); }));
     }
 #endif
 
@@ -346,13 +318,8 @@ private slots:
         QVERIFY(crossThreadProblem != problems.end());
         QCOMPARE(crossThreadProblem->object, ObjectId(task->mainThreadObj.get()));
         QVERIFY2(crossThreadProblem->description.contains("direct cross-thread connection"), qPrintable(crossThreadProblem->description));
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         QVERIFY2(crossThreadProblem->description.contains("signal QObject (newThreadObj)"), qPrintable(crossThreadProblem->description));
         QVERIFY2(crossThreadProblem->description.contains("slot QObject (mainThreadObj)"), qPrintable(crossThreadProblem->description));
-#else
-        QVERIFY2(crossThreadProblem->description.contains("signal QtQml/QtObject (newThreadObj)"), qPrintable(crossThreadProblem->description));
-        QVERIFY2(crossThreadProblem->description.contains("slot QtQml/QtObject (mainThreadObj)"), qPrintable(crossThreadProblem->description));
-#endif
 
         auto duplicateProblem = std::find_if(problems.begin(), problems.end(),
                                              [](const Problem &p) { return p.problemId.startsWith("com.kdab.GammaRay.ObjectInspector.ConnectionsCheck.Duplicate"); });
@@ -360,13 +327,8 @@ private slots:
         QVERIFY(duplicateProblem != problems.end());
         QCOMPARE(duplicateProblem->object, ObjectId(o2.get()));
         QVERIFY(duplicateProblem->description.contains("multiple times"));
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         QVERIFY2(duplicateProblem->description.contains("signal QObject (o1)"), qPrintable(duplicateProblem->description));
         QVERIFY2(duplicateProblem->description.contains("slot QObject (o2)"), qPrintable(duplicateProblem->description));
-#else
-        QVERIFY2(duplicateProblem->description.contains("signal QtQml/QtObject (o1)"), qPrintable(duplicateProblem->description));
-        QVERIFY2(duplicateProblem->description.contains("slot QtQml/QtObject (o2)"), qPrintable(duplicateProblem->description));
-#endif
 
         disconnect(o1.get(), nullptr, o2.get(), nullptr);
         connect(o1.get(), &QObject::destroyed, o2.get(), &QObject::deleteLater);
@@ -409,22 +371,6 @@ private slots:
                                     && p.object == ObjectId(const_cast<QMetaObject *>(obj->metaObject()), "const QMetaObject*")
                                     && p.description.contains(QLatin1String("overrides base class property"));
                             }));
-        // In Qt6 objects get auto registered with metatype system
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        QVERIFY(std::any_of(problems.begin(), problems.end(),
-                            [&obj](const Problem &p) {
-                                return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
-                                    && p.object == ObjectId(const_cast<QMetaObject *>(obj->metaObject()), "const QMetaObject*")
-                                    && p.description.contains(QLatin1String("parameter type not registered"));
-                            }));
-
-        QVERIFY(std::any_of(problems.begin(), problems.end(),
-                            [&obj](const Problem &p) {
-                                return p.problemId.startsWith("com.kdab.GammaRay.MetaObjectBrowser.QMetaObjectValidator")
-                                    && p.object == ObjectId(const_cast<QMetaObject *>(obj->metaObject()), "const QMetaObject*")
-                                    && p.description.contains(QLatin1String("property with a type not registered"));
-                            }));
-#endif
     }
 
 #ifdef HAVE_QT_WIDGETS

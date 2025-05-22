@@ -24,16 +24,10 @@
 #include <Qt3DExtras/QCuboidMesh>
 #include <Qt3DExtras/QForwardRenderer>
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <Qt3DCore/QAttribute>
 #include <Qt3DCore/QBuffer>
 #include <Qt3DCore/QGeometry>
 namespace Qt3DGeometry = Qt3DCore;
-#else
-#include <Qt3DRender/QAttribute>
-#include <Qt3DRender/QBuffer>
-namespace Qt3DGeometry = Qt3DRender;
-#endif
 
 #include <Qt3DRender/QBlendEquation>
 #include <Qt3DRender/QBlendEquationArguments>

@@ -137,21 +137,12 @@ void QuickImplicitBindingDependencyProvider::implicitSizeDependencies(QQuickItem
     if (!itemPriv)
         return;
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 2, 0)
     if (!itemPriv->widthValid()) {
         addDependency("width", item, "implicitWidth");
     }
     if (!itemPriv->heightValid()) {
         addDependency("height", item, "implicitHeight");
     }
-#else
-    if (!itemPriv->widthValid) {
-        addDependency("width", item, "implicitWidth");
-    }
-    if (!itemPriv->heightValid) {
-        addDependency("height", item, "implicitHeight");
-    }
-#endif
 }
 
 template<class Func>

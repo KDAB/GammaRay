@@ -19,8 +19,7 @@
 #include <common/objectbroker.h>
 #include <common/objectid.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QSignalSpy>
 #include <QTimer>
 
@@ -64,7 +63,7 @@ private slots:
 
         auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel"));
         QVERIFY(model);
-        ModelTest modelTest(model);
+        QAbstractItemModelTester modelTest(model);
         auto baseRowCount = model->rowCount();
         QVERIFY(baseRowCount >= 0);
         QVERIFY(!searchFixedIndex(model, "timer1").isValid());
@@ -89,7 +88,7 @@ private slots:
 
         auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TimerModel"));
         QVERIFY(model);
-        ModelTest modelTest(model);
+        QAbstractItemModelTester modelTest(model);
 
         auto t1 = new QTimer;
         t1->setObjectName("timer1");

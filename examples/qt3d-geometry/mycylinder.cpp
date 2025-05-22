@@ -13,17 +13,10 @@
 
 #include "mycylinder.h"
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <Qt3DCore/QAttribute>
 #include <Qt3DCore/QBuffer>
 #include <Qt3DCore/QGeometry>
 namespace Qt3DGeometry = Qt3DCore;
-#else
-#include <Qt3DRender/QAttribute>
-#include <Qt3DRender/QBuffer>
-#include <Qt3DRender/QGeometry>
-namespace Qt3DGeometry = Qt3DRender;
-#endif
 
 #include <QVector3D>
 #include <qmath.h>
@@ -63,13 +56,8 @@ MyCylinderGeometry::MyCylinderGeometry(QNode *parent)
     m_normalAttribute = new Qt3DGeometry::QAttribute(this);
     m_indexAttribute = new Qt3DGeometry::QAttribute(this);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     m_vertexBuffer = new Qt3DGeometry::QBuffer(this);
     m_indexBuffer = new Qt3DGeometry::QBuffer(this);
-#else
-    m_vertexBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::VertexBuffer, this);
-    m_indexBuffer = new Qt3DRender::QBuffer(Qt3DRender::QBuffer::IndexBuffer, this);
-#endif
 
     // vec3 pos, vec3 normal
     const quint32 elementSize = 3 + 3;
@@ -78,26 +66,16 @@ MyCylinderGeometry::MyCylinderGeometry(QNode *parent)
     const int faces = (m_slices * 2) * (m_rings - 1) + (m_slices * 2);
 
     m_positionAttribute->setName(Qt3DGeometry::QAttribute::defaultPositionAttributeName());
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     m_positionAttribute->setVertexBaseType(Qt3DGeometry::QAttribute::Float);
     m_positionAttribute->setVertexSize(3);
-#else
-    m_positionAttribute->setDataType(Qt3DGeometry::QAttribute::Float);
-    m_positionAttribute->setDataSize(3);
-#endif
     m_positionAttribute->setAttributeType(Qt3DGeometry::QAttribute::VertexAttribute);
     m_positionAttribute->setBuffer(m_vertexBuffer);
     m_positionAttribute->setByteStride(stride);
     m_positionAttribute->setCount(nVerts);
 
     m_normalAttribute->setName(Qt3DGeometry::QAttribute::defaultNormalAttributeName());
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     m_normalAttribute->setVertexBaseType(Qt3DGeometry::QAttribute::Float);
     m_normalAttribute->setVertexSize(3);
-#else
-    m_normalAttribute->setDataType(Qt3DRender::QAttribute::Float);
-    m_normalAttribute->setDataSize(3);
-#endif
     m_normalAttribute->setAttributeType(Qt3DGeometry::QAttribute::VertexAttribute);
     m_normalAttribute->setBuffer(m_vertexBuffer);
     m_normalAttribute->setByteStride(stride);
@@ -105,11 +83,7 @@ MyCylinderGeometry::MyCylinderGeometry(QNode *parent)
     m_normalAttribute->setCount(nVerts);
 
     m_indexAttribute->setAttributeType(Qt3DGeometry::QAttribute::IndexAttribute);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     m_indexAttribute->setVertexBaseType(Qt3DGeometry::QAttribute::UnsignedShort);
-#else
-    m_indexAttribute->setDataType(Qt3DRender::QAttribute::UnsignedShort);
-#endif
     m_indexAttribute->setBuffer(m_indexBuffer);
 
     m_indexAttribute->setCount(faces * 3);

@@ -25,15 +25,9 @@ AbstractAttributeModel::~AbstractAttributeModel() = default;
 void AbstractAttributeModel::setAttributeType(const char *name)
 {
     beginResetModel();
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     const auto idx = Qt::staticMetaObject.indexOfEnumerator(name);
     Q_ASSERT(idx >= 0);
     m_attrs = Qt::staticMetaObject.enumerator(idx);
-#else
-    const auto idx = staticQtMetaObject.indexOfEnumerator(name);
-    Q_ASSERT(idx >= 0);
-    m_attrs = staticQtMetaObject.enumerator(idx);
-#endif
     endResetModel();
 }
 

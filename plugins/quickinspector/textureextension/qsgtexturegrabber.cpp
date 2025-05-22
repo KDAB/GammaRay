@@ -25,11 +25,8 @@
 #include <QSGTexture>
 #include <QThread>
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QQuickOpenGLUtils>
 #include <QOpenGLVersionFunctionsFactory>
-#endif
-
 #include <QOpenGLExtraFunctions>
 
 #ifndef GL_TEXTURE_WIDTH
@@ -100,7 +97,6 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow *window)
     // We can't detect this, so we rely on our safety checks in grabTexture and accept
     // a minimal chance of showing texture content from the wrong context.
     if (m_pendingTexture && QThread::currentThread() == m_pendingTexture->thread()) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         auto textureId = m_pendingTexture->nativeInterface<QNativeInterface::QSGOpenGLTexture>();
         if (textureId) {
             const auto img = grabTexture(context, textureId->nativeTexture());
@@ -108,14 +104,6 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow *window)
                 emit textureGrabbed(m_pendingTexture, img);
             }
         }
-#else
-        if (m_pendingTexture->textureId() > 0) {
-            const auto img = grabTexture(context, m_pendingTexture->textureId());
-            if (!img.isNull()) {
-                emit textureGrabbed(m_pendingTexture, img);
-            }
-        }
-#endif
         resetRequest();
     }
 
@@ -129,11 +117,7 @@ void QSGTextureGrabber::windowAfterRendering(QQuickWindow *window)
         resetRequest();
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QQuickOpenGLUtils::resetOpenGLState();
-#else
-    window->resetOpenGLState();
-#endif
 }
 
 QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) const
@@ -180,11 +164,7 @@ QImage QSGTextureGrabber::grabTexture(QOpenGLContext *context, int textureId) co
         return img;
     } else {
 #if !defined(QT_NO_OPENGL) && !QT_CONFIG(opengles2)
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         auto glFuncs = QOpenGLVersionFunctionsFactory::get<QOpenGLFunctions_2_0>(context);
-#else
-        auto glFuncs = context->versionFunctions<QOpenGLFunctions_2_0>();
-#endif
         if (!glFuncs) {
             qWarning() << "unable to obtain OpenGL2 functions, too old GL version?";
             return QImage();

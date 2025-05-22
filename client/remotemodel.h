@@ -20,11 +20,7 @@
 #include <common/remotemodelroles.h>
 
 #include <QAbstractItemModel>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QRegExp>
-#else
 #include <QRegularExpression>
-#endif
 #include <QSet>
 #include <QTimer>
 #include <QVector>
@@ -42,15 +38,8 @@ class GAMMARAY_CLIENT_EXPORT RemoteModel : public QAbstractItemModel
         Qt::CaseSensitivity filterCaseSensitivity READ proxyFilterCaseSensitivity WRITE setProxyFilterCaseSensitivity NOTIFY proxyFilterCaseSensitivityChanged)
     Q_PROPERTY(
         int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn NOTIFY proxyFilterKeyColumnChanged)
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    Q_PROPERTY(
-        QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp NOTIFY proxyFilterRegExpChanged)
-    using RegExpT = QRegExp;
-#else
     Q_PROPERTY(
         QRegularExpression filterRegularExpression READ proxyFilterRegExp WRITE setProxyFilterRegExp NOTIFY proxyFilterRegExpChanged)
-    using RegExpT = QRegularExpression;
-#endif
 
 public:
     explicit RemoteModel(const QString &serverObject, QObject *parent = nullptr);
@@ -155,8 +144,8 @@ private:
     void setProxyFilterCaseSensitivity(Qt::CaseSensitivity caseSensitivity);
     int proxyFilterKeyColumn() const;
     void setProxyFilterKeyColumn(int column);
-    RegExpT proxyFilterRegExp() const;
-    void setProxyFilterRegExp(const RegExpT &regExp);
+    QRegularExpression proxyFilterRegExp() const;
+    void setProxyFilterRegExp(const QRegularExpression &regExp);
 
 private slots:
     void doRequests() const;
@@ -189,7 +178,7 @@ private:
     bool m_proxyDynamicSortFilter;
     Qt::CaseSensitivity m_proxyCaseSensitivity;
     int m_proxyKeyColumn;
-    RegExpT m_proxyFilterRegExp;
+    QRegularExpression m_proxyFilterRegExp;
 
     // hooks for unit tests
     static void (*s_registerClientCallback)();

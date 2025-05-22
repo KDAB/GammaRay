@@ -19,8 +19,7 @@
 
 #include "shared/propertytestobject.h"
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QDebug>
 #include <QObject>
 #include <QSignalSpy>
@@ -44,7 +43,7 @@ private slots:
         obj.setProperty("dynamicProperty", 5);
 
         AggregatedPropertyModel model;
-        ModelTest modelTest(&model);
+        QAbstractItemModelTester modelTest(&model);
         model.setObject(&obj);
 
         QVERIFY(model.rowCount() > 9);
@@ -77,7 +76,7 @@ private slots:
     {
         AggregatedPropertyModel model;
         model.setObject(ObjectInstance(nullptr, &Gadget::staticMetaObject));
-        ModelTest modelTest(&model);
+        QAbstractItemModelTester modelTest(&model);
 
         QCOMPARE(model.rowCount(), 1);
         auto qmoRow = searchFixedIndex(&model, "prop1");
@@ -131,7 +130,7 @@ private slots:
         PropertyTestObject obj;
         AggregatedPropertyModel model;
         model.setObject(ObjectInstance(&obj));
-        ModelTest modelTest(&model);
+        QAbstractItemModelTester modelTest(&model);
 
         auto idx = searchFixedIndex(&model, "gadget");
         QVERIFY(idx.isValid());

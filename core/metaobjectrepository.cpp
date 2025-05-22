@@ -187,11 +187,7 @@ void MetaObjectRepository::initIOTypes()
     MO_ADD_PROPERTY_RO(QFileDevice, permissions);
 
     MO_ADD_METAOBJECT1(QFile, QFileDevice);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     mo->addProperty(GammaRay::MetaPropertyFactory::makeProperty<QFile, bool>("exists", &QFile::exists));
-#else
-    MO_ADD_PROPERTY_RO(QFile, exists);
-#endif
     MO_ADD_PROPERTY_RO(QFile, symLinkTarget);
 
     MO_ADD_METAOBJECT1(QSaveFile, QFileDevice);

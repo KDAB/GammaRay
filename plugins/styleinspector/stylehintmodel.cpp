@@ -178,9 +178,6 @@ static const StyleHintInfo style_hint_table[] = {
     SH(SH_ComboBox_PopupFrameStyle, FrameStyle, None)
         SH(SH_MessageBox_TextInteractionFlags, TextInteractionFlags, None)
             SH(SH_DialogButtonBox_ButtonsHaveIcons, Bool, None)
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-                SH(SH_SpellCheckUnderlineStyle, Int, None) // TODO QTextCharFormat::UnderlineStyle
-#endif
     SH(SH_MessageBox_CenterButtons, Bool, None)
         SH(SH_Menu_SelectionWrap, Bool, None)
             SH(SH_ItemView_MovementWithoutUpdatingSelection, Bool, None)

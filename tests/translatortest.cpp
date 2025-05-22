@@ -15,8 +15,7 @@
 
 #include <common/objectbroker.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QItemSelectionModel>
 #include <QLibraryInfo>
 #include <QTranslator>
@@ -40,7 +39,7 @@ private slots:
 
         auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"));
         QVERIFY(model);
-        ModelTest modelTest(model);
+        QAbstractItemModelTester modelTest(model);
         QCOMPARE(model->rowCount(), 2);
 
         auto t2 = new QTranslator;
@@ -78,7 +77,7 @@ private slots:
 
         auto *translatorModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslatorsModel"));
         QVERIFY(translatorModel);
-        ModelTest TranslationsModelTest(translatorModel);
+        QAbstractItemModelTester TranslationsModelTest(translatorModel);
         QCOMPARE(translatorModel->rowCount(), 2);
 
         auto translatorSelection = ObjectBroker::selectionModel(translatorModel);
@@ -87,7 +86,7 @@ private slots:
 
         auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.TranslationsModel"));
         QVERIFY(model);
-        ModelTest modelTest(model);
+        QAbstractItemModelTester modelTest(model);
 
         QCoreApplication::translate("context", "key", nullptr);
         QCoreApplication::translate(nullptr, "key", nullptr);

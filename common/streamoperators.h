@@ -46,9 +46,6 @@ template<typename T>
 void registerOperators()
 {
     qRegisterMetaType<T>();
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    qRegisterMetaTypeStreamOperators<T>();
-#endif
 }
 
 }

@@ -22,8 +22,7 @@
 #include <common/objectmodel.h>
 #include <common/objectid.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QAbstractItemView>
 #include <QItemSelectionModel>
 #include <QSignalSpy>
@@ -48,7 +47,7 @@ private slots:
 
         auto modelModel = ObjectBroker::model("com.kdab.GammaRay.ModelModel");
         QVERIFY(modelModel);
-        ModelTest modelModelTester(modelModel);
+        QAbstractItemModelTester modelModelTester(modelModel);
         QVERIFY(modelModel->rowCount() >= 1); // can contain the QEmptyModel instance too
         int topRowCount = modelModel->rowCount();
 
@@ -152,7 +151,7 @@ private slots:
 
         auto selectionModels = ObjectBroker::model("com.kdab.GammaRay.SelectionModels");
         QVERIFY(selectionModels);
-        ModelTest selModelTester(selectionModels);
+        QAbstractItemModelTester selModelTester(selectionModels);
         QCOMPARE(selectionModels->rowCount(), 0);
         QSignalSpy resetSpy(selectionModels, &QAbstractItemModel::modelReset);
         QVERIFY(resetSpy.isValid());
@@ -206,12 +205,12 @@ private slots:
 
         auto contentModel = ObjectBroker::model("com.kdab.GammaRay.ModelContent");
         QVERIFY(contentModel);
-        ModelTest contentModelTester(contentModel);
+        QAbstractItemModelTester contentModelTester(contentModel);
         QCOMPARE(contentModel->rowCount(), 0);
 
         auto cellModel = ObjectBroker::model("com.kdab.GammaRay.ModelCellModel");
         QVERIFY(cellModel);
-        ModelTest cellModelTester(cellModel);
+        QAbstractItemModelTester cellModelTester(cellModel);
         QCOMPARE(cellModel->rowCount(), 0);
         QSignalSpy cellContentResetSpy(cellModel, &QAbstractItemModel::modelReset);
         QVERIFY(cellContentResetSpy.isValid());
@@ -220,22 +219,14 @@ private slots:
         QVERIFY(targetModelIdx.isValid());
         auto modelSelModel = ObjectBroker::selectionModel(modelModel);
         QVERIFY(modelSelModel);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        // TODO this breaks QAbstractItemModelTester in Qt6
-        // when the targetModel->appendRow(item); code is
-        // executed below a headerDataChanged() is emitted and asserts
-        modelSelModel->select(targetModelIdx, QItemSelectionModel::ClearAndSelect);
-#endif
         QCOMPARE(contentModel->rowCount(), 0);
 
         auto item = new QStandardItem("item0,0");
         item->setFlags(Qt::NoItemFlags); // should nevertheless be selectable for inspection
         targetModel->appendRow(item);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         // TODO remove this when the above select does not assert in QAbstractItemModelTester
         modelSelModel->select(targetModelIdx, QItemSelectionModel::ClearAndSelect);
-#endif
 
         QCOMPARE(contentModel->rowCount(), 1);
         QCOMPARE(contentModel->columnCount(), 1);

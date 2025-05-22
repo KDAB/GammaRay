@@ -19,8 +19,7 @@
 
 #include <common/objectbroker.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QDebug>
 
 using namespace GammaRay;
@@ -43,7 +42,7 @@ private slots:
         MetaObjectTreeClientProxyModel model;
         model.setSourceModel(srcModel);
 
-        ModelTest modelTest(&model);
+        QAbstractItemModelTester modelTest(&model);
         Probe::instance()->discoverObject(this);
         QTest::qWait(150); // wait for compressed change signals
     }

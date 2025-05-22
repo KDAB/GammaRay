@@ -30,8 +30,6 @@
 #include <plugins/qmlsupport/qmlbindingprovider.h>
 #include <plugins/quickinspector/quickimplicitbindingdependencyprovider.h>
 
-#include <3rdparty/qt/modeltest.h>
-
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -39,6 +37,7 @@
 #include <private/qquickrectangle_p.h>
 
 #include <QDebug>
+#include <QAbstractItemModelTester>
 #include <QTest>
 #include <QObject>
 #include <QThread>
@@ -233,7 +232,7 @@ private slots:
 private:
     MockBindingProvider *provider;
     BindingExtension *bindingExtension;
-    std::unique_ptr<ModelTest> modelTest;
+    std::unique_ptr<QAbstractItemModelTester> modelTest;
     QAbstractItemModel *bindingModel;
 };
 
@@ -249,7 +248,7 @@ void BindingInspectorTest::initTestCase()
     QVERIFY(bindingExtension);
     bindingModel = bindingExtension->model();
     QVERIFY(bindingModel);
-    modelTest.reset(new ModelTest(bindingModel));
+    modelTest.reset(new QAbstractItemModelTester(bindingModel));
 }
 
 void BindingInspectorTest::init()
@@ -945,7 +944,7 @@ void BindingInspectorTest::testIntegration()
 
     QAbstractItemModel *bindingModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspector.bindingModel"));
     QVERIFY(bindingModel);
-    ModelTest modelTest(bindingModel);
+    QAbstractItemModelTester modelTest(bindingModel);
 
     Probe::instance()->selectObject(text);
     QCOMPARE(bindingModel->rowCount(), 6);

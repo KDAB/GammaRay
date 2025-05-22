@@ -6,7 +6,6 @@
         <file>manual/textures.qml</file>
         <file>manual/lsd.png</file>
         <file>manual/rotationinvariant.qml</file>
-        <file>manual/shadereffect.qml</file>
         <file>manual/shadereffect6.qml</file>
         <file>manual/anchorspropertyfiltertest.qml</file>
         <file>manual/picking/invisibleoverlay.qml</file>

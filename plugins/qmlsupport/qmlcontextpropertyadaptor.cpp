@@ -15,17 +15,12 @@
 
 #include <core/propertydata.h>
 
-#include <QQmlContext>
 #include <private/qqmlcontext_p.h>
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qqmlcontextdata_p.h>
 #include <private/qv4identifierhashdata_p.h>
-#else
-#include <private/qv4identifier_p.h>
-#endif
 
 #include <QDebug>
+#include <QQmlContext>
 
 using namespace GammaRay;
 
@@ -75,25 +70,6 @@ void QmlContextPropertyAdaptor::writeProperty(int index, const QVariant &value)
 
 void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    auto context = qobject_cast<QQmlContext *>(oi.qtObject());
-    Q_ASSERT(context);
-
-    auto contextData = QQmlContextData::get(context);
-    Q_ASSERT(contextData);
-
-    const auto &propNames = contextData->propertyNames();
-    m_contextPropertyNames.clear();
-    m_contextPropertyNames.reserve(propNames.count());
-
-    QV4::IdentifierHashEntry *e = propNames.d->entries;
-    QV4::IdentifierHashEntry *end = e + propNames.d->alloc;
-    while (e < end) {
-        if (e->identifier.isValid())
-            m_contextPropertyNames.push_back(e->identifier.toQString());
-        ++e;
-    }
-#else
     auto context = qobject_cast<QQmlContext *>(oi.qtObject());
     Q_ASSERT(context);
     auto contextData = QQmlContextData::get(context);
@@ -103,21 +79,12 @@ void QmlContextPropertyAdaptor::doSetObject(const ObjectInstance &oi)
 
     const int numProps = priv->numPropertyValues();
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
-    const auto propNames = contextData->propertyNames();
-#endif
-
     for (int i = 0; i < numProps; ++i) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 2, 0)
-        const auto prop = propNames.findId(i);
-#else
         const auto prop = contextData->propertyName(i);
-#endif
         if (!prop.isEmpty()) {
             m_contextPropertyNames.push_back(prop);
         }
     }
-#endif
 }
 
 QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::s_instance = nullptr;

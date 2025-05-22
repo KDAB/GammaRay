@@ -16,8 +16,7 @@
 #include <common/objectbroker.h>
 #include <core/paintbuffer.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QAbstractItemModel>
 #include <QWidget>
 
@@ -49,7 +48,7 @@ private slots:
 
         auto *model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.WidgetTree"));
         QVERIFY(model);
-        ModelTest modelTest(model);
+        QAbstractItemModelTester modelTest(model);
 
         std::unique_ptr<QWidget> w2(new QWidget);
         QTest::qWait(1); // event loop re-entry

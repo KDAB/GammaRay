@@ -112,11 +112,7 @@ static bool isEnum(const QVariant &value)
     if (!value.isValid())
         return false;
     const QMetaType mt(value.userType());
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     return mt.isValid() && ((mt.flags() & QMetaType::IsEnumeration) || (mt.flags() & QMetaType::IsUnsignedEnumeration));
-#else
-    return mt.isValid() && mt.flags() & QMetaType::IsEnumeration;
-#endif
 }
 }
 

@@ -104,7 +104,6 @@ public:
         enum GraphicsApi
         {
             Unknown = 0,
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             Software,
             OpenVG,
             OpenGL,
@@ -112,11 +111,6 @@ public:
             Vulkan,
             Metal,
             Null,
-#else
-            Software,
-            OpenGL,
-            Direct3D12
-#endif
         };
 
         RenderInfo()
@@ -228,7 +222,6 @@ private:
     QPointF m_lastItemPosition;
 };
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 class UnsupportedScreenGrabber : public AbstractScreenGrabber
 {
     Q_OBJECT
@@ -244,7 +237,6 @@ private:
 
     QPointF m_lastItemPosition;
 };
-#endif
 
 }
 

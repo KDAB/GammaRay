@@ -11,12 +11,12 @@
   Contact KDAB at <info@kdab.com> for commercial licensing options.
 */
 
-#include <3rdparty/qt/modeltest.h>
 
 #include <core/remote/remotemodelserver.h>
 #include <client/remotemodel.h>
 #include <common/message.h>
 
+#include <QAbstractItemModelTester>
 #include <QBuffer>
 #include <QDebug>
 #include <QObject>
@@ -150,7 +150,7 @@ private slots:
         connect(&client, &FakeRemoteModel::message, &server,
                 &RemoteModelServer::newRequest);
 
-        ModelTest modelTest(&client);
+        QAbstractItemModelTester modelTest(&client);
 
         QCOMPARE(client.rowCount(), 0);
         QTest::qWait(10);
@@ -176,7 +176,7 @@ private slots:
         connect(&client, &FakeRemoteModel::message, &server,
                 &RemoteModelServer::newRequest);
 
-        ModelTest modelTest(&client);
+        QAbstractItemModelTester modelTest(&client);
         QTRY_VERIFY(client.rowCount() == 4); // ModelTest is going to fetch stuff for us already
 
         QCOMPARE(client.rowCount(), 4);
@@ -222,7 +222,7 @@ private slots:
         connect(&client, &FakeRemoteModel::message, &server,
                 &RemoteModelServer::newRequest);
 
-        ModelTest modelTest(&client);
+        QAbstractItemModelTester modelTest(&client);
         QTRY_VERIFY(client.rowCount() == 2);
 
         QCOMPARE(client.rowCount(), 2);
@@ -287,7 +287,7 @@ private slots:
         proxy.sort(0);
         proxy.setSourceModel(&client);
 
-        ModelTest modelTest(&proxy);
+        QAbstractItemModelTester modelTest(&proxy);
         QTRY_VERIFY(client.rowCount() == 2);
 
         QCOMPARE(client.rowCount(), 2);

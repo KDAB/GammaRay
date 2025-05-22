@@ -21,8 +21,7 @@
 
 #include <common/objectid.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QDebug>
 #include <QObject>
 #include <QSignalSpy>
@@ -41,7 +40,7 @@ private slots:
         MetaTypesModel srcModel;
         MetaTypesClientModel model;
         model.setSourceModel(&srcModel);
-        ModelTest modelTest(&model);
+        QAbstractItemModelTester modelTest(&model);
         QVERIFY(model.rowCount() > 0);
         QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
         QVERIFY(resetSpy.isValid());

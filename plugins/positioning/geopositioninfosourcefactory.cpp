@@ -33,11 +33,7 @@ GeoPositionInfoSourceFactory::~GeoPositionInfoSourceFactory()
     delete m_factoryLoader;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-QGeoPositionInfoSource *GeoPositionInfoSourceFactory::positionInfoSource(QObject *parent)
-#else
 QGeoPositionInfoSource *GeoPositionInfoSourceFactory::positionInfoSource(QObject *parent, const QVariantMap & /*parameters*/)
-#endif
 {
     auto proxy = new GeoPositionInfoSource(parent);
 
@@ -48,11 +44,7 @@ QGeoPositionInfoSource *GeoPositionInfoSourceFactory::positionInfoSource(QObject
 
     // filter anything not applicable
     for (auto it = indexes.begin(); it != indexes.end();) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 3, 0)
         const auto data = metaData.at(*it).toCbor();
-#else
-        const auto data = metaData.at(*it).value(QStringLiteral("MetaData")).toObject();
-#endif
         const auto correctType = data.value(QStringLiteral("Position")).toBool();
         const auto isGammaray = data.value(QStringLiteral("Provider")).toString() == QLatin1String("gammaray");
 
@@ -64,25 +56,15 @@ QGeoPositionInfoSource *GeoPositionInfoSourceFactory::positionInfoSource(QObject
 
     // sort by priority
     std::sort(indexes.begin(), indexes.end(), [metaData](int lhs, int rhs) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 3, 0)
         const auto lData = metaData.at(lhs).toCbor();
         const auto rData = metaData.at(rhs).toCbor();
         return lData.value(QStringLiteral("Priority")).toInteger() > rData.value(QStringLiteral("Priority")).toInteger();
-#else
-        const auto lData = metaData.at(lhs).value(QStringLiteral("MetaData")).toObject();
-        const auto rData = metaData.at(rhs).value(QStringLiteral("MetaData")).toObject();
-        return lData.value(QStringLiteral("Priority")).toInt() > rData.value(QStringLiteral("Priority")).toInt();
-#endif
     });
 
     // actually try the plugins
     QGeoPositionInfoSource *source = nullptr;
     for (auto it = indexes.constBegin(); it != indexes.constEnd(); ++it) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 3, 0)
         const auto data = metaData.at(*it).toCbor();
-#else
-        const auto data = metaData.at(*it).value(QStringLiteral("MetaData")).toObject();
-#endif
         const auto provider = data.value(QStringLiteral("Provider")).toString();
         if (provider.isEmpty())
             continue;
@@ -96,21 +78,13 @@ QGeoPositionInfoSource *GeoPositionInfoSourceFactory::positionInfoSource(QObject
     return proxy;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-QGeoSatelliteInfoSource *GeoPositionInfoSourceFactory::satelliteInfoSource(QObject *parent)
-#else
 QGeoSatelliteInfoSource *GeoPositionInfoSourceFactory::satelliteInfoSource(QObject *parent, const QVariantMap & /*parameters*/)
-#endif
 {
     Q_UNUSED(parent);
     return nullptr;
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-QGeoAreaMonitorSource *GeoPositionInfoSourceFactory::areaMonitor(QObject *parent)
-#else
 QGeoAreaMonitorSource *GeoPositionInfoSourceFactory::areaMonitor(QObject *parent, const QVariantMap & /*parameters*/)
-#endif
 {
     Q_UNUSED(parent);
     return nullptr;

@@ -21,8 +21,7 @@
 #include <common/tools/objectinspector/methodsextensioninterface.h>
 #include <core/tools/objectinspector/methodsextension.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QDebug>
 #include <QItemSelectionModel>
 
@@ -40,17 +39,11 @@ public slots:
     MY_TAG void taggedSlot()
     {
     }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    Q_REVISION(147)
-    void revisionedSlot()
-    {
-    }
-#else
+
     Q_REVISION(0, 147)
     void revisionedSlot()
     {
     }
-#endif
 
     void bumpI()
     {
@@ -70,7 +63,7 @@ private slots:
         ClientMethodModel model;
         model.setSourceModel(&srcModel);
 
-        ModelTest modelTest(&model);
+        QAbstractItemModelTester modelTest(&model);
 
         srcModel.setMetaObject(&QObject::staticMetaObject);
         srcModel.setMetaObject(&staticMetaObject);

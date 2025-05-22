@@ -78,11 +78,6 @@
 
 #include <QSGRenderNode>
 #include <QSGRendererInterface>
-#ifndef QT_NO_OPENGL
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <private/qquickopenglshadereffectnode_p.h>
-#endif
-#endif
 #include <private/qsgsoftwarecontext_p.h>
 #include <private/qsgsoftwarerenderer_p.h>
 #include <private/qsgsoftwarerenderablenode_p.h>
@@ -188,11 +183,7 @@ static QString qsgMaterialFlagsToString(QSGMaterial::Flags flags)
     F(RequiresDeterminant)
     F(RequiresFullMatrixExceptTranslate)
     F(RequiresFullMatrix)
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    F(CustomCompileStep)
-#else
     F(NoBatching)
-#endif
 #undef F
 
     if (list.isEmpty())
@@ -307,18 +298,11 @@ void RenderModeRequest::apply()
     if (window) {
         const QByteArray mode = renderModeToString(RenderModeRequest::mode);
         QQuickWindowPrivate *winPriv = QQuickWindowPrivate::get(window);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         QObject::connect(window.get(), &QQuickWindow::beforeSynchronizing, this, [this, winPriv, mode]() {
             emit aboutToCleanSceneGraph();
             QMetaObject::invokeMethod(window, "cleanupSceneGraph", Qt::DirectConnection);
             winPriv->visualizationMode = mode;
             emit sceneGraphCleanedUp(); }, static_cast<Qt::ConnectionType>(Qt::DirectConnection | Qt::SingleShotConnection));
-#else
-        emit aboutToCleanSceneGraph();
-        QMetaObject::invokeMethod(window, "cleanupSceneGraph", Qt::DirectConnection);
-        winPriv->customRenderMode = mode;
-        emit sceneGraphCleanedUp();
-#endif
     }
 
     QMetaObject::invokeMethod(this, "preFinished", Qt::QueuedConnection);
@@ -438,11 +422,7 @@ void QuickInspector::selectWindow(QQuickWindow *window)
     }
 
     if (m_window) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         const QByteArray mode = QQuickWindowPrivate::get(m_window)->visualizationMode;
-#else
-        const QByteArray mode = QQuickWindowPrivate::get(m_window)->customRenderMode;
-#endif
 
         if (!mode.isEmpty()) {
             auto reset = new RenderModeRequest(m_window);
@@ -937,22 +917,12 @@ void QuickInspector::registerMetaTypes()
     MetaObject *mo = nullptr;
     MO_ADD_METAOBJECT1(QQuickWindow, QWindow);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_PROPERTY(QQuickWindow, renderTarget, setRenderTarget);
     MO_ADD_PROPERTY(QQuickWindow, graphicsConfiguration, setGraphicsConfiguration);
     MO_ADD_PROPERTY(QQuickWindow, graphicsDevice, setGraphicsDevice);
-#else
-    MO_ADD_PROPERTY(QQuickWindow, clearBeforeRendering, setClearBeforeRendering);
-    MO_ADD_PROPERTY_RO(QQuickWindow, renderTargetId);
-#endif
 
 #ifndef QT_NO_OPENGL
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_PROPERTY(QQuickWindow, isPersistentGraphics, setPersistentGraphics);
-#else
-    MO_ADD_PROPERTY(QQuickWindow, isPersistentOpenGLContext, setPersistentOpenGLContext);
-    MO_ADD_PROPERTY_RO(QQuickWindow, openglContext);
-#endif
 #endif
 
     MO_ADD_PROPERTY_RO(QQuickWindow, mouseGrabberItem);
@@ -1078,14 +1048,6 @@ void QuickInspector::registerMetaTypes()
 
     MO_ADD_METAOBJECT1(QSGDistanceFieldShiftedStyleTextMaterial, QSGDistanceFieldStyledTextMaterial);
     MO_ADD_PROPERTY_RO(QSGDistanceFieldShiftedStyleTextMaterial, shift);
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MO_ADD_METAOBJECT1(QQuickOpenGLShaderEffectMaterial, QSGMaterial);
-    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, attributes);
-    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, cullMode);
-    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, geometryUsesTextureSubRect);
-    MO_ADD_PROPERTY_MEM(QQuickOpenGLShaderEffectMaterial, textureProviders);
-#endif
 #endif
 }
 
@@ -1097,15 +1059,10 @@ static const MetaEnum::Value<QSGRendererInterface::GraphicsApi> qsg_graphics_api
     E(Unknown),
     E(Software),
     E(OpenGL),
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    E(Direct3D12), // Should just remove this? See QTBUG-79925
-#endif
     E(OpenVG),
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     E(Direct3D11),
     E(Vulkan),
     E(Metal),
-#endif
 };
 
 static const MetaEnum::Value<QSGRendererInterface::ShaderCompilationType> qsg_shader_compilation_type_table[] = {

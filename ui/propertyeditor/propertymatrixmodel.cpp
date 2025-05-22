@@ -13,9 +13,6 @@
 
 #include "propertymatrixmodel.h"
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QMatrix>
-#endif
 #include <QMatrix4x4>
 #include <QQuaternion>
 #include <QTransform>
@@ -51,9 +48,6 @@ int PropertyMatrixModel::rowCount(const QModelIndex &parent) const
     case QMetaType::QVector2D:
         return 2;
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    case QMetaType::Matrix:
-#endif
     case QMetaType::QTransform:
     case QMetaType::QVector3D:
     case QMetaType::QQuaternion:
@@ -80,11 +74,6 @@ int PropertyMatrixModel::columnCount(const QModelIndex &parent) const
     case QMetaType::QQuaternion:
         return 1;
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    case QMetaType::Matrix:
-        return 2;
-#endif
-
     case QMetaType::QTransform:
         return 3;
 
@@ -105,28 +94,6 @@ QVariant PropertyMatrixModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     switch (m_matrix.typeId()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    case QMetaType::Matrix: {
-        const QMatrix value = m_matrix.value<QMatrix>();
-        switch (index.row() << 4 | index.column()) {
-        case 0x00:
-            return value.m11();
-        case 0x01:
-            return value.m12();
-        case 0x10:
-            return value.m21();
-        case 0x11:
-            return value.m22();
-        case 0x20:
-            return value.dx();
-        case 0x21:
-            return value.dy();
-        }
-
-        break;
-    }
-#endif
-
     case QMetaType::QTransform: {
         const QTransform value = m_matrix.value<QTransform>();
         switch (index.row() << 4 | index.column()) {
@@ -314,42 +281,6 @@ bool PropertyMatrixModel::setData(const QModelIndex &index, const QVariant &data
         break;
     }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    case QMetaType::Matrix: {
-        QMatrix value = m_matrix.value<QMatrix>();
-
-        switch (index.row() << 4 | index.column()) {
-        case 0x00:
-            value.setMatrix(floatData, value.m12(), value.m21(), value.m22(), value.dx(),
-                            value.dy());
-            break;
-        case 0x01:
-            value.setMatrix(value.m11(), floatData, value.m21(), value.m22(), value.dx(),
-                            value.dy());
-            break;
-        case 0x10:
-            value.setMatrix(value.m11(), value.m12(), floatData, value.m22(), value.dx(),
-                            value.dy());
-            break;
-        case 0x11:
-            value.setMatrix(value.m11(), value.m12(), value.m21(), floatData, value.dx(),
-                            value.dy());
-            break;
-        case 0x20:
-            value.setMatrix(value.m11(), value.m12(), value.m21(), value.m22(), floatData,
-                            value.dy());
-            break;
-        case 0x21:
-            value.setMatrix(value.m11(), value.m12(), value.m21(), value.m22(),
-                            value.dx(), floatData);
-            break;
-        }
-
-        m_matrix = value;
-        break;
-    }
-#endif
-
     case QMetaType::QTransform: {
         QTransform value = m_matrix.value<QTransform>();
 
@@ -423,16 +354,6 @@ QVariant PropertyMatrixModel::headerData(int section, Qt::Orientation orientatio
 
     if (orientation == Qt::Horizontal) {
         switch (m_matrix.typeId()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        case QMetaType::Matrix:
-            switch (section) {
-            case 0:
-                return tr("m_1");
-            case 1:
-                return tr("m_2");
-            }
-            break;
-#endif
 
         case QMetaType::QMatrix4x4:
             switch (section) {
@@ -467,18 +388,6 @@ QVariant PropertyMatrixModel::headerData(int section, Qt::Orientation orientatio
         }
     } else {
         switch (m_matrix.typeId()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        case QMetaType::Matrix:
-            switch (section) {
-            case 0:
-                return tr("m1_");
-            case 1:
-                return tr("m2_");
-            case 2:
-                return tr("d x/y");
-            }
-            break;
-#endif
 
         case QMetaType::QMatrix4x4:
             switch (section) {

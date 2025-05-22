@@ -18,11 +18,7 @@
 
 #include <QObject>
 #include <QPointer>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QRegExp>
-#else
 #include <QRegularExpression>
-#endif
 
 QT_BEGIN_NAMESPACE
 class QBuffer;
@@ -43,13 +39,8 @@ class RemoteModelServer : public QObject
     Q_PROPERTY( // clazy:exclude=qproperty-without-notify
         Qt::CaseSensitivity filterCaseSensitivity READ proxyFilterCaseSensitivity WRITE setProxyFilterCaseSensitivity)
     Q_PROPERTY(int filterKeyColumn READ proxyFilterKeyColumn WRITE setProxyFilterKeyColumn) // clazy:exclude=qproperty-without-notify
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    Q_PROPERTY(QRegExp filterRegExp READ proxyFilterRegExp WRITE setProxyFilterRegExp) // clazy:exclude=qproperty-without-notify
-    using RegExpT = QRegExp;
-#else
     Q_PROPERTY(QRegularExpression filterRegularExpression READ proxyFilterRegExp WRITE setProxyFilterRegExp) // clazy:exclude=qproperty-without-notify
     using RegExpT = QRegularExpression;
-#endif
 
 public:
     /** Registers a new model server object with name @p objectName (must be unique). */
