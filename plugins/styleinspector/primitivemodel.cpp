@@ -64,9 +64,6 @@ static const primitive_element_t primititveElements[] = {
     MAKE_PE(PE_IndicatorArrowUp),
     MAKE_PE(PE_IndicatorBranch),
     MAKE_PE(PE_IndicatorButtonDropDown),
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MAKE_PE(PE_IndicatorViewItemCheck),
-#endif
     MAKE_PE_X(PE_IndicatorCheckBox, makeButtonStyleOption),
     MAKE_PE(PE_IndicatorDockWidgetResizeHandle),
     MAKE_PE_X(PE_IndicatorHeaderArrow, makeHeaderStyleOption),

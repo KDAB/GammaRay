@@ -28,9 +28,7 @@
 
 #include <private/qquickitem_p.h>
 #include <private/qsgdistancefieldglyphnode_p_p.h>
-#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
 #include <private/qobject_p_p.h>
-#endif
 
 using namespace GammaRay;
 
@@ -119,13 +117,8 @@ bool TextureExtension::setObject(void *object, const QString &typeName)
             return setQObject(mat->texture());
 
         if (auto mat = dynamic_cast<QSGDistanceFieldTextMaterial *>(material)) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
             if (!mat->texture())
                 return false;
-#else
-            if (!mat->texture() || mat->texture()->textureId <= 0)
-                return false;
-#endif
             m_remoteView->resetView();
             m_currentMaterial = mat;
             m_remoteView->sourceChanged();
@@ -165,16 +158,10 @@ void TextureExtension::triggerGrab()
 {
     if (m_currentTexture)
         QSGTextureGrabber::instance()->requestGrab(m_currentTexture);
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     else if (m_currentMaterial) {
         auto texture = m_currentMaterial->wrapperTexture()->nativeInterface<QNativeInterface::QSGOpenGLTexture>();
         QSGTextureGrabber::instance()->requestGrab(texture->nativeTexture(), m_currentMaterial->texture()->size, m_currentMaterial);
     }
-#else
-    else if (m_currentMaterial)
-        QSGTextureGrabber::instance()->requestGrab(m_currentMaterial->texture()->textureId, m_currentMaterial->texture()->size, m_currentMaterial);
-#endif
 }
 
 bool GammaRay::TextureExtension::ensureSetup()

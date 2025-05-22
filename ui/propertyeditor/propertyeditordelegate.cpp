@@ -19,9 +19,6 @@
 
 #include <QApplication>
 #include <QDebug>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QMatrix>
-#endif
 #include <QMatrix4x4>
 #include <QPainter>
 #include <QQuaternion>
@@ -36,33 +33,6 @@ template<typename T>
 struct matrix_trait
 {
 };
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-template<>
-struct matrix_trait<QMatrix>
-{
-    static const int rows = 3;
-    static const int columns = 2;
-    static qreal value(const QMatrix &matrix, int r, int c)
-    {
-        switch (r << 4 | c) {
-        case 0x00:
-            return matrix.m11();
-        case 0x01:
-            return matrix.m12();
-        case 0x10:
-            return matrix.m21();
-        case 0x11:
-            return matrix.m22();
-        case 0x20:
-            return matrix.dx();
-        case 0x21:
-            return matrix.dy();
-        }
-        Q_ASSERT(false);
-        return 0.0;
-    }
-};
-#endif
 
 template<>
 struct matrix_trait<QMatrix4x4>
@@ -184,10 +154,6 @@ void PropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
     const QVariant value = index.data(Qt::EditRole);
     if (value.canConvert<QMatrix4x4>()) {
         paint(painter, option, index, value.value<QMatrix4x4>());
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    } else if (value.canConvert<QMatrix>()) {
-        paint(painter, option, index, value.value<QMatrix>());
-#endif
     } else if (value.typeId() == QMetaType::QTransform) {
         paint(painter, option, index, value.value<QTransform>());
     } else if (value.canConvert<QVector2D>()) {
@@ -209,10 +175,6 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option,
     const QVariant value = index.data(Qt::EditRole);
     if (value.canConvert<QMatrix4x4>()) {
         return sizeHint(option, index, value.value<QMatrix4x4>());
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    } else if (value.canConvert<QMatrix>()) {
-        return sizeHint(option, index, value.value<QMatrix>());
-#endif
     } else if (value.typeId() == QMetaType::QTransform) {
         return sizeHint(option, index, value.value<QTransform>());
     } else if (value.canConvert<QVector2D>()) {

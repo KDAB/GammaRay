@@ -32,9 +32,7 @@ template<>
 inline void init<QSortFilterProxyModel>(QSortFilterProxyModel *proxy)
 {
     proxy->setRecursiveFilteringEnabled(true);
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     proxy->setAutoAcceptChildRows(true);
-#endif
 }
 
 /** Sort/filter proxy model for server-side use to pass through extra roles in itemData().

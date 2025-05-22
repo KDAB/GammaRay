@@ -89,11 +89,6 @@ static const pixel_metric_t pixelMetrics[] = {
     MAKE_PM(PM_ToolBarSeparatorExtent),
     MAKE_PM(PM_ToolBarExtensionExtent),
     MAKE_PM(PM_SpinBoxSliderHeight),
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    MAKE_PM(PM_DefaultTopLevelMargin),
-    MAKE_PM(PM_DefaultChildMargin),
-    MAKE_PM(PM_DefaultLayoutSpacing),
-#endif
     MAKE_PM(PM_ToolBarIconSize),
     MAKE_PM(PM_ListViewIconSize),
     MAKE_PM(PM_IconViewIconSize),

@@ -23,8 +23,7 @@
 #include <core/propertyfilter.h>
 #include <core/toolmanager.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
 #include <QRegularExpression>
@@ -66,11 +65,11 @@ private slots:
 
         itemModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickItemModel"));
         QVERIFY(itemModel);
-        new ModelTest(itemModel, view());
+        new QAbstractItemModelTester(itemModel, view());
 
         sgModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.QuickSceneGraphModel"));
         QVERIFY(sgModel);
-        new ModelTest(sgModel, view());
+        new QAbstractItemModelTester(sgModel, view());
 
         inspector = ObjectBroker::object<QuickInspectorInterface *>();
         QVERIFY(inspector);

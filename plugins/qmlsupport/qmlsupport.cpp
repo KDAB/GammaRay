@@ -19,10 +19,7 @@
 #include "qmlcontextextension.h"
 #include "qmltypeextension.h"
 #include "qmltypeutil.h"
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
 #include "qmlbindingprovider.h"
-#endif
 
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
@@ -48,18 +45,10 @@
 #include <private/qjsvalue_p.h>
 #include <private/qqmlmetatype_p.h>
 #include <private/qqmldata_p.h>
-#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
-#include <private/qqmlcompiler_p.h>
-#endif
 #include <private/qqmlcontext_p.h>
 #include <private/qqmlscriptstring_p.h>
 #include <private/qv4qobjectwrapper_p.h>
-#if QT_VERSION < QT_VERSION_CHECK(5, 12, 0)
-#include <private/qv8engine_p.h> // removed in qtdeclarative commit fd6321c03e2d63997078bfa41332dbddefbb86b0
-#endif
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qqmlcontextdata_p.h>
-#endif
 
 Q_DECLARE_METATYPE(QQmlError)
 
@@ -75,26 +64,11 @@ static QString metaMethodToString(const QObject *object, const QMetaMethod &meth
 
 static QString callableQjsValueToString(const QJSValue &v)
 {
-#if defined(QT_DEPRECATED)
-    // note: QJSValue::engine() is deprecated
-    // note: QJSValuePrivate::convertedToValue got introduced in Qt 5.5.0
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     QV4::ExecutionEngine *jsEngine = QJSValuePrivate::engine(&v);
-#elif QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-    // QJSEngine::handle() changed signature in 5.12
-    QV4::ExecutionEngine *jsEngine = v.engine()->handle();
-#else
-    QV4::ExecutionEngine *jsEngine = QV8Engine::getV4(v.engine());
-#endif
 
     QV4::Scope scope(jsEngine);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QV4::Scoped<QV4::QObjectMethod> qobjectMethod(scope, QJSValuePrivate::convertToReturnedValue(jsEngine, v));
-#else
-    QV4::Scoped<QV4::QObjectMethod> qobjectMethod(scope, QJSValuePrivate::convertedToValue(jsEngine, v));
-#endif
 
     if (!qobjectMethod)
         return QStringLiteral("<callable>");
@@ -103,10 +77,6 @@ static QString callableQjsValueToString(const QJSValue &v)
     Q_ASSERT(sender);
     QMetaMethod metaMethod = sender->metaObject()->method(qobjectMethod->methodIndex());
     return metaMethodToString(sender, metaMethod);
-#else
-    Q_UNUSED(v);
-    return QStringLiteral("<callable>");
-#endif
 }
 
 static QString qmlErrorToString(const QQmlError &error)
@@ -141,13 +111,11 @@ static QString qjsValueToString(const QJSValue &v)
         return QStringLiteral("<array>");
     } else if (v.isBool()) {
         return v.toBool() ? QStringLiteral("true") : QStringLiteral("false");
-#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
         // note: v.isQMetaObject() == true => v.isCallable() == true, because QV4::QMetaObjectWrapper inherits
         // QV4::FunctionObject and isCallable just checks whether the object is a function object.
         // thus the isQMetaObject check needs to come before the isCallable check
     } else if (v.isQMetaObject()) {
         return QStringLiteral("QMetaObject[className=%1]").arg(v.toQMetaObject()->className());
-#endif
     } else if (v.isCallable()) {
         return callableQjsValueToString(v);
     } else if (v.isDate()) {
@@ -215,17 +183,10 @@ QString QmlObjectDataProvider::typeName(const QObject *obj) const
 
     // QML defined type
     auto data = QQmlData::get(obj);
-#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
-    if (!data || !data->compiledData)
-        return QString();
-
-    qmlType = QQmlMetaType::qmlType(data->compiledData->url());
-#else
     if (!data || !data->compilationUnit)
         return QString();
 
     qmlType = QQmlMetaType::qmlType(data->compilationUnit->url());
-#endif
     if (QmlType::isValid(qmlType)) {
         // we get the same type for top-level types and inline types, with no known way to tell those apart...
         if (QString::fromLatin1(obj->metaObject()->className()).startsWith(QmlType::callable(qmlType)->qmlTypeName() + QStringLiteral("_QMLTYPE_")))
@@ -288,17 +249,10 @@ SourceLocation QmlObjectDataProvider::declarationLocation(const QObject *obj) co
 
     // QML-defined type
     auto data = QQmlData::get(obj);
-#if QT_VERSION < QT_VERSION_CHECK(5, 8, 0)
-    if (!data || !data->compiledData)
-        return SourceLocation();
-
-    qmlType = QQmlMetaType::qmlType(data->compiledData->url());
-#else
     if (!data || !data->compilationUnit)
         return SourceLocation();
 
     qmlType = QQmlMetaType::qmlType(data->compilationUnit->url());
-#endif
     if (QmlType::isValid(qmlType))
         return SourceLocation(QmlType::callable(qmlType)->sourceUrl());
     return SourceLocation();
@@ -338,17 +292,7 @@ QmlSupport::QmlSupport(Probe *probe, QObject *parent)
     MO_ADD_PROPERTY_RO(QQmlType, typeName);
     MO_ADD_PROPERTY_RO(QQmlType, qmlTypeName);
     MO_ADD_PROPERTY_RO(QQmlType, elementName);
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_PROPERTY_RO(QQmlType, version);
-#else
-    MO_ADD_PROPERTY_RO(QQmlType, majorVersion);
-    MO_ADD_PROPERTY_RO(QQmlType, minorVersion);
-#endif
-
-#if QT_VERSION < QT_VERSION_CHECK(5, 13, 0)
-    MO_ADD_PROPERTY_RO(QQmlType, createSize); // got removed in v5.13.0-alpha1
-#endif
     MO_ADD_PROPERTY_RO(QQmlType, isCreatable);
     MO_ADD_PROPERTY_RO(QQmlType, isExtendedType);
     MO_ADD_PROPERTY_RO(QQmlType, isSingleton);
@@ -379,9 +323,7 @@ QmlSupport::QmlSupport(Probe *probe, QObject *parent)
     PropertyController::registerExtension<QmlContextExtension>();
     PropertyController::registerExtension<QmlTypeExtension>();
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     BindingAggregator::registerBindingProvider(std::unique_ptr<AbstractBindingProvider>(new QmlBindingProvider));
-#endif
 
     static auto dataProvider = new QmlObjectDataProvider;
     ObjectDataProvider::registerProvider(dataProvider);

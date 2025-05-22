@@ -522,20 +522,12 @@ void RemoteModelServer::setProxyFilterKeyColumn(int column)
 RemoteModelServer::RegExpT RemoteModelServer::proxyFilterRegExp() const
 {
     if (auto proxy = qobject_cast<QSortFilterProxyModel *>(m_model))
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         return proxy->filterRegularExpression();
-#else
-        return proxy->filterRegExp();
-#endif
     return {};
 }
 
 void RemoteModelServer::setProxyFilterRegExp(const RegExpT &regExp)
 {
     if (auto proxy = qobject_cast<QSortFilterProxyModel *>(m_model))
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         proxy->setFilterRegularExpression(regExp);
-#else
-        proxy->setFilterRegExp(regExp);
-#endif
 }

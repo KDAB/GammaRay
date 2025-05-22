@@ -23,8 +23,6 @@
 
 #include <algorithm>
 
-// #include <modeltest.h>
-
 using namespace GammaRay;
 
 namespace GammaRay {

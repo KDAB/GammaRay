@@ -13,7 +13,7 @@
 
 #include <plugins/fontbrowser/fontdatabasemodel.h>
 
-#include <3rdparty/qt/modeltest.h>
+#include <QAbstractItemModelTester>
 
 #include <QTest>
 
@@ -26,7 +26,7 @@ private slots:
     static void modelTest()
     {
         FontDatabaseModel model;
-        ModelTest tester(&model);
+        QAbstractItemModelTester tester(&model);
 
         QVERIFY(model.rowCount() > 0);
     }

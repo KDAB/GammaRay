@@ -19,16 +19,6 @@
 
 using namespace GammaRay;
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-namespace GammaRay {
-class ProtectedExposer : public QObject
-{
-public:
-    using QObject::staticQtMetaObject;
-};
-}
-#endif
-
 static const QMetaObject *metaObjectForClass(const QByteArray &name)
 {
     if (name.isEmpty())
@@ -43,11 +33,6 @@ static const QMetaObject *metaObjectForClass(const QByteArray &name)
 
 static QMetaEnum flagsFromEnumIndex(int enumIndex, const QByteArray &enumName, const QMetaObject *const mo)
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    Q_UNUSED(enumName)
-    Q_ASSERT(false);
-    return mo->enumerator(enumIndex);
-#else
     Q_ASSERT(mo);
     // usually it should be just enumIndex + 1
     const auto count = mo->enumeratorCount();
@@ -65,7 +50,6 @@ static QMetaEnum flagsFromEnumIndex(int enumIndex, const QByteArray &enumName, c
         }
     }
     return mo->enumerator(enumIndex);
-#endif
 }
 
 QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const QMetaObject *metaObject)
@@ -83,7 +67,6 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
         className = enumTypeName.left(pos);
         enumTypeName = enumTypeName.mid(pos + 2);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         // QVariant::typeName is no longer the flag name, but QFlags<Foo>...
         if (className.startsWith("QFlags<")) {
             className.remove(0, sizeof("QFlags<") - 1);
@@ -93,14 +76,9 @@ QMetaEnum EnumUtil::metaEnum(const QVariant &value, const char *typeName, const 
         if (enumTypeName.endsWith(">")) {
             enumTypeName.chop(1);
         }
-#endif
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     const QMetaObject *mo = &Qt::staticMetaObject;
-#else
-    const QMetaObject *mo = &ProtectedExposer::staticQtMetaObject;
-#endif
     int enumIndex = mo->indexOfEnumerator(enumTypeName);
     if (enumIndex < 0 && metaObject) {
         mo = metaObject;

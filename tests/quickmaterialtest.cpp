@@ -17,8 +17,7 @@
 #include <core/propertycontroller.h>
 #include <common/objectbroker.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QAbstractItemModel>
 #include <QQuickItem>
 
@@ -47,14 +46,8 @@ class QuickMaterialTest : public BaseQuickTest
 private slots:
     void testStaticShader()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         if (!showSource("qrc:/manual/shadereffect6.qml"))
             return;
-#else
-        if (!showSource("qrc:/manual/shadereffect.qml"))
-            return;
-#endif
-
 
         auto iface = ObjectBroker::object<MaterialExtensionInterface *>("com.kdab.GammaRay.QuickSceneGraph.material");
         QVERIFY(iface);
@@ -63,12 +56,12 @@ private slots:
 
         auto propModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.materialPropertyModel");
         QVERIFY(propModel);
-        ModelTest propModelTest(propModel);
+        QAbstractItemModelTester propModelTest(propModel);
         QCOMPARE(propModel->rowCount(), 0);
 
         auto shaderModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.shaderModel");
         QVERIFY(shaderModel);
-        ModelTest shaderModelTest(shaderModel);
+        QAbstractItemModelTester shaderModelTest(shaderModel);
         QCOMPARE(shaderModel->rowCount(), 0);
 
         auto imageItem = view()->rootObject();
@@ -103,13 +96,8 @@ private slots:
 
     void testDynamicShader()
     {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         if (!showSource("qrc:/manual/shadereffect6.qml"))
             return;
-#else
-        if (!showSource("qrc:/manual/shadereffect.qml"))
-            return;
-#endif
 
         auto iface = ObjectBroker::object<MaterialExtensionInterface *>("com.kdab.GammaRay.QuickSceneGraph.material");
         QVERIFY(iface);
@@ -118,12 +106,12 @@ private slots:
 
         auto propModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.materialPropertyModel");
         QVERIFY(propModel);
-        ModelTest propModelTest(propModel);
+        QAbstractItemModelTester propModelTest(propModel);
         QCOMPARE(propModel->rowCount(), 0);
 
         auto shaderModel = ObjectBroker::model("com.kdab.GammaRay.QuickSceneGraph.shaderModel");
         QVERIFY(shaderModel);
-        ModelTest shaderModelTest(shaderModel);
+        QAbstractItemModelTester shaderModelTest(shaderModel);
         QCOMPARE(shaderModel->rowCount(), 0);
 
         QQuickItem *effectItem = nullptr;
@@ -144,26 +132,8 @@ private slots:
         QVERIFY(geometryNode);
         controller->setObject(geometryNode, "QSGGeometryNode");
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         // In Qt6 we don't have access to shader source code
         return;
-#endif
-
-        QVERIFY(propModel->rowCount() > 1);
-        QCOMPARE(shaderModel->rowCount(), 2);
-
-        iface->getShader(0);
-        QCOMPARE(shaderSpy.size(), 1);
-        QVERIFY(!shaderSpy.at(0).at(0).toString().isEmpty());
-        QVERIFY(shaderSpy.at(0).at(0).toString().contains(QLatin1String("TESTVERTEXSHADER")));
-        shaderSpy.clear();
-
-        iface->getShader(1);
-        QCOMPARE(shaderSpy.size(), 1);
-        QVERIFY(!shaderSpy.at(0).at(0).toString().isEmpty());
-        QVERIFY(shaderSpy.at(0).at(0).toString().contains(QLatin1String("TESTFRAGMENTSHADER")));
-
-        controller->setObject(nullptr, QString());
     }
 };
 

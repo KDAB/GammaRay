@@ -18,8 +18,7 @@
 
 #include <common/objectbroker.h>
 
-#include <3rdparty/qt/modeltest.h>
-
+#include <QAbstractItemModelTester>
 #include <QAbstractItemModel>
 #include <QAction>
 #include <QSignalSpy>
@@ -124,7 +123,7 @@ private slots:
     void testClientSide()
     {
         ClientToolManager::instance()->requestAvailableTools();
-        ModelTest modelTest(ClientToolManager::instance()->model());
+        QAbstractItemModelTester modelTest(ClientToolManager::instance()->model());
 
         // we're testing inprocess, thus tool list should be available instantly.
         QVERIFY(ClientToolManager::instance()->isToolListLoaded());

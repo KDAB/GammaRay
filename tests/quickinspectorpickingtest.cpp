@@ -23,8 +23,6 @@
 #include <common/remoteviewinterface.h>
 #include <common/remoteviewframe.h>
 
-#include <3rdparty/qt/modeltest.h>
-
 #include <QQuickView>
 #include <QItemSelectionModel>
 #include <QSignalSpy>

@@ -1137,12 +1137,12 @@ void RemoteModel::setProxyFilterKeyColumn(int column)
     emit proxyFilterKeyColumnChanged();
 }
 
-RemoteModel::RegExpT RemoteModel::proxyFilterRegExp() const
+QRegularExpression RemoteModel::proxyFilterRegExp() const
 {
     return m_proxyFilterRegExp;
 }
 
-void RemoteModel::setProxyFilterRegExp(const RegExpT &regExp)
+void RemoteModel::setProxyFilterRegExp(const QRegularExpression &regExp)
 {
     if (m_proxyFilterRegExp == regExp)
         return;

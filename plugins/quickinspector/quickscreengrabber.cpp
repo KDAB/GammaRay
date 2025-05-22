@@ -35,9 +35,7 @@
 
 #include <private/qsgsoftwarerenderer_p.h>
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QQuickOpenGLUtils>
-#endif
 
 #include <algorithm>
 #include <functional>
@@ -232,13 +230,8 @@ std::unique_ptr<AbstractScreenGrabber> AbstractScreenGrabber::get(QQuickWindow *
 #endif
     case RenderInfo::Software:
         return std::unique_ptr<AbstractScreenGrabber>(new SoftwareScreenGrabber(window));
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     default:
         return std::unique_ptr<AbstractScreenGrabber>(new UnsupportedScreenGrabber(window));
-#else
-    default:
-        return nullptr;
-#endif
     }
 }
 
@@ -620,7 +613,6 @@ void OpenGLScreenGrabber::windowAfterRendering()
         int yOff = 0;
         int xOff = 0;
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 4, 0)
         // With Qt 6.4 all the content of the window (widgets + quick) is on the same surface, we need
         // to find the right x,y offsets to extract and show just our quick widget
         const bool isQQuickWidget = qstrcmp(m_window->metaObject()->className(), "QQuickWidgetOffscreenWindow") == 0;
@@ -646,7 +638,6 @@ void OpenGLScreenGrabber::windowAfterRendering()
 #endif
 #endif
         }
-#endif
 
         // readout parameters
         // when in doubt, round x and y to floor--> reads one pixel more
@@ -683,11 +674,7 @@ void OpenGLScreenGrabber::windowAfterRendering()
 
     drawDecorations();
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     QQuickOpenGLUtils::resetOpenGLState();
-#else
-    m_window->resetOpenGLState();
-#endif
 
     if (m_isGrabbing) {
         locker.unlock();
@@ -756,11 +743,7 @@ void SoftwareScreenGrabber::requestGrabWindow(const QRectF &userViewport)
     renderer->markDirty();
     winPriv->polishItems();
     winPriv->syncSceneGraph();
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     winPriv->renderSceneGraph();
-#else
-    winPriv->renderSceneGraph(m_window->size());
-#endif
     renderer->setCurrentPaintDevice(regularRenderDevice);
 
     m_isGrabbing = false;
@@ -809,7 +792,6 @@ QSGSoftwareRenderer *SoftwareScreenGrabber::softwareRenderer() const
     return softwareRenderer;
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 UnsupportedScreenGrabber::UnsupportedScreenGrabber(QQuickWindow *window)
     : AbstractScreenGrabber(window)
 {
@@ -855,5 +837,3 @@ void UnsupportedScreenGrabber::drawDecorations()
 void UnsupportedScreenGrabber::updateOverlay()
 {
 }
-
-#endif // QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)

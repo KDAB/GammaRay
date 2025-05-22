@@ -16,13 +16,8 @@
 
 #include <QtGlobal>
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <Qt3DCore/QAttribute>
 namespace Qt3DGeometry = Qt3DCore;
-#else
-#include <Qt3DRender/QAttribute>
-namespace Qt3DGeometry = Qt3DRender;
-#endif
 
 namespace GammaRay {
 /** Utilities for decoding attribute data. */

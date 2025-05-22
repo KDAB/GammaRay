@@ -22,14 +22,8 @@ using namespace GammaRay;
 
 QT_BEGIN_NAMESPACE
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DCore::QAttribute::AttributeType)
 GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DCore::QAttribute::VertexBaseType)
-#else
-GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QAttribute::AttributeType)
-GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QAttribute::VertexBaseType)
-GAMMARAY_ENUM_STREAM_OPERATORS(Qt3DRender::QBuffer::BufferType)
-#endif
 
 QDataStream &operator<<(QDataStream &out, const Qt3DGeometryAttributeData &data)
 {

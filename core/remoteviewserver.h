@@ -100,11 +100,7 @@ private:
     bool m_grabberReady;
     bool m_pendingReset;
     bool m_pendingCompleteFrame;
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
     std::unique_ptr<QPointingDevice> m_touchDevice;
-#else
-    std::unique_ptr<QTouchDevice> m_touchDevice;
-#endif
 };
 }
 

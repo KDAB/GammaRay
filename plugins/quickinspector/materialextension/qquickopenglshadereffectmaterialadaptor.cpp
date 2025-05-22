@@ -15,12 +15,6 @@
 
 #include <core/propertydata.h>
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <private/qquickopenglshadereffectnode_p.h>
-
-Q_DECLARE_METATYPE(QQuickOpenGLShaderEffectMaterial::UniformData)
-#endif
-
 #include <QDebug>
 
 using namespace GammaRay;
@@ -49,45 +43,11 @@ PropertyData QQuickOpenGLShaderEffectMaterialAdaptor::propertyData(int index) co
     PropertyData pd;
 
     if (object().type() == ObjectInstance::Object) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        auto mat = reinterpret_cast<QQuickOpenGLShaderEffectMaterial *>(object().object());
-        switch (index) {
-        case 0:
-            pd.setName(QStringLiteral("Vertex Uniforms"));
-            break;
-        case 1:
-            pd.setName(QStringLiteral("Fragment Uniforms"));
-            break;
-        }
-        pd.setValue(QVariant::fromValue(mat->uniforms[index]));
-#endif
         pd.setClassName(QStringLiteral("QQuickOpenGLShaderEffectMaterial"));
         return pd;
     }
 
     if (object().type() == ObjectInstance::QtVariant) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        const auto ud = object().variant().value<QQuickOpenGLShaderEffectMaterial::UniformData>();
-        pd.setName(ud.name);
-        pd.setValue(ud.value);
-        pd.setTypeName(ud.value.typeName());
-        pd.setClassName(QStringLiteral("QQuickOpenGLShaderEffectMaterial::UniformData"));
-
-        // special values are only filled in dynamically from the owning node, so we won't see those
-        switch (ud.specialType) {
-        case QQuickOpenGLShaderEffectMaterial::UniformData::Opacity:
-            pd.setTypeName(QStringLiteral("double"));
-            pd.setValue(QStringLiteral("<see node>"));
-            break;
-        case QQuickOpenGLShaderEffectMaterial::UniformData::Matrix:
-            pd.setTypeName(QStringLiteral("QMatrix4x4"));
-            pd.setValue(QStringLiteral("<see node>"));
-            break;
-        default:
-            break;
-        }
-#endif
-
         return pd;
     }
 
