@@ -74,7 +74,7 @@ public:
         painter.setPen(palette().color(QPalette::HighlightedText));
         painter.drawText(selectRect, Qt::TextDontClip, text.mid(startSelectChar, endSelectChar - startSelectChar));
 
-        if (endSelectChar < text.count()) {
+        if (endSelectChar < text.size()) {
             painter.setPen(palette().color(QPalette::Text));
             painter.drawText(QRect(rect.x() + endX, rect.y(), m_metrics.horizontalAdvance(text) - endX, rect.height()), text.mid(endSelectChar));
         }
@@ -111,12 +111,12 @@ public:
         selectionBoundaries(start, end);
 
         if (start.y() < line && line < end.y()) {
-            return { 0, ( int )m_lines.at(line).text.text().count() };
+            return { 0, ( int )m_lines.at(line).text.text().size() };
         }
 
         if (start.y() == line || end.y() == line) {
             int startChar = 0;
-            int endChar = m_lines.at(line).text.text().count();
+            int endChar = m_lines.at(line).text.text().size();
             if (start.y() == line)
                 startChar = start.x();
             if (end.y() == line)
@@ -196,7 +196,7 @@ public:
         int lineX = 0;
 
         const QString &text = m_lines.at(line).text.text();
-        for (int x = 0, i = 0; i < text.count(); ++i) {
+        for (int x = 0, i = 0; i < text.size(); ++i) {
             const QChar &c = text.at(i);
             if (p.x() >= x) {
                 lineX = i;
@@ -498,7 +498,7 @@ public:
 
         void mouseMoveEvent(QMouseEvent *e) override
         {
-            const QPointF &pos = e->localPos();
+            const QPointF &pos = e->position();
             for (int i = 0; i < m_data.count(); ++i) {
                 qreal timex = (m_data.at(i).time - m_start) / m_zoom;
                 if (fabs(pos.x() - timex) < 2) {

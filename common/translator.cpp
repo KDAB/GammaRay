@@ -34,7 +34,7 @@ static QString rootTranslationsPath()
 
 static QString qtTranslationsPath()
 {
-    return QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    return QLibraryInfo::path(QLibraryInfo::TranslationsPath);
 }
 
 void Translator::loadTranslations(const QString &catalog, const QString &path, const QString &overrideLanguage)

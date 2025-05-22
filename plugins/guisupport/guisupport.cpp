@@ -420,11 +420,10 @@ void GuiSupport::registerMetaTypes()
 
     MO_ADD_METAOBJECT1(QDropEvent, QEvent);
     MO_ADD_PROPERTY_RO(QDropEvent, dropAction);
-    MO_ADD_PROPERTY_RO(QDropEvent, keyboardModifiers);
+    MO_ADD_PROPERTY_RO(QDropEvent, modifiers);
     MO_ADD_PROPERTY_RO(QDropEvent, mimeData);
-    MO_ADD_PROPERTY_RO(QDropEvent, mouseButtons);
-    MO_ADD_PROPERTY_RO(QDropEvent, pos);
-    MO_ADD_PROPERTY_RO(QDropEvent, posF);
+    MO_ADD_PROPERTY_RO(QDropEvent, buttons);
+    MO_ADD_PROPERTY_RO(QDropEvent, position);
     MO_ADD_PROPERTY_RO(QDropEvent, possibleActions);
     MO_ADD_PROPERTY_RO(QDropEvent, proposedAction);
     MO_ADD_PROPERTY_RO(QDropEvent, source);
@@ -475,10 +474,10 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QMouseEvent, QSinglePointEvent);
 #endif
     MO_ADD_PROPERTY_RO(QMouseEvent, flags);
-    MO_ADD_PROPERTY_RO(QMouseEvent, localPos);
-    MO_ADD_PROPERTY_RO(QMouseEvent, screenPos);
+    MO_ADD_PROPERTY_RO(QMouseEvent, pos);
+    MO_ADD_PROPERTY_RO(QMouseEvent, globalPosition);
     MO_ADD_PROPERTY_RO(QMouseEvent, source);
-    MO_ADD_PROPERTY_RO(QMouseEvent, windowPos);
+    MO_ADD_PROPERTY_RO(QMouseEvent, scenePosition);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT1(QHoverEvent, QInputEvent);
@@ -518,7 +517,6 @@ void GuiSupport::registerMetaTypes()
 #else
     MO_ADD_METAOBJECT1(QTabletEvent, QSinglePointEvent);
 #endif
-    MO_ADD_PROPERTY_RO(QTabletEvent, uniqueId);
     MO_ADD_PROPERTY_RO(QTabletEvent, pressure);
     MO_ADD_PROPERTY_RO(QTabletEvent, z);
     MO_ADD_PROPERTY_RO(QTabletEvent, tangentialPressure);
@@ -536,9 +534,9 @@ void GuiSupport::registerMetaTypes()
 #endif
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, gestureType);
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, value);
-    MO_ADD_PROPERTY_RO(QNativeGestureEvent, localPos);
-    MO_ADD_PROPERTY_RO(QNativeGestureEvent, windowPos);
-    MO_ADD_PROPERTY_RO(QNativeGestureEvent, screenPos);
+    MO_ADD_PROPERTY_RO(QNativeGestureEvent, position);
+    MO_ADD_PROPERTY_RO(QNativeGestureEvent, scenePosition);
+    MO_ADD_PROPERTY_RO(QNativeGestureEvent, globalPosition);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     MO_ADD_PROPERTY_RO(QNativeGestureEvent, device);
 #endif
@@ -581,7 +579,6 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_PROPERTY_RO(QMoveEvent, oldPos);
 
     MO_ADD_METAOBJECT1(QExposeEvent, QEvent);
-    MO_ADD_PROPERTY_RO(QExposeEvent, region);
 
     MO_ADD_METAOBJECT1(QResizeEvent, QEvent);
     MO_ADD_PROPERTY_RO(QResizeEvent, size);
@@ -599,7 +596,7 @@ void GuiSupport::registerMetaTypes()
     MO_ADD_METAOBJECT1(QTouchEvent, QPointerEvent);
 #endif
     MO_ADD_PROPERTY_RO(QTouchEvent, target);
-    MO_ADD_PROPERTY_RO(QTouchEvent, touchPoints);
+    MO_ADD_PROPERTY_RO(QTouchEvent, points);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     MO_ADD_METAOBJECT0(QTouchEvent::TouchPoint);
@@ -670,9 +667,9 @@ void GuiSupport::registerMetaTypes()
 #else
     MO_ADD_METAOBJECT1(QEnterEvent, QSinglePointEvent);
 #endif
-    MO_ADD_PROPERTY_RO(QEnterEvent, localPos);
-    MO_ADD_PROPERTY_RO(QEnterEvent, screenPos);
-    MO_ADD_PROPERTY_RO(QEnterEvent, windowPos);
+    MO_ADD_PROPERTY_RO(QEnterEvent, position);
+    MO_ADD_PROPERTY_RO(QEnterEvent, scenePosition);
+    MO_ADD_PROPERTY_RO(QEnterEvent, globalPosition);
 
     StreamOperators::registerOperators<QMargins>();
     StreamOperators::registerOperators<QMarginsF>();

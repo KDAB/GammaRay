@@ -42,7 +42,7 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         switch (index.column()) {
         case 0: {
-            QString name(QMetaType::typeName(metaTypeId));
+            QString name(QMetaType(metaTypeId).name());
             if (name.isEmpty())
                 return tr("N/A");
             return name;
@@ -50,11 +50,11 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
         case 1:
             return metaTypeId;
         case 2:
-            return QMetaType::sizeOf(metaTypeId);
+            return QMetaType(metaTypeId).sizeOf();
         case 3:
-            return Util::addressToString(QMetaType::metaObjectForType(metaTypeId));
+            return Util::addressToString(QMetaType(metaTypeId).metaObject());
         case 4: {
-            const QMetaType::TypeFlags flags = QMetaType::typeFlags(metaTypeId);
+            const QMetaType::TypeFlags flags = QMetaType(metaTypeId).flags();
             QStringList l;
 #define F(x)                  \
     if (flags & QMetaType::x) \
@@ -91,10 +91,10 @@ QVariant MetaTypesModel::data(const QModelIndex &index, int role) const
 #endif
         }
         case 6:
-            return QMetaType::hasRegisteredDebugStreamOperator(metaTypeId);
+            return QMetaType(metaTypeId).hasRegisteredDebugStreamOperator();
         }
     } else if (role == MetaTypeRoles::MetaObjectIdRole && index.column() == 0) {
-        if (auto mo = QMetaType::metaObjectForType(metaTypeId))
+        if (auto mo = QMetaType(metaTypeId).metaObject())
             return QVariant::fromValue(ObjectId(const_cast<QMetaObject *>(mo), "const QMetaObject*"));
     }
 
@@ -125,12 +125,12 @@ void MetaTypesModel::scanMetaTypes()
     for (int mtId = 0; mtId <= QMetaType::User; ++mtId) {
         if (!MetaObjectRegistry::isTypeIdRegistered(mtId))
             continue;
-        const auto name = QMetaType::typeName(mtId);
+        const auto name = QMetaType(mtId).name();
         if (strstr(name, "GammaRay::") != name)
             metaTypes.push_back(mtId);
     }
     for (int mtId = QMetaType::User + 1; QMetaType::isRegistered(mtId); ++mtId) {
-        const auto name = QMetaType::typeName(mtId);
+        const auto name = QMetaType(mtId).name();
         if (strstr(name, "GammaRay::") != name)
             metaTypes.push_back(mtId);
     }

@@ -148,17 +148,19 @@ bool GammaRay::ActionValidator::isAmbigous(const QAction *action, const QKeySequ
             || other->shortcutContext() == Qt::ApplicationShortcut)
             return true;
         if (action->shortcutContext() == Qt::WindowShortcut || other->shortcutContext() == Qt::WindowShortcut) {
-            Q_FOREACH (QWidget *w1, action->associatedWidgets()) {
-                Q_FOREACH (QWidget *w2, other->associatedWidgets()) {
-                    if (w1->window() == w2->window())
-                        return true;
+            Q_FOREACH (QObject *w1, action->associatedObjects()) {
+                Q_FOREACH (QObject *w2, other->associatedObjects()) {
+                    if (w1->isWidgetType() && w2->isWidgetType()) {
+                        if (static_cast<QWidget *>(w1)->window() == static_cast<QWidget *>(w2)->window())
+                            return true;
+                    }
                 }
             }
         }
         if (action->shortcutContext() == Qt::WidgetWithChildrenShortcut) {
-            Q_FOREACH (QWidget *w1, action->associatedWidgets()) {
-                Q_FOREACH (QWidget *w2, other->associatedWidgets()) {
-                    for (QWidget *ancestor = w2; ancestor; ancestor = ancestor->parentWidget()) {
+            Q_FOREACH (QObject *w1, action->associatedObjects()) {
+                Q_FOREACH (QObject *w2, other->associatedObjects()) {
+                    for (QObject *ancestor = w2; ancestor; ancestor = ancestor->parent()) {
                         if (w1 == ancestor)
                             return true;
                     }
@@ -166,9 +168,9 @@ bool GammaRay::ActionValidator::isAmbigous(const QAction *action, const QKeySequ
             }
         }
         if (other->shortcutContext() == Qt::WidgetWithChildrenShortcut) {
-            Q_FOREACH (QWidget *w1, other->associatedWidgets()) {
-                Q_FOREACH (QWidget *w2, action->associatedWidgets()) {
-                    for (QWidget *ancestor = w2; ancestor; ancestor = ancestor->parentWidget()) {
+            Q_FOREACH (QObject *w1, other->associatedObjects()) {
+                Q_FOREACH (QObject *w2, action->associatedObjects()) {
+                    for (QObject *ancestor = w2; ancestor; ancestor = ancestor->parent()) {
                         if (w1 == ancestor)
                             return true;
                     }
@@ -176,8 +178,8 @@ bool GammaRay::ActionValidator::isAmbigous(const QAction *action, const QKeySequ
             }
         }
         if (action->shortcutContext() == Qt::WidgetShortcut && other->shortcutContext() == Qt::WidgetShortcut) {
-            Q_FOREACH (QWidget *w1, action->associatedWidgets()) {
-                Q_FOREACH (QWidget *w2, other->associatedWidgets()) {
+            Q_FOREACH (QObject *w1, action->associatedObjects()) {
+                Q_FOREACH (QObject *w2, other->associatedObjects()) {
                     if (w1 == w2)
                         return true;
                 }

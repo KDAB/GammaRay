@@ -152,7 +152,7 @@ QMap<int, QVariant> AggregatedPropertyModel::itemData(const QModelIndex &index) 
     } else if (index.column() == 1) {
         res.insert(Qt::EditRole, data(adaptor, d, index.column(), Qt::EditRole));
         res.insert(Qt::DecorationRole, data(adaptor, d, index.column(), Qt::DecorationRole));
-        if (d.value().type() == QVariant::Bool)
+        if (d.value().typeId() == QMetaType::Bool)
             res.insert(Qt::CheckStateRole, data(adaptor, d, index.column(), Qt::CheckStateRole));
     }
     return res;
@@ -172,7 +172,7 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
             const QString enumStr = EnumUtil::enumToString(d.value(), d.typeName().toLatin1(), adaptor->object().metaObject());
             if (!enumStr.isEmpty())
                 return enumStr;
-            if (d.value().type() == QVariant::Bool && (d.accessFlags() & PropertyData::Writable))
+            if (d.value().typeId() == QMetaType::Bool && (d.accessFlags() & PropertyData::Writable))
                 return QVariant();
             if (isInvalidPointer(d.value()) && Util::uncheckedQObjectCast(d.value()) != nullptr)
                 return "[invalid]";
@@ -199,7 +199,7 @@ QVariant AggregatedPropertyModel::data(PropertyAdaptor *adaptor, const PropertyD
             return VariantHandler::decoration(d.value());
         break;
     case Qt::CheckStateRole:
-        if (column == 1 && d.value().type() == QVariant::Bool && (d.accessFlags() & PropertyData::Writable))
+        if (column == 1 && d.value().typeId() == QMetaType::Bool && (d.accessFlags() & PropertyData::Writable))
             return d.value().toBool() ? Qt::Checked : Qt::Unchecked;
         break;
     case PropertyModel::ActionRole: {
@@ -252,7 +252,7 @@ bool AggregatedPropertyModel::setData(const QModelIndex &index, const QVariant &
         QPointer<GammaRay::PropertyAdaptor> guard(adaptor);
         if (value.userType() == qMetaTypeId<EnumValue>()) {
             const auto d = adaptor->propertyData(index.row());
-            if (d.value().type() == QVariant::Int) {
+            if (d.value().typeId() == QMetaType::Int) {
                 adaptor->writeProperty(index.row(), value.value<EnumValue>().value());
             } else {
                 auto v = d.value();
@@ -322,7 +322,7 @@ Qt::ItemFlags AggregatedPropertyModel::flags(const QModelIndex &index) const
     auto adaptor = adaptorForIndex(index);
     auto data = adaptor->propertyData(index.row());
     const auto editable = (data.accessFlags() & PropertyData::Writable) && isParentEditable(adaptor);
-    const auto booleanEditable = editable && data.value().type() == QVariant::Bool;
+    const auto booleanEditable = editable && data.value().typeId() == QMetaType::Bool;
     if (booleanEditable)
         return baseFlags | Qt::ItemIsUserCheckable;
     return editable ? (baseFlags | Qt::ItemIsEditable) : baseFlags;

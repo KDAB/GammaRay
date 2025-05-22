@@ -40,8 +40,8 @@ void CodeEditorSidebar::paintEvent(QPaintEvent *event)
 
 void CodeEditorSidebar::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->x() >= width() - m_codeEditor->foldingBarWidth()) {
-        auto block = m_codeEditor->blockAtPosition(event->y());
+    if (event->pos().x() >= width() - m_codeEditor->foldingBarWidth()) {
+        auto block = m_codeEditor->blockAtPosition(event->pos().y());
         if (!block.isValid() || !m_codeEditor->isFoldable(block))
             return;
         m_codeEditor->toggleFold(block);

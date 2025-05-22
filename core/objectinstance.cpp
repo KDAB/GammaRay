@@ -50,8 +50,9 @@ ObjectInstance::ObjectInstance(const QVariant &value)
             m_type = QtObject;
         }
     } else {
-        if (QMetaType::typeFlags(value.userType()) & QMetaType::IsGadget) {
-            m_metaObj = QMetaType::metaObjectForType(value.userType());
+        auto mt = QMetaType(value.userType());
+        if (mt.flags() & QMetaType::IsGadget) {
+            m_metaObj = mt.metaObject();
             if (m_metaObj)
                 m_type = QtGadgetValue;
         } else {
@@ -177,7 +178,7 @@ void ObjectInstance::unpackVariant()
 {
     const auto mo = MetaObjectRepository::instance()->metaObject(m_variant.typeName());
     if (mo && strstr(m_variant.typeName(), "*") != nullptr) { // pointer types
-        QMetaType::construct(m_variant.userType(), &m_obj, m_variant.constData());
+        QMetaType(m_variant.userType()).construct(&m_obj, m_variant.constData());
         if (!Util::isNullish(m_obj)) {
             m_type = Object;
             m_typeName = m_variant.typeName();
@@ -198,10 +199,10 @@ void ObjectInstance::unpackVariant()
         normalizedTypeName.replace(' ', "");
         // krazy:endcond=doublequote_chars
 
-        const auto typeId = QMetaType::type(normalizedTypeName);
-        if (typeId != QMetaType::UnknownType && (QMetaType::typeFlags(typeId) & QMetaType::IsGadget)) {
-            QMetaType::construct(m_variant.userType(), &m_obj, m_variant.constData());
-            m_metaObj = QMetaType::metaObjectForType(typeId);
+        const auto typeId = QMetaType::fromName(normalizedTypeName).id();
+        if (typeId != QMetaType::UnknownType && (QMetaType(typeId).flags() & QMetaType::IsGadget)) {
+            QMetaType(m_variant.userType()).construct(&m_obj, m_variant.constData());
+            m_metaObj = QMetaType(typeId).metaObject();
             if (m_obj && m_metaObj) {
                 m_type = QtGadgetPointer;
                 m_typeName = m_variant.typeName();

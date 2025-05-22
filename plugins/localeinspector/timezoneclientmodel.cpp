@@ -33,17 +33,17 @@ QVariant TimezoneClientModel::data(const QModelIndex &index, int role) const
         return QIdentityProxyModel::data(index.sibling(index.row(), 0), role);
     } else if (role == Qt::DisplayRole && index.column() == TimezoneModelColumns::DSTColumn) {
         const auto v = QIdentityProxyModel::data(index, Qt::DisplayRole);
-        const auto b = v.type() == QVariant::Bool && v.toBool();
+        const auto b = v.typeId() == QMetaType::Bool && v.toBool();
         if (b && qApp->style()->standardIcon(QStyle::SP_DialogYesButton).isNull())
             return tr("yes");
         return QVariant();
     } else if (role == Qt::DecorationRole && index.column() == TimezoneModelColumns::DSTColumn) {
         const auto v = QIdentityProxyModel::data(index, Qt::DisplayRole);
-        const auto b = v.type() == QVariant::Bool && v.toBool();
+        const auto b = v.typeId() == QMetaType::Bool && v.toBool();
         return b ? qApp->style()->standardIcon(QStyle::SP_DialogYesButton) : QVariant();
     } else if (role == Qt::FontRole) {
         const auto v = QIdentityProxyModel::data(index.sibling(index.row(), 0), TimezoneModelRoles::LocalZoneRole);
-        const auto b = v.type() == QVariant::Bool && v.toBool();
+        const auto b = v.typeId() == QMetaType::Bool && v.toBool();
         if (b) {
             QFont f;
             f.setBold(true);

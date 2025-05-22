@@ -184,7 +184,7 @@ void RemoteModelServer::newRequest(const GammaRay::Message &msg)
 
         Message msg(m_myAddress, Protocol::ModelContentReply);
         msg << quint32(indexes.size());
-        for (const auto &qmIndex : qAsConst(indexes)) {
+        for (const auto &qmIndex : std::as_const(indexes)) {
             msg << Protocol::fromQModelIndex(qmIndex);
             msg << filterItemData(m_model->itemData(qmIndex));
             msg.writeCStringMarker(GammaRay::REMOTE_MODEL_MARKER, sizeof(GammaRay::REMOTE_MODEL_MARKER) - 1);
@@ -311,7 +311,7 @@ bool RemoteModelServer::canSerialize(const QVariant &value) const
     // ugly, but there doesn't seem to be a better way atm to find out without trying
     m_dummyBuffer->seek(0);
     QDataStream stream(m_dummyBuffer);
-    return QMetaType::save(stream, value.userType(), value.constData());
+    return QMetaType(value.userType()).save(stream, value.constData());
 }
 
 void RemoteModelServer::modelMonitored(bool monitored)

@@ -77,19 +77,19 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
         case Label:
             return styleIndex == -1 ? family : style;
         case Weight:
-            return QFontDatabase().weight(family, style);
+            return QFontDatabase::weight(family, style);
         case SmoothSizes:
             return smoothSizeString(family, style);
         case Bold:
-            return toSortVariant(QFontDatabase().bold(family, style));
+            return toSortVariant(QFontDatabase::bold(family, style));
         case Italic:
-            return toSortVariant(QFontDatabase().italic(family, style));
+            return toSortVariant(QFontDatabase::italic(family, style));
         case Scalable:
-            return toSortVariant(QFontDatabase().isScalable(family, style));
+            return toSortVariant(QFontDatabase::isScalable(family, style));
         case BitmapScalable:
-            return toSortVariant(QFontDatabase().isBitmapScalable(family, style));
+            return toSortVariant(QFontDatabase::isBitmapScalable(family, style));
         case SmoothlyScalable:
-            return toSortVariant(QFontDatabase().isSmoothlyScalable(family, style));
+            return toSortVariant(QFontDatabase::isSmoothlyScalable(family, style));
         case NUM_COLUMNS:
             return {};
         }
@@ -99,15 +99,15 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
         };
         switch (static_cast<Columns>(index.column())) {
         case Bold:
-            return checkState(QFontDatabase().bold(family, style));
+            return checkState(QFontDatabase::bold(family, style));
         case Italic:
-            return checkState(QFontDatabase().italic(family, style));
+            return checkState(QFontDatabase::italic(family, style));
         case Scalable:
-            return checkState(QFontDatabase().isScalable(family, style));
+            return checkState(QFontDatabase::isScalable(family, style));
         case BitmapScalable:
-            return checkState(QFontDatabase().isBitmapScalable(family, style));
+            return checkState(QFontDatabase::isBitmapScalable(family, style));
         case SmoothlyScalable:
-            return checkState(QFontDatabase().isSmoothlyScalable(family, style));
+            return checkState(QFontDatabase::isSmoothlyScalable(family, style));
         case Weight:
         case Label:
         case SmoothSizes:
@@ -121,7 +121,7 @@ QVariant FontDatabaseModel::data(const QModelIndex &index, int role) const
         if (styleIndex == -1) {
             return QFont(family);
         } else {
-            return QFontDatabase().font(family, style, 10);
+            return QFontDatabase::font(family, style, 10);
         }
     } else if (role == FontBrowserInterface::FontSearchRole) {
         if (index.internalId() == TopLevelId) {
@@ -202,8 +202,7 @@ QMap<int, QVariant> FontDatabaseModel::itemData(const QModelIndex &index) const
 
 QString FontDatabaseModel::smoothSizeString(const QString &family, const QString &style)
 {
-    QFontDatabase database;
-    const auto smoothSizes = database.smoothSizes(family, style);
+    const auto smoothSizes = QFontDatabase::smoothSizes(family, style);
     QStringList sizes;
     sizes.reserve(smoothSizes.size());
     for (auto points : smoothSizes)
@@ -221,17 +220,16 @@ void FontDatabaseModel::ensureModelPopulated() const
 
 void FontDatabaseModel::populateModel()
 {
-    QFontDatabase database;
-    const auto families = database.families();
+    const auto families = QFontDatabase::families();
     m_families.reserve(families.size());
     m_styles.resize(families.size());
     for (int i = 0; i < families.size(); ++i) {
         const auto &family = families.at(i);
         m_families.push_back(family);
 
-        const auto styles = database.styles(family);
+        const auto styles = QFontDatabase::styles(family);
         m_styles[i].reserve(styles.size());
-        foreach (const auto &style, database.styles(family))
+        foreach (const auto &style, QFontDatabase::styles(family))
             m_styles[i].push_back(style);
     }
 }

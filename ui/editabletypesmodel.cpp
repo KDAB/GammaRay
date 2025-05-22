@@ -38,7 +38,7 @@ QVariant EditableTypesModel::data(const QModelIndex &index, int role) const
 
     const int type = m_types.at(index.row());
     if (role == Qt::DisplayRole)
-        return QMetaType::typeName(type);
+        return QMetaType(type).name();
     else if (role == Qt::UserRole)
         return type;
 

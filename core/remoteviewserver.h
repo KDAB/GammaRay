@@ -76,9 +76,8 @@ private:
                         int modifiers) override;
     void sendWheelEvent(const QPoint &localPos, QPoint pixelDelta, QPoint angleDelta, int buttons,
                         int modifiers) override;
-    void sendTouchEvent(int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
-                        int touchPointStates, const QList<QTouchEvent::TouchPoint> &touchPoints)
-        override;
+    void sendTouchEvent(const QString &deviceName, int deviceSystemId, int type, int touchDeviceType, int deviceCaps, int touchDeviceMaxTouchPoints, int modifiers,
+                        const QList<QTouchEvent::TouchPoint> &touchPoints) override;
     void setViewActive(bool active) override;
     void sendUserViewport(const QRectF &userViewport) override;
     void clientViewUpdated() override;

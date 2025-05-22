@@ -116,10 +116,10 @@ bool PaletteModel::setData(const QModelIndex &index, const QVariant &value, int 
         return false;
 
     if (index.isValid() && role == Qt::EditRole) {
-        if (value.type() == QVariant::Color) {
+        if (value.typeId() == QMetaType::QColor) {
             m_palette.setColor(paletteGroups[index.column() - 1].group,
                                paletteRoles[index.row()].role, value.value<QColor>());
-        } else if (value.type() == QVariant::Brush) {
+        } else if (value.typeId() == QMetaType::QBrush) {
             m_palette.setBrush(paletteGroups[index.column() - 1].group,
                                paletteRoles[index.row()].role, value.value<QBrush>());
         }

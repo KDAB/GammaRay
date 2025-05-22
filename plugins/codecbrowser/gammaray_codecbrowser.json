@@ -1,7 +1,0 @@
-{
-    "id": "gammaray_codecbrowser",
-    "name": "Text Codecs",
-    "types": [
-        "QObject"
-    ]
-}

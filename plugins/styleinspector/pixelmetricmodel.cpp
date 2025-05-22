@@ -184,7 +184,7 @@ bool PixelMetricModel::setData(const QModelIndex &index, const QVariant &value, 
     if (!index.isValid()
         || index.column() != 1
         || !value.isValid()
-        || !value.canConvert(QVariant::Int)
+        || !value.canConvert(QMetaType(QMetaType::Int))
         || role != Qt::EditRole)
         return false;
 

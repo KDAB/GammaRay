@@ -55,7 +55,7 @@ public:
         QVector<QVariant> v;
         const QList<QByteArray> paramTypes = signal.parameterTypes();
         for (int i = 0; i < paramTypes.size(); ++i) {
-            int type = QMetaType::type(paramTypes[i]);
+            int type = QMetaType::fromName(paramTypes[i]).id();
             if (type == QMetaType::Void || type == QMetaType::UnknownType) {
                 qWarning() << Q_FUNC_INFO << "unknown metatype for signal argument type"
                            << paramTypes[i];

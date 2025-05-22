@@ -188,7 +188,7 @@ void PropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
     } else if (value.canConvert<QMatrix>()) {
         paint(painter, option, index, value.value<QMatrix>());
 #endif
-    } else if (value.type() == QVariant::Transform) {
+    } else if (value.typeId() == QMetaType::QTransform) {
         paint(painter, option, index, value.value<QTransform>());
     } else if (value.canConvert<QVector2D>()) {
         paint(painter, option, index, value.value<QVector2D>());
@@ -196,7 +196,7 @@ void PropertyEditorDelegate::paint(QPainter *painter, const QStyleOptionViewItem
         paint(painter, option, index, value.value<QVector3D>());
     } else if (value.canConvert<QVector4D>()) {
         paint(painter, option, index, value.value<QVector4D>());
-    } else if (value.type() == QVariant::Quaternion) {
+    } else if (value.typeId() == QMetaType::QQuaternion) {
         paint(painter, option, index, value.value<QQuaternion>());
     } else {
         QStyledItemDelegate::paint(painter, option, index);
@@ -213,7 +213,7 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option,
     } else if (value.canConvert<QMatrix>()) {
         return sizeHint(option, index, value.value<QMatrix>());
 #endif
-    } else if (value.type() == QVariant::Transform) {
+    } else if (value.typeId() == QMetaType::QTransform) {
         return sizeHint(option, index, value.value<QTransform>());
     } else if (value.canConvert<QVector2D>()) {
         return sizeHint(option, index, value.value<QVector2D>());
@@ -221,12 +221,12 @@ QSize PropertyEditorDelegate::sizeHint(const QStyleOptionViewItem &option,
         return sizeHint(option, index, value.value<QVector3D>());
     } else if (value.canConvert<QVector4D>()) {
         return sizeHint(option, index, value.value<QVector4D>());
-    } else if (value.type() == QVariant::Quaternion) {
+    } else if (value.typeId() == QMetaType::QQuaternion) {
         return sizeHint(option, index, value.value<QQuaternion>());
     }
 
     // We don't want multiline texts for String values
-    if (value.type() == QVariant::String || value.type() == QVariant::ByteArray) {
+    if (value.typeId() == QMetaType::QString || value.typeId() == QMetaType::QByteArray) {
         QStyleOptionViewItem opt = option;
 
         QSize sh = QStyledItemDelegate::sizeHint(opt, index);
@@ -338,9 +338,9 @@ bool PropertyEditorDelegate::editorEvent(QEvent *event, QAbstractItemModel *mode
             return QStyledItemDelegate::editorEvent(event, model, option, index);
 
         // special cases for strings, short ones don't benefit from the external editor
-        if (value.type() == QVariant::String && !value.toString().contains(QLatin1Char('\n')))
+        if (value.typeId() == QMetaType::QString && !value.toString().contains(QLatin1Char('\n')))
             return QStyledItemDelegate::editorEvent(event, model, option, index);
-        else if (value.type() == QVariant::ByteArray && !value.toByteArray().contains('\n'))
+        else if (value.typeId() == QMetaType::QByteArray && !value.toByteArray().contains('\n'))
             return QStyledItemDelegate::editorEvent(event, model, option, index);
 
         const auto editor = qobject_cast<PropertyExtendedEditor *>(PropertyEditorFactory::instance()->createEditor(value.userType(), nullptr));

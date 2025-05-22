@@ -12,7 +12,7 @@
 # Pass the following variables to cmake to control the build:
 # (See INSTALL.md for more information)
 #
-# -DQT_VERSION_MAJOR=[5|6]
+# -DQT_VERSION_MAJOR=6
 #  Build against QtX version
 #  Default=(The first Qt version found by cmake or the one provided by CMAKE_PREFIX_PATH will be used)
 #
@@ -98,7 +98,7 @@ set(CMAKE_AUTOMOC TRUE)
 set(CMAKE_AUTOUIC TRUE)
 set(CMAKE_AUTORCC TRUE)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
 
@@ -430,22 +430,8 @@ if(GAMMARAY_ENFORCE_QT_ASSERTS)
     add_definitions(-DQT_FORCE_ASSERTS)
 endif()
 
-if(GAMMARAY_QT6_BUILD) #to support the "old-way" of specifying a Qt6 build
-    set(QT_VERSION_MAJOR 6)
-endif()
 if(NOT DEFINED QT_VERSION_MAJOR)
-    #
-    # Finding Qt
-    #
-    find_package(
-        QT
-        5.15
-        NAMES
-        Qt6
-        Qt5
-        COMPONENTS Core NO_MODULE
-        REQUIRED
-    )
+    set(QT_VERSION_MAJOR 6)
 endif()
 
 set_package_properties(Qt${QT_VERSION_MAJOR}Core PROPERTIES TYPE REQUIRED)
@@ -479,9 +465,7 @@ find_package(
         Widgets
         WaylandCompositor
 )
-if(QT_VERSION_MAJOR EQUAL 5)
-    find_package(Qt5 NO_MODULE OPTIONAL_COMPONENTS Script ScriptTools)
-endif()
+
 if(ANDROID)
     find_package(Qt${QT_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS AndroidExtras)
 endif()
@@ -510,41 +494,30 @@ if(GAMMARAY_BUILD_DOCS)
     find_package(Qt${QT_VERSION_MAJOR} NO_MODULE QUIET OPTIONAL_COMPONENTS Help LinguistTools)
 endif()
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    set(CMAKE_CXX_STANDARD 17)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-    if(MSVC)
-        add_compile_options(/Zc:__cplusplus)
-    endif()
-    if(MINGW)
-        # prevent 'file too big' and 'too many sections' errors with Qt6
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
-    endif()
-    if(Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
-        find_package(Qt6WidgetsPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
-    endif()
+if(MSVC)
+    add_compile_options(/Zc:__cplusplus)
+endif()
+if(MINGW)
+    # prevent 'file too big' and 'too many sections' errors with Qt6
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
+endif()
+if(Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
+    find_package(Qt6WidgetsPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
 endif()
 
 # these need to included after the last Qt-related find_package() call
-include(Qt5LegacySupport)
 include(ECMQt5ToQt6Porting)
 
-set(MACOS_DISABLE_UNSUPPORTED_TESTS FALSE)
 if(APPLE)
     cmake_host_system_information(RESULT MACOS_RELEASE QUERY OS_RELEASE)
     message(STATUS "MACOS_RELEASE: ${MACOS_RELEASE}")
     message(STATUS "QtQuick_VERSION: ${QtQuick_VERSION}")
 endif()
 
-if(MACOS_DISABLE_UNSUPPORTED_TESTS)
-    set(Qt5Quick_FOUND FALSE)
-endif()
-
 add_flag_if_supported(-Wzero-as-null-pointer-constant ZERO_AS_NULL_POINTER_CONSTANT)
 
 if(GAMMARAY_BUILD_UI) # widgets are required for the UI
-    find_package(Qt${QtCore_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Widgets)
+    find_package(Qt${QT_VERSION_MAJOR} NO_MODULE REQUIRED COMPONENTS Widgets)
 endif()
 
 set(HAVE_QT_CONCURRENT ${QtConcurrent_FOUND})
@@ -560,7 +533,7 @@ if(TARGET Qt${QtGui_VERSION_MAJOR}::Gui)
     cmake_pop_check_state()
 endif()
 
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500)
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060500)
 #add_definitions(-DQT_DEPRECATED_WARNINGS)
 
 if(NOT DEFINED QT_LIBINFIX)
@@ -621,9 +594,6 @@ else()
     set(GAMMARAY_CORE_ONLY_LAUNCHER TRUE)
 endif()
 
-if(${QT_VERSION_MAJOR} EQUAL 5)
-    add_feature_info("QtScript debugger" Qt5ScriptTools_FOUND "Requires QtScript and QtScriptTools.")
-endif()
 add_feature_info("Widget .ui file export" HAVE_QT_DESIGNER "Requires QtDesigner library.")
 
 #
@@ -650,7 +620,7 @@ set_package_properties(
     PURPOSE "Validate QML code."
 )
 
-find_package(KF${QtCore_VERSION_MAJOR}SyntaxHighlighting 5.28 NO_MODULE QUIET)
+find_package(KF${QtCore_VERSION_MAJOR}SyntaxHighlighting 6.0 NO_MODULE QUIET)
 set_package_properties(
     KF${QtCore_VERSION_MAJOR}SyntaxHighlighting PROPERTIES
     TYPE RECOMMENDED
@@ -829,9 +799,6 @@ add_subdirectory(3rdparty)
 if(WARNINGS_ARE_ERRORS)
     if(NOT MSVC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wno-error=deprecated-declarations")
-        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND ${QT_VERSION_MAJOR} EQUAL 5)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=suggest-override") # Q_OBJECT expansion warnings
-        endif()
 
         if(CMAKE_COMPILER_IS_GNUCXX)
             # each compiler has its own opinion on when to apply [noreturn]
