@@ -8,21 +8,21 @@ you can pass to CMake.
 To build GammaRay you will need *at least*:
 
 - CMake 3.16.0
-- a C++ compiler with C++11 support
-- Qt 5.15 or higher, or Qt 6.3 or higher
-  (GammaRay v3.0.0 was the last release to support Qt versions less than 5.15)
+- a C++ compiler with C++17 support
+- Qt 6.5 or higher
+  (GammaRay v3.2.0 was the last release to support Qt versions less than 6.5)
 
 Please be aware that GammaRay heavily relies on Qt private headers which can
 be changed at will by The Qt Company between releases and may need to be
 specially installed from your distribution. Before running CMake, make sure
 your Qt installation provides private Qt headers.
 
-i.e. when using distro provided Qt make sure you have (or the equivalent for Qt6):
+i.e. when using distro provided Qt make sure you have:
 
-- Redhat,Fedora: qt5-qtbase-private-devel
-- Debian,Ubuntu: qtbase5-private-dev qtdeclarative5-private-dev
- qtattributionsscanner-qt5 qhelpgenerator-qt5 qdoc-qt5
-- SUSE: libqt5-qtbase-private-headers-devel libqt5-qtdeclarative-private-headers-devel
+- Redhat,Fedora: qt6-qtbase-private-devel
+- Debian,Ubuntu: qtbase6-private-dev qtdeclarative6-private-dev
+ qtattributionsscanner-qt6 qhelpgenerator-qt6 qdoc-qt6
+- SUSE: libqt6-qtbase-private-headers-devel libqt6-qtdeclarative-private-headers-devel
 
 Optional FOSS packages (eg. KDSME, etc) provide extra functionality.
 See the "Optional Dependencies" section below for more details.
@@ -72,7 +72,7 @@ Build on Android:
     cd android-build
     export ANDROID_NDK=/path/to/android-ndk
     cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake \
-          -DCMAKE_FIND_ROOT_PATH=/android/qt5/install/path \
+          -DCMAKE_FIND_ROOT_PATH=/android/qt6/install/path \
           -DCMAKE_INSTALL_PREFIX=/install/path ..
     make [-j CPU_NUMBER+2]
     make install
