@@ -832,7 +832,7 @@ QModelIndex ResourceModel::index(const QString &path, int column) const
     // On Windows, "filename......." and "filename" are equivalent
     if (absolutePath.endsWith(QLatin1Char('.'))) {
         int i;
-        for (i = absolutePath.count() - 1; i >= 0; --i) {
+        for (i = absolutePath.size() - 1; i >= 0; --i) {
             if (absolutePath.at(i) != QLatin1Char('.'))
                 break;
         }
