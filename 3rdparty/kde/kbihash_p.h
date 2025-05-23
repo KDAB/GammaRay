@@ -166,7 +166,7 @@ public:
 
     inline int count() const
     {
-        return _leftToRight.count();
+        return _leftToRight.size();
     }
 
     inline int capacity() const

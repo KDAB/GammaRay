@@ -131,7 +131,7 @@ int TransitionModel::rowCount(const QModelIndex &parent) const
     Q_D(const TransitionModel);
     if (!d->m_state)
         return 0;
-    return d->children(d->mapModelIndex2QObject(parent)).count();
+    return d->children(d->mapModelIndex2QObject(parent)).size();
 }
 
 QModelIndex TransitionModel::index(int row, int column, const QModelIndex &parent) const

@@ -56,7 +56,7 @@ void distributeSpace(QList<int> &sizes, int size, int handleSize)
     }
 
     if (!indexes.empty()) {
-        const int freeSpace = size - usedSpace - (sizes.count() * handleSize) - handleSize;
+        const int freeSpace = size - usedSpace - (sizes.size() * handleSize) - handleSize;
         const int space = freeSpace / indexes.size();
         for (auto i : indexes)
             sizes[i] = space;
@@ -411,10 +411,10 @@ void UIStateManager::restoreSplitterState(QSplitter *splitter)
             const UISizeVector defaultSizes = this->defaultSizes(splitter);
 
             if (!defaultSizes.isEmpty()) {
-                Q_ASSERT(defaultSizes.count() == splitter->count());
+                Q_ASSERT(defaultSizes.size() == splitter->count());
 
                 QList<int> sizes;
-                sizes.reserve(defaultSizes.count());
+                sizes.reserve(defaultSizes.size());
 
                 for (const QVariant &size : defaultSizes) {
                     switch (size.typeId()) {
@@ -477,10 +477,10 @@ void UIStateManager::restoreHeaderState(QHeaderView *header)
             QAbstractItemView *view = headerView(header);
 
             if (!defaultSizes.isEmpty()) {
-                Q_ASSERT(defaultSizes.count() == header->count());
+                Q_ASSERT(defaultSizes.size() == header->count());
 
                 QList<int> sizes;
-                sizes.reserve(defaultSizes.count());
+                sizes.reserve(defaultSizes.size());
 
                 int i = 0;
                 for (auto it = defaultSizes.constBegin(), end = defaultSizes.constEnd(); it != end;

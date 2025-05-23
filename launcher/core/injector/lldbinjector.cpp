@@ -49,7 +49,7 @@ bool LldbInjector::selfTest()
             const auto version = match.captured(1);
             const QStringList parts = version.split(QLatin1Char('.'));
 
-            if (parts.count() >= 2) {
+            if (parts.size() >= 2) {
                 const auto major = parts.at(0).toInt();
                 const auto minor = parts.at(1).toInt();
                 if (major > targetMajor || (major == targetMajor && minor >= targetMinor))

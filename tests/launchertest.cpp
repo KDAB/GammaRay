@@ -87,12 +87,12 @@ private slots:
 
         QVERIFY(launcher.start());
         startSpy.wait(60000);
-        QCOMPARE(startSpy.count(), 1);
-        QCOMPARE(finishSpy.count(), 0);
+        QCOMPARE(startSpy.size(), 1);
+        QCOMPARE(finishSpy.size(), 0);
 
         launcher.stop();
         finishSpy.wait(10000);
-        QCOMPARE(finishSpy.count(), 1);
+        QCOMPARE(finishSpy.size(), 1);
     }
 
 #ifdef HAVE_QT_WIDGETS
@@ -118,12 +118,12 @@ private slots:
 
         QVERIFY(launcher.start());
         startSpy.wait(60000);
-        QCOMPARE(startSpy.count(), 1);
-        QCOMPARE(finishSpy.count(), 0);
+        QCOMPARE(startSpy.size(), 1);
+        QCOMPARE(finishSpy.size(), 0);
 
         launcher.stop();
         finishSpy.wait(10000);
-        QCOMPARE(finishSpy.count(), 1);
+        QCOMPARE(finishSpy.size(), 1);
     }
 #endif
 
@@ -153,7 +153,7 @@ private slots:
         QVERIFY(launcher.start());
 
         spy.wait(30000);
-        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.size(), 1);
     }
 };
 

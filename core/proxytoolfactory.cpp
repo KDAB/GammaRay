@@ -20,7 +20,7 @@ ProxyToolFactory::ProxyToolFactory(const PluginInfo &pluginInfo, QObject *parent
 {
     const QStringList typesList = pluginInfo.supportedTypes();
     QVector<QByteArray> typesVector;
-    typesVector.reserve(typesList.count());
+    typesVector.reserve(typesList.size());
     for (auto it = typesList.constBegin(), end = typesList.constEnd(); it != end; ++it)
         typesVector << (*it).toLatin1();
     setSupportedTypes(typesVector);

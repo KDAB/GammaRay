@@ -193,7 +193,7 @@ const TimerIdInfo *TimerModel::findTimerInfo(const QModelIndex &index) const
 
         return &it.value();
     }
-    if (index.row() < m_sourceModel->rowCount() + m_freeTimersInfo.count()) {
+    if (index.row() < m_sourceModel->rowCount() + m_freeTimersInfo.size()) {
         return &m_freeTimersInfo[index.row() - m_sourceModel->rowCount()];
     }
 
@@ -464,7 +464,7 @@ int TimerModel::rowCount(const QModelIndex &parent) const
     Q_UNUSED(parent);
     if (!m_sourceModel || parent.isValid())
         return 0;
-    return m_sourceModel->rowCount() + m_freeTimersInfo.count();
+    return m_sourceModel->rowCount() + m_freeTimersInfo.size();
 }
 
 QVariant TimerModel::data(const QModelIndex &index, int role) const
@@ -566,7 +566,7 @@ void TimerModel::clearHistory()
     }
 
     if (!m_freeTimersInfo.isEmpty()) {
-        beginRemoveRows(QModelIndex(), m_sourceModel->rowCount(), m_sourceModel->rowCount() + m_freeTimersInfo.count() - 1);
+        beginRemoveRows(QModelIndex(), m_sourceModel->rowCount(), m_sourceModel->rowCount() + m_freeTimersInfo.size() - 1);
         m_freeTimersInfo.clear();
         endRemoveRows();
     }
@@ -691,7 +691,7 @@ void TimerModel::applyChanges(const TimerIdInfoContainer &changes)
 
     // Fill new free timers to insert
     QVector<TimerIdInfo> freeTimersToInsert;
-    freeTimersToInsert.reserve(changes.count() - updatedIds.count());
+    freeTimersToInsert.reserve(changes.size() - updatedIds.size());
     for (auto it = changes.constBegin(), end = changes.constEnd(); it != end; ++it) {
         if (updatedIds.contains(it.key()))
             continue;
@@ -710,8 +710,8 @@ void TimerModel::applyChanges(const TimerIdInfoContainer &changes)
 
     // Inform model about new rows
     if (!freeTimersToInsert.isEmpty()) {
-        const int first = m_sourceModel->rowCount() + m_freeTimersInfo.count();
-        const int last = m_sourceModel->rowCount() + m_freeTimersInfo.count() + freeTimersToInsert.count() - 1;
+        const int first = m_sourceModel->rowCount() + m_freeTimersInfo.size();
+        const int last = m_sourceModel->rowCount() + m_freeTimersInfo.size() + freeTimersToInsert.size() - 1;
         beginInsertRows(QModelIndex(), first, last);
         m_freeTimersInfo << freeTimersToInsert;
         endInsertRows();

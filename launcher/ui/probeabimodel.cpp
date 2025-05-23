@@ -45,7 +45,7 @@ int ProbeABIModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return m_abis.count();
+    return m_abis.size();
 }
 
 int ProbeABIModel::indexOfBestMatchingABI(const ProbeABI &targetABI) const

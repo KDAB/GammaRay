@@ -27,7 +27,7 @@ public:
     int realChildrenCount() const
     {
         int count = 0;
-        for (int i = 0, c = ( int )children.count(); i < c; ++i) {
+        for (int i = 0, c = ( int )children.size(); i < c; ++i) {
             if (children[i]) {
                 count += 1 + children[i]->realChildrenCount();
             }
@@ -216,7 +216,7 @@ int Widget3DSubtreeModel::sourceRowsInserted(const QModelIndex &sourceParent, in
 
     // Recursively count all descendants of "parent" between 0 and "first"
     int realSiblings = 0;
-    Q_ASSERT(!parentNode || first <= parentNode->children.count());
+    Q_ASSERT(!parentNode || first <= parentNode->children.size());
     for (int i = 0; parentNode && i < first; ++i) {
         if (Node *node = parentNode->children.at(i)) {
             realSiblings += 1 + node->realChildrenCount();
@@ -265,7 +265,7 @@ int Widget3DSubtreeModel::sourceRowsInserted(const QModelIndex &sourceParent, in
         }
     }
     if (parentNode) {
-        Q_ASSERT(parentNode->children.count() == sourceModel()->rowCount(sourceParent));
+        Q_ASSERT(parentNode->children.size() == sourceModel()->rowCount(sourceParent));
     }
 
     return insertIndex - parentIdx - realSiblings;
@@ -361,7 +361,7 @@ void GammaRay::Widget3DSubtreeModel::sourceRowsAboutToBeRemoved(const QModelInde
     }
     // TODO: Maybe rowCount() is not reliable at this point? Maybe compare in
     // sourceRowsRemoved()
-    Q_ASSERT(parentNode->children.count() == sourceModel()->rowCount(parent) - (last - first + 1));
+    Q_ASSERT(parentNode->children.size() == sourceModel()->rowCount(parent) - (last - first + 1));
 }
 
 void Widget3DSubtreeModel::sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
@@ -396,7 +396,7 @@ int Widget3DSubtreeModel::columnCount(const QModelIndex &) const
 
 int Widget3DSubtreeModel::rowCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : mNodeList.count();
+    return parent.isValid() ? 0 : mNodeList.size();
 }
 
 QModelIndex Widget3DSubtreeModel::index(int row, int column, const QModelIndex &parent) const

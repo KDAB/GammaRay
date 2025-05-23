@@ -197,7 +197,7 @@ private slots:
             QCOMPARE(idx.data(ObjectModel::ObjectIdRole).value<ObjectId>(), ObjectId(mainTimer.data()));
 
             const auto idxs = searchFixedIndexes(model, "QTimer (threadTimer)");
-            QCOMPARE(idxs.count(), 2);
+            QCOMPARE(idxs.size(), 2);
             for (const QModelIndex &idx : idxs) {
                 QVERIFY(idx.isValid());
             }

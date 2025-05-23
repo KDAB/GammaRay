@@ -91,7 +91,7 @@ void TestConnections::timeout()
         obj->deleteLater();
     } else {
         // delete last objects
-        for (int i = 0; i < m_objects.count(); ++i) {
+        for (int i = 0; i < m_objects.size(); ++i) {
             QObject *obj = m_objects.at(i);
             switch (m_type) {
             case Delete:

@@ -86,7 +86,7 @@ private slots:
         QVERIFY(launcher.start());
 
         spy.wait(10000);
-        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.size(), 1);
         QEXPECT_FAIL("", "Debug injectors miss error detection for this case.", Continue);
         QVERIFY(!launcher.errorMessage().isEmpty());
     }
@@ -108,7 +108,7 @@ private slots:
 
         spy.wait(10000);
 
-        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.size(), 1);
     }
 
     void testStop_data()
@@ -140,7 +140,7 @@ private slots:
         QVERIFY(launcher.start());
         launcher.stop();
         spy.wait(1000);
-        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.size(), 1);
     }
 };
 

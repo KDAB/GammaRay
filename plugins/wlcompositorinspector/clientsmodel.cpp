@@ -35,7 +35,7 @@ QWaylandClient *ClientsModel::client(int index) const
 
 void ClientsModel::addClient(QWaylandClient *client)
 {
-    beginInsertRows(QModelIndex(), m_clients.count(), m_clients.count());
+    beginInsertRows(QModelIndex(), m_clients.size(), m_clients.size());
     m_clients.append(client);
     endInsertRows();
 }
@@ -43,7 +43,7 @@ void ClientsModel::addClient(QWaylandClient *client)
 void ClientsModel::removeClient(QWaylandClient *client)
 {
     int index = -1;
-    for (int i = 0; i < m_clients.count(); ++i) {
+    for (int i = 0; i < m_clients.size(); ++i) {
         if (m_clients.at(i) == client) {
             index = i;
             break;
@@ -63,7 +63,7 @@ int ClientsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return m_clients.count();
+    return m_clients.size();
 }
 
 int ClientsModel::columnCount(const QModelIndex &) const

@@ -139,7 +139,7 @@ public:
         int startingLine = lineAt(drawRect.y());
         int y = linePosAt(drawRect.y());
 
-        for (int i = startingLine; i < m_lines.count(); ++i) {
+        for (int i = startingLine; i < m_lines.size(); ++i) {
             if (m_client && m_lines.at(i).pid != m_client) {
                 continue;
             }
@@ -165,23 +165,23 @@ public:
 
     inline int linesCount() const
     {
-        return m_client ? m_linesCount.value(m_client) : m_lines.count();
+        return m_client ? m_linesCount.value(m_client) : m_lines.size();
     }
 
     inline int linePosAt(int y) const
     {
-        int line = qMin(y / m_lineHeight, m_lines.count() - 1);
+        int line = qMin(y / m_lineHeight, m_lines.size() - 1);
         return line * m_lineHeight;
     }
 
     inline int lineAt(int y) const
     {
-        int line = qMin(y / m_lineHeight, m_lines.count() - 1);
+        int line = qMin(y / m_lineHeight, m_lines.size() - 1);
         if (!m_client) {
             return line;
         }
 
-        for (int i = 0, l = 0; i < m_lines.count(); ++i) {
+        for (int i = 0, l = 0; i < m_lines.size(); ++i) {
             if (m_lines.at(i).pid == m_client) {
                 if (l++ == line) {
                     return i;
@@ -469,7 +469,7 @@ public:
             // finally draw the event lines
             painter.setPen(palette.color(QPalette::Text));
             bool hasDrawn = false;
-            for (int i = 0; i < m_data.count(); ++i) {
+            for (int i = 0; i < m_data.size(); ++i) {
                 const auto &point = m_data.at(i);
                 if (m_client && point.pid != m_client) {
                     painter.setPen(palette.color(QPalette::Dark));
@@ -495,7 +495,7 @@ public:
         void mouseMoveEvent(QMouseEvent *e) override
         {
             const QPointF &pos = e->position();
-            for (int i = 0; i < m_data.count(); ++i) {
+            for (int i = 0; i < m_data.size(); ++i) {
                 qreal timex = (m_data.at(i).time - m_start) / m_zoom;
                 if (fabs(pos.x() - timex) < 2) {
                     setToolTip(m_data.at(i).msg);
@@ -512,7 +512,7 @@ public:
 
         void updateSize()
         {
-            if (m_data.count() == 0)
+            if (m_data.size() == 0)
                 return;
 
             m_start = round(m_data.at(0).time, -1);
