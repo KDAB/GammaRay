@@ -15,8 +15,6 @@
 #include "client.h"
 #include "common/sourcelocation.h"
 
-#include <compat/qasconst.h>
-
 #include <common/streamoperators.h>
 #include <common/message.h>
 
@@ -624,7 +622,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
 
         QVector<Node *> parentNodes;
         parentNodes.reserve(parents.size());
-        for (const auto &p : qAsConst(parents)) {
+        for (const auto &p : std::as_const(parents)) {
             auto node = nodeForIndex(p);
             if (!node)
                 continue;
@@ -637,7 +635,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         foreach (const auto &persistentIndex, persistentIndexList()) {
             auto persistentNode = nodeForIndex(persistentIndex);
             Q_ASSERT(persistentNode);
-            for (auto node : qAsConst(parentNodes)) {
+            for (auto node : std::as_const(parentNodes)) {
                 if (!isAncestor(node, persistentNode))
                     continue;
                 changePersistentIndex(persistentIndex, QModelIndex());
@@ -664,7 +662,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             // Check for parent/children
             bool skip = false;
             std::vector<Node *> childsOfNode;
-            for (auto *n : qAsConst(parentNodes)) {
+            for (auto *n : std::as_const(parentNodes)) {
                 if (isAncestor(n, node)) {
                     // parent already there, no need to add
                     skip = true;
@@ -686,7 +684,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             parentNodes.push_back(node);
         }
 
-        for (auto node : qAsConst(parentNodes)) {
+        for (auto node : std::as_const(parentNodes)) {
             if (hint == 0)
                 node->clearChildrenStructure();
             else
@@ -1039,7 +1037,7 @@ void RemoteModel::doInsertColumns(RemoteModel::Node *parentNode, int first, int 
         m_horizontalHeaders.insert(first, newColCount, QHash<int, QVariant>());
 
     // adjust column data in all child nodes, if available
-    for (auto node : qAsConst(parentNode->children)) {
+    for (auto node : std::as_const(parentNode->children)) {
         if (!node->hasColumnData())
             continue;
 
@@ -1066,7 +1064,7 @@ void RemoteModel::doRemoveColumns(RemoteModel::Node *parentNode, int first, int 
         m_horizontalHeaders.remove(first, delColCount);
 
     // adjust column data in all child nodes, if available
-    for (auto node : qAsConst(parentNode->children)) {
+    for (auto node : std::as_const(parentNode->children)) {
         if (!node->hasColumnData())
             continue;
         node->data.remove(first, delColCount);

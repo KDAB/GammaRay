@@ -28,8 +28,6 @@
 #include <common/objectmodel.h>
 #include <common/remoteviewframe.h>
 
-#include <compat/qasconst.h>
-
 #include <core/metaobject.h>
 #include <core/metaobjectrepository.h>
 #include <core/objecttypefilterproxymodel.h>
@@ -247,7 +245,7 @@ public:
 
     void clear()
     {
-        for (Resource *res : qAsConst(m_resources)) {
+        for (Resource *res : std::as_const(m_resources)) {
             destroy(res);
         }
         m_resources.clear();
@@ -255,7 +253,7 @@ public:
 
     void destroy(Resource *res)
     {
-        for (Resource *child : qAsConst(res->children)) {
+        for (Resource *child : std::as_const(res->children)) {
             destroy(child);
         }
 

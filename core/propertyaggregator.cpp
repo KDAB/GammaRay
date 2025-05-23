@@ -15,8 +15,6 @@
 #include "propertydata.h"
 #include "objectinstance.h"
 
-#include <compat/qasconst.h>
-
 #include <QDebug>
 
 #include <algorithm>
@@ -70,7 +68,7 @@ void PropertyAggregator::writeProperty(int index, const QVariant &value)
         return;
 
     int offset = 0;
-    for (const auto adaptor : qAsConst(m_propertyAdaptors)) {
+    for (const auto adaptor : std::as_const(m_propertyAdaptors)) {
         if (index < offset + adaptor->count()) {
             QPointer<PropertyAggregator> guard(this);
             adaptor->writeProperty(index - offset, value);
@@ -101,7 +99,7 @@ void PropertyAggregator::addProperty(const PropertyData &data)
 
     Q_ASSERT(canAddProperty());
 
-    for (const auto adaptor : qAsConst(m_propertyAdaptors)) {
+    for (const auto adaptor : std::as_const(m_propertyAdaptors)) {
         if (adaptor->canAddProperty()) {
             adaptor->addProperty(data);
             return;
@@ -117,7 +115,7 @@ void PropertyAggregator::resetProperty(int index)
         return;
 
     int offset = 0;
-    for (const auto adaptor : qAsConst(m_propertyAdaptors)) {
+    for (const auto adaptor : std::as_const(m_propertyAdaptors)) {
         if (index < offset + adaptor->count()) {
             adaptor->resetProperty(index - offset);
             return;
@@ -143,7 +141,7 @@ void PropertyAggregator::slotPropertyChanged(int first, int last)
     Q_ASSERT(source);
 
     int offset = 0;
-    for (auto pa : qAsConst(m_propertyAdaptors)) {
+    for (auto pa : std::as_const(m_propertyAdaptors)) {
         if (pa == source) {
             emit propertyChanged(first + offset, last + offset);
             return;
@@ -158,7 +156,7 @@ void PropertyAggregator::slotPropertyAdded(int first, int last)
     Q_ASSERT(source);
 
     int offset = 0;
-    for (auto pa : qAsConst(m_propertyAdaptors)) {
+    for (auto pa : std::as_const(m_propertyAdaptors)) {
         if (pa == source) {
             emit propertyAdded(first + offset, last + offset);
             return;
@@ -173,7 +171,7 @@ void PropertyAggregator::slotPropertyRemoved(int first, int last)
     Q_ASSERT(source);
 
     int offset = 0;
-    for (auto pa : qAsConst(m_propertyAdaptors)) {
+    for (auto pa : std::as_const(m_propertyAdaptors)) {
         if (pa == source) {
             emit propertyRemoved(first + offset, last + offset);
             return;

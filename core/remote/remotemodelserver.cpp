@@ -21,8 +21,6 @@
 #include <common/sourcelocation.h>
 #include <common/objectmodel.h>
 
-#include <compat/qasconst.h>
-
 #include <QAbstractItemModel>
 #include <QAssociativeIterable>
 #include <QBuffer>

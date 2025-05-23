@@ -20,8 +20,6 @@
 #include <common/metatypedeclarations.h>
 #include <common/tools/metaobjectbrowser/qmetaobjectmodel.h>
 
-#include <compat/qasconst.h>
-
 #include <QDebug>
 #include <QThread>
 #include <QTimer>
@@ -193,7 +191,7 @@ void GammaRay::MetaObjectTreeModel::scheduleDataChange(const QMetaObject *mo)
 
 void GammaRay::MetaObjectTreeModel::emitPendingDataChanged()
 {
-    for (auto mo : qAsConst(m_pendingDataChanged)) {
+    for (auto mo : std::as_const(m_pendingDataChanged)) {
         auto index = indexForMetaObject(mo);
         if (!index.isValid())
             continue;

@@ -52,7 +52,7 @@ QByteArray LoggingCategoryModel::exportLoggingConfig(bool all, bool forFile)
     }
 
     const char delimiter = forFile ? '\n' : ';';
-    for (const auto &cat : qAsConst(m_categories)) {
+    for (const auto &cat : std::as_const(m_categories)) {
         if (all || cat.category->isDebugEnabled() != cat.wasDebugEnabled) {
             ret.append(cat.category->categoryName());
             ret.append(cat.category->isDebugEnabled() ? ".debug=true" : ".debug=false");

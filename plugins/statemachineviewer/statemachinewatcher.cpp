@@ -13,8 +13,6 @@
 
 #include "statemachinewatcher.h"
 
-#include <compat/qasconst.h>
-
 #include <QAbstractTransition>
 #include <QFinalState>
 #include <QState>
@@ -85,7 +83,7 @@ void StateMachineWatcher::watchState(QAbstractState *state)
 
 void StateMachineWatcher::clearWatchedStates()
 {
-    for (QAbstractState *state : qAsConst(m_watchedStates)) {
+    for (QAbstractState *state : std::as_const(m_watchedStates)) {
         disconnect(state, &QAbstractState::entered, this, &StateMachineWatcher::handleStateEntered);
         disconnect(state, &QAbstractState::exited, this, &StateMachineWatcher::handleStateExited);
         disconnect(state, &QObject::destroyed, this, &StateMachineWatcher::handleStateDestroyed);

@@ -14,8 +14,6 @@
 #include "processmodel.h"
 #include "probeabimodel.h"
 
-#include <compat/qasconst.h>
-
 #include <launcher/core/probefinder.h>
 
 #include <QDebug>
@@ -67,7 +65,7 @@ void ProcessModel::mergeProcesses(const ProcDataList &processes)
     // iterator over m_data
     int i = 0;
 
-    for (const ProcData &newProc : qAsConst(sortedProcesses)) {
+    for (const ProcData &newProc : std::as_const(sortedProcesses)) {
         bool shouldInsert = true;
         while (i < m_data.count()) {
             const ProcData &oldProc = m_data.at(i);

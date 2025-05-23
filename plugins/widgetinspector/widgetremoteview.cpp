@@ -14,8 +14,6 @@
 #include "widgetremoteview.h"
 #include "widgetinspectorinterface.h"
 
-#include <compat/qasconst.h>
-
 #include <QPainter>
 #include <QVector2D>
 
@@ -70,7 +68,7 @@ void WidgetRemoteView::drawDecoration(QPainter *p)
 
         p->setPen(Qt::green);
         QLineF l(r1.center(), r2.center());
-        for (const auto &prevLine : qAsConst(lines)) {
+        for (const auto &prevLine : std::as_const(lines)) {
             QPointF pnt;
             if (l.intersects(prevLine, &pnt) == QLineF::BoundedIntersection && pnt != l.p1() && pnt != l.p2()) {
                 p->setPen(Qt::red);

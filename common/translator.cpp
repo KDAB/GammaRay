@@ -16,8 +16,6 @@
 #include "translator.h"
 #include "paths.h"
 
-#include <compat/qasconst.h>
-
 #include <QCoreApplication>
 #include <QDebug>
 #include <QLibraryInfo>
@@ -45,7 +43,7 @@ void Translator::loadTranslations(const QString &catalog, const QString &path, c
     if (!overrideLanguage.isEmpty())
         names.prepend(overrideLanguage);
 
-    for (const QString &name : qAsConst(names)) {
+    for (const QString &name : std::as_const(names)) {
         const QLocale uiLocale(name);
         auto translator = new QTranslator(QCoreApplication::instance());
         if (translator->load(uiLocale, catalog, QStringLiteral("_"), path)) {

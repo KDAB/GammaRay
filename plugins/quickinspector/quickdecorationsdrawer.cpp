@@ -13,8 +13,6 @@
 
 #include "quickdecorationsdrawer.h"
 
-#include <compat/qasconst.h>
-
 #include <QDebug>
 #include <QPainter>
 #include <QVector2D>
@@ -251,7 +249,7 @@ void QuickDecorationsDrawer::drawDecorations()
 
     // Finally draw texts over the traced rectangles and lines
     // This make sure texts are always readable
-    for (const auto &t : qAsConst(texts)) {
+    for (const auto &t : std::as_const(texts)) {
         if (t.label.isEmpty())
             continue;
 

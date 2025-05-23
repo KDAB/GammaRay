@@ -26,7 +26,6 @@
 #include <core/singlecolumnobjectproxymodel.h>
 #include <core/remote/serverproxymodel.h>
 #include <common/objectbroker.h>
-#include <compat/qasconst.h>
 
 #include <QStateMachine>
 #include <QItemSelectionModel>
@@ -83,7 +82,7 @@ void StateMachineViewerServer::repopulateGraph()
     if (m_filteredStates.isEmpty()) {
         addState(m_stateModel->stateMachine()->rootState());
     } else {
-        for (State state : qAsConst(m_filteredStates))
+        for (State state : std::as_const(m_filteredStates))
             addState(state);
     }
     m_recursionGuard.clear();
@@ -104,7 +103,7 @@ bool StateMachineViewerServer::mayAddState(State state)
     if (m_recursionGuard.contains(state))
         return false;
 
-    for (State filter : qAsConst(m_filteredStates)) {
+    for (State filter : std::as_const(m_filteredStates)) {
         if (filter == state || selectedStateMachine()->isDescendantOf(filter, state)) {
             return true;
         }
@@ -199,7 +198,7 @@ void StateMachineViewerServer::stateSelectionChanged()
         /// only pick the top-level items of the selection
         // NOTE: this might be slow for large selections, if someone wants to come up with a better
         // algorithm, please - go for it!
-        for (State potentialParent : qAsConst(filter)) {
+        for (State potentialParent : std::as_const(filter)) {
             if (selectedStateMachine()->isDescendantOf(potentialParent, state)) {
                 addState = false;
                 break;
@@ -241,7 +240,7 @@ void StateMachineViewerServer::stateConfigurationChanged()
 
     StateMachineConfiguration config;
     config.reserve(newConfig.size());
-    for (State state : qAsConst(newConfig))
+    for (State state : std::as_const(newConfig))
         config << StateId(state);
 
     emit stateConfigurationChanged(config);

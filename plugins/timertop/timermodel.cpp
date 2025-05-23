@@ -19,8 +19,6 @@
 #include <common/objectid.h>
 #include <common/sourcelocation.h>
 
-#include <compat/qasconst.h>
-
 #include <QElapsedTimer>
 #include <QMutexLocker>
 #include <QTimerEvent>
@@ -706,7 +704,7 @@ void TimerModel::applyChanges(const TimerIdInfoContainer &changes)
     }
 
     // Inform model about data changes
-    for (const auto &range : qAsConst(dataChangedRanges)) {
+    for (const auto &range : std::as_const(dataChangedRanges)) {
         emit dataChanged(index(range.first, 0), index(range.second, columnCount() - 1));
     }
 

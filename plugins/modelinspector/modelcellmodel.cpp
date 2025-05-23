@@ -13,8 +13,6 @@
 
 #include "modelcellmodel.h"
 
-#include <compat/qasconst.h>
-
 #include <core/varianthandler.h>
 
 #include <QAbstractProxyModel>
@@ -90,7 +88,7 @@ QVector<ModelCellModel::RoleInfo> ModelCellModel::rolesForModel(const QAbstractI
 
     for (auto it = roleNames.constBegin(); it != roleNames.constEnd(); ++it) {
         bool roleFound = false;
-        for (const auto &role : qAsConst(roles)) {
+        for (const auto &role : std::as_const(roles)) {
             if (role.first == it.key()) {
                 roleFound = true;
                 break;

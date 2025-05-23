@@ -56,7 +56,7 @@ void BufferModel::updateAttributes()
 
     Q_ASSERT(m_data.buffers.size() >= m_bufferIndex);
     m_buffer = m_data.buffers.at(m_bufferIndex).data;
-    for (const auto &attr : qAsConst(m_data.attributes)) {
+    for (const auto &attr : std::as_const(m_data.attributes)) {
         if (attr.bufferIndex == ( uint )m_bufferIndex)
             updateAttribute(attr);
     }
