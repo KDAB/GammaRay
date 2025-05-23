@@ -19,8 +19,6 @@
 
 #include <common/commonutils.h>
 
-#include <compat/qasconst.h>
-
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -157,13 +155,13 @@ QString ProbeABIDetector::qtCoreForExecutable(const QString &path)
     QSet<QString> checkedImports;
 
     while (!resolvedImports.isEmpty()) {
-        for (const auto &import : qAsConst(resolvedImports)) {
+        for (const auto &import : std::as_const(resolvedImports)) {
             if (containsQtCore(import.toUtf8()))
                 return import;
         }
 
         QStringList resolvedSubImports;
-        for (const auto &import : qAsConst(resolvedImports)) {
+        for (const auto &import : std::as_const(resolvedImports)) {
             PEFile f(import);
             if (!f.isValid())
                 continue;

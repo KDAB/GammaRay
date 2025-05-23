@@ -42,8 +42,6 @@
 #include <common/streamoperators.h>
 #include <common/paths.h>
 
-#include <compat/qasconst.h>
-
 #include <QGuiApplication>
 #include <QWindow>
 #include <QDir>
@@ -598,7 +596,7 @@ void Probe::processQueuedObjectChanges()
 
     m_queuedObjectChanges.clear();
 
-    for (QObject *obj : qAsConst(m_pendingReparents)) {
+    for (QObject *obj : std::as_const(m_pendingReparents)) {
         if (!isValidObject(obj))
             continue;
         if (filterObject(obj)) // the move might have put it under a hidden parent
@@ -838,7 +836,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
 
     // filters provided by plugins
     if (!filterObject(receiver)) {
-        for (QObject *filter : qAsConst(m_globalEventFilters)) {
+        for (QObject *filter : std::as_const(m_globalEventFilters)) {
             filter->eventFilter(receiver, event);
         }
     }

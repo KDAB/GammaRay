@@ -14,8 +14,6 @@
 #include "statemachinedebuginterface.h"
 #include "statemachinewatcher.h"
 
-#include <compat/qasconst.h>
-
 #include <core/objectmodelbase.h>
 #include <core/util.h>
 
@@ -106,14 +104,14 @@ void StateModelPrivate::stateConfigurationChanged()
     std::set_difference(newConfig.begin(), newConfig.end(),
                         m_lastConfiguration.begin(), m_lastConfiguration.end(),
                         std::back_inserter(difference));
-    for (State state : qAsConst(difference))
+    for (State state : std::as_const(difference))
         emitDataChangedForState(state);
     // states which became inactive
     difference.clear();
     std::set_difference(m_lastConfiguration.begin(), m_lastConfiguration.end(),
                         newConfig.begin(), newConfig.end(),
                         std::back_inserter(difference));
-    for (State state : qAsConst(difference))
+    for (State state : std::as_const(difference))
         emitDataChangedForState(state);
     m_lastConfiguration = std::move(newConfig);
 }

@@ -28,7 +28,7 @@ SKIP /plugins/.*/.*\.desktop$
 #no need to check 3rdparty stuff
 SKIP /3rdparty/
 #nor Digia's stuff
-SKIP /processlist_unix.cpp|/processlist_win.cpp|/processlist.h|/compat/qasconst.h
+SKIP /processlist_unix.cpp|/processlist_win.cpp|/processlist.h
 #if you have a build subdir, skip it
 SKIP /build-
 

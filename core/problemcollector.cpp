@@ -16,8 +16,6 @@
 
 #include "probe.h"
 
-#include <compat/qasconst.h>
-
 using namespace GammaRay;
 
 ProblemCollector::ProblemCollector(QObject *parent)
@@ -42,7 +40,7 @@ void GammaRay::ProblemCollector::requestScan()
 {
     clearScans();
 
-    for (const auto &checker : qAsConst(m_availableCheckers)) {
+    for (const auto &checker : std::as_const(m_availableCheckers)) {
         if (checker.enabled)
             checker.callback();
     }

@@ -3,7 +3,7 @@
 ci:
     autoupdate_schedule: monthly
 
-exclude: ^(3rdparty/|cmake/ECM/|cmake/KDAB/|launcher/ui/processlist.*|compat/qasconst.h|docs/api/doxygen-awesome.css|launcher/cli/completions/gammaray.zsh|ui/resources/gammaray/update_icon_sets.sh)
+exclude: ^(3rdparty/|cmake/ECM/|cmake/KDAB/|launcher/ui/processlist.*|docs/api/doxygen-awesome.css|launcher/cli/completions/gammaray.zsh|ui/resources/gammaray/update_icon_sets.sh)
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v5.0.0

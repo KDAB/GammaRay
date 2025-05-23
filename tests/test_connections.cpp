@@ -13,8 +13,6 @@
 
 #include "test_connections.h"
 
-#include <compat/qasconst.h>
-
 #include <QApplication>
 #include <QDebug>
 #include <QProcessEnvironment>
@@ -187,7 +185,7 @@ void TestWaiter::startThreadsAndWaitForFinished()
     if (m_threads.isEmpty() && m_tester.isEmpty())
         return;
 
-    for (TestThread *thread : qAsConst(m_threads)) {
+    for (TestThread *thread : std::as_const(m_threads)) {
         thread->start();
     }
 

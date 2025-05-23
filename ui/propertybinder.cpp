@@ -13,8 +13,6 @@
 
 #include "propertybinder.h"
 
-#include <compat/qasconst.h>
-
 #include <QDebug>
 #include <QMetaProperty>
 
@@ -80,7 +78,7 @@ void PropertyBinder::syncSourceToDestination()
         return;
 
     m_lock = true;
-    for (const auto &b : qAsConst(m_properties))
+    for (const auto &b : std::as_const(m_properties))
         b.destinationProperty.write(m_destination, b.sourceProperty.read(m_source));
     m_lock = false;
 }
@@ -91,7 +89,7 @@ void PropertyBinder::syncDestinationToSource()
         return;
 
     m_lock = true;
-    for (const auto &b : qAsConst(m_properties)) {
+    for (const auto &b : std::as_const(m_properties)) {
         if (!b.sourceProperty.isWritable())
             continue;
         b.sourceProperty.write(m_source, b.destinationProperty.read(m_destination));

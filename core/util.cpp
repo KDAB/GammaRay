@@ -21,8 +21,6 @@
 #include "objectdataprovider.h"
 #include "enumutil.h"
 
-#include <compat/qasconst.h>
-
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
@@ -164,7 +162,7 @@ static IconDatabase readIconData()
             propString.chop(4);
             const QStringList props = propString.split(';');
             IconCacheEntry::PropertyMap propertyMap;
-            for (const QString &prop : qAsConst(props)) {
+            for (const QString &prop : std::as_const(props)) {
                 const QStringList keyValue = prop.split(QLatin1Char('='));
                 if (keyValue.size() != 2)
                     continue;
@@ -184,10 +182,10 @@ static int iconIdForObject(const QMetaObject *mo, const QObject *obj)
 
     auto it = iconDataBase.constFind(QLatin1String(mo->className()));
     if (it != iconDataBase.end()) {
-        for (const auto &propertyIcon : qAsConst(it->propertyIcons)) {
+        for (const auto &propertyIcon : std::as_const(it->propertyIcons)) {
             bool allMatch = true;
             Q_ASSERT(!propertyIcon.second.isEmpty());
-            for (const IconCacheEntry::PropertyPair &keyValue : qAsConst(propertyIcon.second)) {
+            for (const IconCacheEntry::PropertyPair &keyValue : std::as_const(propertyIcon.second)) {
                 if (stringifyProperty(obj, keyValue.first) != keyValue.second) {
                     allMatch = false;
                     break;

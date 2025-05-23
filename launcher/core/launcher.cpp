@@ -23,8 +23,6 @@
 #include <common/message.h>
 #include <common/paths.h>
 
-#include <compat/qasconst.h>
-
 #include <QByteArray>
 #include <QCoreApplication>
 #include <QDebug>
@@ -149,7 +147,7 @@ bool Launcher::start()
     if (!d->injector) {
         Q_ASSERT(!errorStrings.isEmpty());
         std::cerr << "Potential errors:" << std::endl;
-        for (const QString &errorString : qAsConst(errorStrings)) {
+        for (const QString &errorString : std::as_const(errorStrings)) {
             injectorError(-1, errorString);
         }
         std::cerr << std::endl;

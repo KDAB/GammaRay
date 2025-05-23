@@ -14,8 +14,6 @@
 #include "propertysyncer.h"
 #include "message.h"
 
-#include <compat/qasconst.h>
-
 #include <QDebug>
 #include <QMetaProperty>
 
@@ -120,7 +118,7 @@ void PropertySyncer::handleMessage(const GammaRay::Message &msg)
 
         Message msg(m_address, Protocol::PropertyValuesChanged);
         msg << addr << ( quint32 )values.size();
-        for (const auto &value : qAsConst(values))
+        for (const auto &value : std::as_const(values))
             msg << value.first << value.second;
         emit message(msg);
         break;
@@ -184,7 +182,7 @@ void PropertySyncer::propertyChanged()
 
     Message msg(m_address, Protocol::PropertyValuesChanged);
     msg << (*it).addr << ( quint32 )changes.size();
-    for (const auto &change : qAsConst(changes))
+    for (const auto &change : std::as_const(changes))
         msg << change.first << change.second;
     emit message(msg);
 }

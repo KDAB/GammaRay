@@ -27,8 +27,6 @@
 #include "tools/messagehandler/messagehandler.h"
 #include "tools/metaobjectbrowser/metaobjectbrowser.h"
 
-#include <compat/qasconst.h>
-
 #include <QDebug>
 #include <QCoreApplication>
 #include <QMutexLocker>
@@ -104,7 +102,7 @@ void ToolManager::requestAvailableTools()
 {
     QVector<ToolData> toolInfos;
     toolInfos.reserve(m_tools.size());
-    for (ToolFactory *factory : qAsConst(m_tools))
+    for (ToolFactory *factory : std::as_const(m_tools))
         toolInfos.push_back(toolInfoForFactory(factory));
     emit availableToolsResponse(toolInfos);
 }
