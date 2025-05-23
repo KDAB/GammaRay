@@ -279,7 +279,7 @@ void RemoteViewWidget::elementsAtReceived(const GammaRay::ObjectIds &ids, int be
 
     m_pickProxyModel->setIds(ids);
 
-    if (ids.count() == 1) {
+    if (ids.size() == 1) {
         m_interface->pickElementId(ids.first());
     } else {
         const int candidate = bestCandidate == -1 ? 0 : bestCandidate;

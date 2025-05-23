@@ -99,7 +99,7 @@ int ClientToolModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return m_toolManager->tools().count();
+    return m_toolManager->tools().size();
 }
 
 

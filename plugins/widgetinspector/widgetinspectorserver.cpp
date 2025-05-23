@@ -395,7 +395,7 @@ GammaRay::ObjectIds WidgetInspectorServer::recursiveWidgetsAt(QWidget *parent, c
             const bool hasSubChildren = !w->children().isEmpty();
 
             if (hasSubChildren) {
-                const int count = objects.count();
+                const int count = objects.size();
                 int bc;
                 objects << recursiveWidgetsAt(w, p, mode, bc);
 
@@ -404,7 +404,7 @@ GammaRay::ObjectIds WidgetInspectorServer::recursiveWidgetsAt(QWidget *parent, c
                 }
             } else {
                 if (bestCandidate == -1 && isGoodCandidateWidget(w)) {
-                    bestCandidate = objects.count();
+                    bestCandidate = objects.size();
                 }
 
                 objects << ObjectId(w);
@@ -417,7 +417,7 @@ GammaRay::ObjectIds WidgetInspectorServer::recursiveWidgetsAt(QWidget *parent, c
     }
 
     if (bestCandidate == -1 && isGoodCandidateWidget(parent)) {
-        bestCandidate = objects.count();
+        bestCandidate = objects.size();
     }
 
     objects << ObjectId(parent);

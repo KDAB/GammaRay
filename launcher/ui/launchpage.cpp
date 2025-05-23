@@ -84,7 +84,7 @@ void LaunchPage::writeSettings()
 QStringList LaunchPage::notEmptyString(const QStringList &list)
 {
     QStringList notEmptyStringList;
-    const int numberOfArguments = list.count();
+    const int numberOfArguments = list.size();
     for (int i = 0; i < numberOfArguments; ++i) {
         if (!list.at(i).trimmed().isEmpty())
             notEmptyStringList << list.at(i);

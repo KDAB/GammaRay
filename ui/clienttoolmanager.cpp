@@ -265,7 +265,7 @@ void ClientToolManager::gotTools(const QVector<GammaRay::ToolData> &tools)
 
 bool ClientToolManager::isToolListLoaded() const
 {
-    return m_tools.count();
+    return m_tools.size();
 }
 
 QAbstractItemModel *ClientToolManager::model()

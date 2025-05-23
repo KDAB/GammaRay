@@ -108,7 +108,7 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override
     {
-        return parent.isValid() ? 0 : m_items.count();
+        return parent.isValid() ? 0 : m_items.size();
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
@@ -177,7 +177,7 @@ public:
             settings.gridColor,
             QT_TR_NOOP("Grid"));
 
-        for (int i = 0; i < m_items.count(); ++i) {
+        for (int i = 0; i < m_items.size(); ++i) {
             Item::createPixmap(m_items[i]);
         }
         endResetModel();

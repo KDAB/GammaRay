@@ -67,7 +67,7 @@ void ProcessModel::mergeProcesses(const ProcDataList &processes)
 
     for (const ProcData &newProc : std::as_const(sortedProcesses)) {
         bool shouldInsert = true;
-        while (i < m_data.count()) {
+        while (i < m_data.size()) {
             const ProcData &oldProc = m_data.at(i);
             if (oldProc < newProc) {
                 // remove old proc, seems to be outdated
@@ -113,7 +113,7 @@ void ProcessModel::mergeProcesses(const ProcDataList &processes)
 
 void ProcessModel::clear()
 {
-    beginRemoveRows(QModelIndex(), 0, m_data.count());
+    beginRemoveRows(QModelIndex(), 0, m_data.size());
     m_data.clear();
     endRemoveRows();
 }
@@ -195,7 +195,7 @@ int ProcessModel::columnCount(const QModelIndex &parent) const
 
 int ProcessModel::rowCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : m_data.count();
+    return parent.isValid() ? 0 : m_data.size();
 }
 
 ProcDataList ProcessModel::processes() const

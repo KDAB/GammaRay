@@ -73,7 +73,7 @@ int ProblemModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return m_problemCollector->problems().count();
+    return m_problemCollector->problems().size();
 }
 int ProblemModel::columnCount(const QModelIndex &parent) const
 {

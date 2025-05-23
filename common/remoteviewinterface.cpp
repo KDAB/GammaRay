@@ -56,7 +56,7 @@ QDataStream &operator>>(QDataStream &s, QPointingDeviceUniqueId &id)
 QDataStream &operator<<(QDataStream &s, const QList<QTouchEvent::TouchPoint> &points)
 {
     // The (int) is fkn important!
-    s << ( int )points.count();
+    s << ( int )points.size();
 
     for (const auto &p : points) {
         s << p.id();

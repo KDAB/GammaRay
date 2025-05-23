@@ -119,7 +119,7 @@ void TranslationsModel::resetTranslations(const QItemSelection &selection)
         }
     }
 
-    for (int i = ranges.count() - 1; i >= 0; --i) {
+    for (int i = ranges.size() - 1; i >= 0; --i) {
         const auto &range = ranges[i];
         beginRemoveRows(QModelIndex(), range.first, range.second);
         m_nodes.remove(range.first, range.second - range.first + 1);

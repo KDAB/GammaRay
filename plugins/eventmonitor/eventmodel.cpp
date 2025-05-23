@@ -41,7 +41,7 @@ EventModel::EventModel(QObject *parent)
     m_pendingEventTimer->setInterval(200);
     connect(m_pendingEventTimer, &QTimer::timeout, this, [this]() {
         Q_ASSERT(!m_pendingEvents.isEmpty());
-        beginInsertRows(QModelIndex(), m_events.count(), m_events.count() + m_pendingEvents.size() - 1);
+        beginInsertRows(QModelIndex(), m_events.size(), m_events.size() + m_pendingEvents.size() - 1);
         m_events += m_pendingEvents;
         m_pendingEvents.clear();
         endInsertRows();

@@ -35,7 +35,7 @@ QModelIndexList ModelUtils::match(const QModelIndex &start, int role, MatchAccep
 
     // iterates twice if wrapping
     for (int i = 0; (wrap && i < 2) || (!wrap && i < 1); ++i) {
-        for (int r = from; (r < to) && (allHits || result.count() < hits); ++r) {
+        for (int r = from; (r < to) && (allHits || result.size() < hits); ++r) {
             QModelIndex idx = model->index(r, start.column(), parentIndex);
             if (!idx.isValid())
                 continue;
@@ -47,7 +47,7 @@ QModelIndexList ModelUtils::match(const QModelIndex &start, int role, MatchAccep
             // search the hierarchy
             if (recurse && model->hasChildren(idx)) {
                 result += match(model->index(0, idx.column(), idx), role,
-                                accept, (allHits ? -1 : hits - result.count()), flags);
+                                accept, (allHits ? -1 : hits - result.size()), flags);
             }
         }
 

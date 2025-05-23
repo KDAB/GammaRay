@@ -32,7 +32,7 @@ void MessageModel::addMessage(const DebugMessage &message)
     /// WARNING: do not trigger *any* kind of debug output here
     ///          this would trigger an infinite loop and hence crash!
 
-    beginInsertRows(QModelIndex(), m_messages.count(), m_messages.count());
+    beginInsertRows(QModelIndex(), m_messages.size(), m_messages.size());
     m_messages << message;
     endInsertRows();
 }
@@ -48,7 +48,7 @@ int MessageModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return m_messages.count();
+    return m_messages.size();
 }
 
 QVariant MessageModel::data(const QModelIndex &index, int role) const

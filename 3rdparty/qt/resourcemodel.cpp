@@ -172,7 +172,7 @@ void ResourceModelPrivate::invalidate()
         const QDirNode *current = nodes.pop();
         current->stat = false;
         const QVector<QDirNode> children = current->children;
-        for (int i = 0; i < children.count(); ++i)
+        for (int i = 0; i < children.size(); ++i)
             nodes.push(&children.at(i));
     }
 }
@@ -270,7 +270,7 @@ QModelIndex ResourceModel::index(int row, int column, const QModelIndex &parent)
     Q_ASSERT(p);
     if (!p->populated)
         d->populate(p); // populate without stat'ing
-    if (row >= p->children.count())
+    if (row >= p->children.size())
         return QModelIndex();
     // now get the internal pointer for the index
     ResourceModelPrivate::QDirNode *n = d->node(row, d->indexValid(parent) ? p : nullptr);
@@ -297,7 +297,7 @@ QModelIndex ResourceModel::parent(const QModelIndex &child) const
     // get the parent's row
     const QVector<ResourceModelPrivate::QDirNode> children =
         par->parent ? par->parent->children : d->root.children;
-    Q_ASSERT(children.count() > 0);
+    Q_ASSERT(children.size() > 0);
     int row = (par - &(children.at(0)));
     Q_ASSERT(row >= 0);
 
@@ -319,14 +319,14 @@ int ResourceModel::rowCount(const QModelIndex &parent) const
 //       qDebug() << "Root" << d->root;
         if (!d->root.populated) // lazy population
             d->populate(&d->root);
-        return d->root.children.count();
+        return d->root.children.size();
     }
     if (parent.model() != this)
         return 0;
     ResourceModelPrivate::QDirNode *p = d->node(parent);
     if (p->info.isDir() && !p->populated) // lazy population
         d->populate(p);
-    return p->children.count();
+    return p->children.size();
 }
 
 /*!
@@ -790,7 +790,7 @@ void ResourceModel::refresh(const QModelIndex &parent)
 
     ResourceModelPrivate::QDirNode *n = d->indexValid(parent) ? d->node(parent) : &(d->root);
 
-    int rows = n->children.count();
+    int rows = n->children.size();
     if (rows == 0) {
         emit layoutAboutToBeChanged();
         n->stat = true; // make sure that next time we read all the info
@@ -856,11 +856,11 @@ QModelIndex ResourceModel::index(const QString &path, int column) const
     if (absolutePath.startsWith(QLatin1String("//"))) { // UNC path
         QString host = pathElements.first();
         int r = 0;
-        for (; r < d->root.children.count(); ++r)
+        for (; r < d->root.children.size(); ++r)
             if (d->root.children.at(r).info.fileName() == host)
                 break;
         bool childAppended = false;
-        if (r >= d->root.children.count() && d->allowAppendChild) {
+        if (r >= d->root.children.size() && d->allowAppendChild) {
             d->appendChild(&d->root, QLatin1String("//") + host);
             childAppended = true;
         }
@@ -879,7 +879,7 @@ QModelIndex ResourceModel::index(const QString &path, int column) const
     pathElements.prepend(QLatin1String("/"));
 #endif
 
-    for (int i = 0; i < pathElements.count(); ++i) {
+    for (int i = 0; i < pathElements.size(); ++i) {
         Q_ASSERT(!pathElements.at(i).isEmpty());
         QString element = pathElements.at(i);
         ResourceModelPrivate::QDirNode *parent = (idx.isValid() ? d->node(idx) : &d->root);
@@ -890,7 +890,7 @@ QModelIndex ResourceModel::index(const QString &path, int column) const
 
         // search for the element in the child nodes first
         int row = -1;
-        for (int j = parent->children.count() - 1; j >= 0; --j) {
+        for (int j = parent->children.size() - 1; j >= 0; --j) {
             const QFileInfo& fi = parent->children.at(j).info;
             QString childFileName;
             childFileName = idx.isValid() ? fi.fileName() : fi.absoluteFilePath();
@@ -898,7 +898,7 @@ QModelIndex ResourceModel::index(const QString &path, int column) const
             childFileName = childFileName.toLower();
 #endif
             if (childFileName == element) {
-                if (i == pathElements.count() - 1)
+                if (i == pathElements.size() - 1)
                     parent->children[j].stat = true;
                 row = j;
                 break;
@@ -919,8 +919,8 @@ QModelIndex ResourceModel::index(const QString &path, int column) const
             if (!d->allowAppendChild || !QFileInfo(newPath).isDir())
                 return QModelIndex();
             d->appendChild(parent, newPath);
-            row = parent->children.count() - 1;
-            if (i == pathElements.count() - 1) // always stat children of  the last element
+            row = parent->children.size() - 1;
+            if (i == pathElements.size() - 1) // always stat children of  the last element
                 parent->children[row].stat = true;
             emit const_cast<ResourceModel*>(this)->layoutChanged();
         }
@@ -1145,7 +1145,7 @@ ResourceModelPrivate::QDirNode *ResourceModelPrivate::node(int row, QDirNode *pa
     if (isDir && !p->populated)
         populate(p); // will also resolve symlinks
 
-    if (row >= p->children.count()) {
+    if (row >= p->children.size()) {
         qWarning("node: the row does not exist");
         return nullptr;
     }
@@ -1178,8 +1178,8 @@ QVector<ResourceModelPrivate::QDirNode> ResourceModelPrivate::children(QDirNode 
         }
     }
 
-    QVector<QDirNode> nodes(infoList.count());
-    for (int i = 0; i < infoList.count(); ++i) {
+    QVector<QDirNode> nodes(infoList.size());
+    for (int i = 0; i < infoList.size(); ++i) {
         QDirNode &node = nodes[i];
         node.parent = parent;
         node.info = infoList.at(i);
@@ -1217,7 +1217,7 @@ void ResourceModelPrivate::restorePersistentIndexes()
 //    Q_Q(ResourceModel);
 //     bool allow = allowAppendChild;
 //     allowAppendChild = false;
-//     for (int i = 0; i < savedPersistent.count(); ++i) {
+//     for (int i = 0; i < savedPersistent.size(); ++i) {
 //         QPersistentModelIndexData *data = savedPersistent.at(i).data;
 //         QString path = savedPersistent.at(i).path;
 //         int column = savedPersistent.at(i).column;
@@ -1334,9 +1334,9 @@ void ResourceModelPrivate::appendChild(ResourceModelPrivate::QDirNode *parent, c
     ResourceModelPrivate *that = const_cast<ResourceModelPrivate *>(this);
     that->savePersistentIndexes();
     parent->children.append(node);
-    for (int i = 0; i < parent->children.count(); ++i) {
+    for (int i = 0; i < parent->children.size(); ++i) {
         QDirNode *childNode = &parent->children[i];
-        for (int j = 0; j < childNode->children.count(); ++j)
+        for (int j = 0; j < childNode->children.size(); ++j)
             childNode->children[j].parent = childNode;
     }
     that->restorePersistentIndexes();

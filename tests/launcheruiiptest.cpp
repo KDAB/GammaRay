@@ -95,7 +95,7 @@ private slots:
         QVERIFY(lineEdit);
         lineEdit->setText(userInput);
         for (size_t i = 0; i < 500; i++) {
-            if (addressParsedSpy.count() > 0)
+            if (addressParsedSpy.size() > 0)
                 break;
             QTest::qWait(1);
         }
@@ -126,7 +126,7 @@ private slots:
         QVERIFY(lineEdit);
         lineEdit->setText(userInput);
         for (size_t i = 0; i < 1000; i++) {
-            if (dnsDoneSpy.count() > 0)
+            if (dnsDoneSpy.size() > 0)
                 break;
             QTest::qWait(1);
             if (i == 999)

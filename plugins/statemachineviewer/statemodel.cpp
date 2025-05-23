@@ -214,7 +214,7 @@ QVariant StateModel::data(const QModelIndex &index, int role) const
 int StateModel::rowCount(const QModelIndex &parent) const
 {
     Q_D(const StateModel);
-    return d->children(d->mapModelIndex2State(parent)).count();
+    return d->children(d->mapModelIndex2State(parent)).size();
 }
 
 QModelIndex StateModel::index(int row, int column, const QModelIndex &parent) const

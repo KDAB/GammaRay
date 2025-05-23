@@ -72,7 +72,7 @@ private slots:
             QVERIFY(launcher.start());
 
             spy.wait(30000);
-            QCOMPARE(spy.count(), 1);
+            QCOMPARE(spy.size(), 1);
 
             m_serverUrl = launcher.serverAddress();
             QVERIFY(m_serverUrl.isValid());
@@ -111,7 +111,7 @@ private slots:
                 }
             }
 
-            QVERIFY(spyReady.count() == 1);
+            QVERIFY(spyReady.size() == 1);
             QVERIFY(Endpoint::isConnected());
             QCOMPARE(m_process.processId(), Endpoint::instance()->pid());
             QVERIFY(spyError.isEmpty());
@@ -120,7 +120,7 @@ private slots:
             connector.disconnectFromHost();
             QTest::qWait(1);
 
-            QVERIFY(spyDisconnected.count() == 1);
+            QVERIFY(spyDisconnected.size() == 1);
             QVERIFY(!Endpoint::isConnected());
         }
     }

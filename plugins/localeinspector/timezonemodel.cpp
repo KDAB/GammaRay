@@ -38,7 +38,7 @@ int TimezoneModel::rowCount(const QModelIndex &parent) const
         return 0;
     if (m_ids.isEmpty())
         m_ids = QTimeZone::availableTimeZoneIds();
-    return m_ids.count();
+    return m_ids.size();
 }
 
 static QString displayNameForAllTimeTypes(const QTimeZone &tz, QTimeZone::NameType nameType)

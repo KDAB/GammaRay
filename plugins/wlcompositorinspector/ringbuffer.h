@@ -28,9 +28,9 @@ struct RingBuffer
         Q_ASSERT(capacity > 0);
     }
 
-    int count() const
+    int size() const
     {
-        return qMin(m_capacity, m_vector.count());
+        return qMin(m_capacity, m_vector.size());
     }
     int capacity() const
     {
@@ -38,17 +38,17 @@ struct RingBuffer
     }
     bool isEmpty() const
     {
-        return count() == 0;
+        return size() == 0;
     }
 
     const T &last() const
     {
-        return at(count() - 1);
+        return at(size() - 1);
     }
 
     void append(const T &t)
     {
-        if (m_vector.count() == m_capacity) {
+        if (m_vector.size() == m_capacity) {
             m_vector[m_head++] = t;
             if (m_head >= m_capacity)
                 m_head = 0;

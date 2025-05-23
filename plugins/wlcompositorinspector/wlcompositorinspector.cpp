@@ -150,7 +150,7 @@ public:
     void setConnected(bool c)
     {
         m_connected = c;
-        for (int i = 0; i < m_lines.count(); ++i) {
+        for (int i = 0; i < m_lines.size(); ++i) {
             const Message &m = m_lines.at(i);
             emit m_inspector->logMessage(m.pid, m.time, m.line);
         }
@@ -278,7 +278,7 @@ public:
     {
         Resource *parentres = exists(parent) ? static_cast<Resource *>(parent.internalPointer()) : nullptr;
         const auto &resources = parentres ? parentres->children : m_resources;
-        if (resources.count() <= row) {
+        if (resources.size() <= row) {
             return {};
         }
         Resource *res = resources.at(row);
@@ -306,7 +306,7 @@ public:
     {
         wl_resource *parentResource = nullptr; // wl_resource_get_parent(res);
         Resource *parent = parentResource ? Resource::fromWlResource(parentResource) : nullptr;
-        int count = parent ? parent->children.count() : m_resources.count();
+        int count = parent ? parent->children.size() : m_resources.size();
 
         beginInsertRows(parent ? index(parent) : QModelIndex(), count, count);
 
@@ -356,7 +356,7 @@ public:
             return 0;
 
         Resource *res = static_cast<Resource *>(index.internalPointer());
-        return res ? res->children.count() : m_resources.count();
+        return res ? res->children.size() : m_resources.size();
     }
 
     int columnCount(const QModelIndex &) const override

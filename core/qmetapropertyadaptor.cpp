@@ -58,7 +58,7 @@ int QMetaPropertyAdaptor::count() const
     if (!object().isValid())
         return 0;
 
-    return m_rowToPropertyIndex.count();
+    return m_rowToPropertyIndex.size();
 }
 
 PropertyData QMetaPropertyAdaptor::propertyMetaData(int propertyIndex) const

@@ -824,7 +824,7 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
         const auto child = childItems.at(i);
         const auto requestedPoint = parent->mapToItem(child, pos);
         if (!child->childItems().isEmpty() && (child->contains(requestedPoint) || combinedChildrenRect(child).contains(requestedPoint))) {
-            const int count = objects.count();
+            const int count = objects.size();
             int bc; // possibly better candidate among subChildren
             objects << recursiveItemsAt(child, requestedPoint, mode, bc, parentIsGoodCandidate);
 
@@ -835,7 +835,7 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
 
         if (child->contains(requestedPoint)) {
             if (bestCandidate == -1 && parentIsGoodCandidate && isGoodCandidateItem(child)) {
-                bestCandidate = objects.count();
+                bestCandidate = objects.size();
             }
             objects << ObjectId(child);
         }
@@ -846,7 +846,7 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
     }
 
     if (bestCandidate == -1 && parentIsGoodCandidate && itemHasContents(parent)) {
-        bestCandidate = objects.count();
+        bestCandidate = objects.size();
     }
 
     objects << ObjectId(parent);
