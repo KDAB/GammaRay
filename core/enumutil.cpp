@@ -27,7 +27,7 @@ static const QMetaObject *metaObjectForClass(const QByteArray &name)
     // auto mo = QMetaType::metaObjectForType(QMetaType::type(name));
     if (mo)
         return mo;
-    mo = QMetaType::fromName(name+ '*').metaObject(); // try pointer version, more likely for QObjects
+    mo = QMetaType::fromName(name + '*').metaObject(); // try pointer version, more likely for QObjects
     return mo;
 }
 
