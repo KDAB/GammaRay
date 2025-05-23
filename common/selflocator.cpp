@@ -45,7 +45,7 @@ static QString findMeInternal()
     if (GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                            reinterpret_cast<LPWSTR>(&SelfLocator::findMe), &handle)) {
         GetModuleFileNameW(handle, path, sizeof(path));
-        return QDir::fromNativeSeparators(QString::fromUtf16(reinterpret_cast<const ushort *>(path)));
+        return QDir::fromNativeSeparators(QString::fromUtf16(reinterpret_cast<const char16_t *>(path)));
     }
     return QString();
 }

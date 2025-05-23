@@ -38,13 +38,13 @@
 
 // Enable Win API of XP SP1 and later
 #ifdef Q_OS_WIN
-#    if !defined(_WIN32_WINNT)
-#        define _WIN32_WINNT 0x0502
-#    endif
-#    include <qt_windows.h>
-#    if !defined(PROCESS_SUSPEND_RESUME) // Check flag for MinGW
-#        define PROCESS_SUSPEND_RESUME (0x0800)
-#    endif // PROCESS_SUSPEND_RESUME
+#if !defined(_WIN32_WINNT)
+#define _WIN32_WINNT 0x0502
+#endif
+#include <qt_windows.h>
+#if !defined(PROCESS_SUSPEND_RESUME) // Check flag for MinGW
+#define PROCESS_SUSPEND_RESUME (0x0800)
+#endif // PROCESS_SUSPEND_RESUME
 #endif // Q_OS_WIN
 
 #include <tlhelp32.h>
@@ -58,13 +58,12 @@ static GammaRay::ProbeABIDetector s_abiDetector;
 static inline BOOL queryFullProcessImageName(HANDLE h, DWORD flags, LPWSTR buffer, DWORD *size)
 {
     // Resolve required symbols from the kernel32.dll
-    typedef BOOL (WINAPI *QueryFullProcessImageNameWProtoType)(HANDLE, DWORD, LPWSTR, PDWORD);
+    typedef BOOL(WINAPI * QueryFullProcessImageNameWProtoType)(HANDLE, DWORD, LPWSTR, PDWORD);
     static QueryFullProcessImageNameWProtoType queryFullProcessImageNameW = nullptr;
     if (!queryFullProcessImageNameW) {
         QLibrary kernel32Lib(QLatin1String("kernel32.dll"), 0);
         if (kernel32Lib.isLoaded() || kernel32Lib.load()) {
-            queryFullProcessImageNameW
-                = (QueryFullProcessImageNameWProtoType)kernel32Lib.resolve(
+            queryFullProcessImageNameW = ( QueryFullProcessImageNameWProtoType )kernel32Lib.resolve(
                 "QueryFullProcessImageNameW");
         }
     }
@@ -74,7 +73,8 @@ static inline BOOL queryFullProcessImageName(HANDLE h, DWORD flags, LPWSTR buffe
     return (*queryFullProcessImageNameW)(h, flags, buffer, size);
 }
 
-struct ProcessInfo {
+struct ProcessInfo
+{
     QString imageName;
     QString processOwner;
 };
@@ -88,7 +88,7 @@ static inline ProcessInfo processInfo(DWORD processId)
     WCHAR buffer[MAX_PATH];
     DWORD bufSize = MAX_PATH;
     if (queryFullProcessImageName(handle, 0, buffer, &bufSize))
-        pi.imageName = QString::fromUtf16(reinterpret_cast<const ushort *>(buffer));
+        pi.imageName = QString::fromUtf16(reinterpret_cast<const char16_t *>(buffer));
 
     HANDLE processTokenHandle = NULL;
     if (!OpenProcessToken(handle, TOKEN_READ, &processTokenHandle) || !processTokenHandle) {
@@ -118,7 +118,7 @@ static inline ProcessInfo processInfo(DWORD processId)
                                  domain,
                                  &domainNameLength,
                                  &sidNameUse))
-                pi.processOwner = QString::fromUtf16(reinterpret_cast<const ushort *>(user));
+                pi.processOwner = QString::fromUtf16(reinterpret_cast<const char16_t *>(user));
         }
     }
 
@@ -142,7 +142,7 @@ ProcDataList processList(const ProcDataList & /*previous*/)
          hasNext = Process32Next(snapshot, &pe)) {
         ProcData procData;
         procData.ppid = pe.th32ProcessID;
-        procData.name = QString::fromUtf16(reinterpret_cast<ushort *>(pe.szExeFile));
+        procData.name = QString::fromUtf16(reinterpret_cast<char16_t *>(pe.szExeFile));
         const ProcessInfo processInf = processInfo(pe.th32ProcessID);
         procData.image = processInf.imageName;
         procData.user = processInf.processOwner;

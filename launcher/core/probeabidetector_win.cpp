@@ -55,13 +55,13 @@ static QStringList dllSearchPaths(const QString &exePath)
     TCHAR syspath[256];
     UINT len = GetSystemDirectoryW(syspath, sizeof(syspath));
     Q_ASSERT(len <= sizeof(syspath) && len > 0);
-    paths.push_back(QString::fromUtf16(reinterpret_cast<const ushort *>(syspath), len));
+    paths.push_back(QString::fromUtf16(reinterpret_cast<const char16_t *>(syspath), len));
 
     // (3) windows directory
     TCHAR dirpath[256];
     len = GetWindowsDirectoryW(dirpath, sizeof(dirpath));
     Q_ASSERT(len <= sizeof(dirpath));
-    paths.push_back(QString::fromUtf16(reinterpret_cast<const ushort *>(dirpath), len));
+    paths.push_back(QString::fromUtf16(reinterpret_cast<const char16_t *>(dirpath), len));
 
     // (4) current working dir
     paths.push_back(QDir::currentPath());
@@ -199,9 +199,9 @@ QString ProbeABIDetector::qtCoreForProcess(quint64 pid) const
 
     for (bool hasNext = Module32First(snapshot, &me); hasNext;
          hasNext = Module32Next(snapshot, &me)) {
-        const QString module = QString::fromUtf16(reinterpret_cast<const ushort *>(me.szModule));
+        const QString module = QString::fromUtf16(reinterpret_cast<const char16_t *>(me.szModule));
         if (containsQtCore(module.toUtf8())) {
-            const QString path = QString::fromUtf16(reinterpret_cast<const ushort *>(me.szExePath));
+            const QString path = QString::fromUtf16(reinterpret_cast<const char16_t *>(me.szExePath));
             CloseHandle(snapshot);
             return path;
         }
