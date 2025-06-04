@@ -29,6 +29,8 @@
 #include <QQuickWidget>
 #include <QQmlContext>
 
+#include <memory>
+
 using namespace GammaRay;
 
 static QObject *createPositioningClient(const QString &name, QObject *parent)
@@ -156,7 +158,8 @@ void PositioningWidget::loadNmeaFile()
     if (fileName.isEmpty())
         return;
 
-    QScopedPointer<QFile> file(new QFile(fileName, this));
+    //QScopedPointer<QFile> file(new QFile(fileName, this));
+    std::unique_ptr<QFile> file = std::make_unique<QFile>(fileName, this);
     if (!file->open(QFile::ReadOnly)) {
         QMessageBox::critical(this, tr("Failed to open NMEA file"), tr("Could not open '%1': %2.").arg(fileName, file->errorString()));
         return;
@@ -169,7 +172,8 @@ void PositioningWidget::loadNmeaFile()
     }
 
     m_replaySource = new QNmeaPositionInfoSource(QNmeaPositionInfoSource::SimulationMode, this);
-    m_replaySource->setDevice(file.take());
+    //m_replaySource->setDevice(file.take());           -----> the line that cause the issue
+    m_replaySource->setDevice(file.release()); 
     connect(m_replaySource, &QGeoPositionInfoSource::positionUpdated, this, &PositioningWidget::replayPosition);
     m_replaySource->startUpdates();
     connect(m_replaySource, &QGeoPositionInfoSource::errorOccurred, this, &PositioningWidget::nmeaError);
