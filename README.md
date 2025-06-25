@@ -99,19 +99,22 @@ according to the [Eclipse Public License v1.0](https://www.eclipse.org/legal/epl
 
 GammaRay is supported and maintained by Klarälvdalens Datakonsult AB (KDAB).
 
-The [KDAB](https://www.kdab.com) Group is a globally recognized provider for software consulting, development and training, specializing in embedded devices and complex cross-platform desktop applications. In addition to being leading experts in Qt, C++ and 3D technologies for over two decades, KDAB provides deep expertise across the stack, including Linux, Rust and modern UI frameworks. With 100+ employees from 20 countries and offices in Sweden, Germany, USA, France and UK, KDAB serves clients around the world.
+The [KDAB](https://www.kdab.com) Group is a globally recognized provider for software
+consulting, development and training, specializing in embedded devices and complex
+cross-platform desktop applications. In addition to being leading experts in Qt, C++ and 3D
+technologies for over two decades, KDAB provides deep expertise across the stack,
+including Linux, Rust and modern UI frameworks. With 100+ employees from 20 countries
+and offices in Sweden, Germany, USA, France and UK, KDAB serves clients around the world.
 
 Please visit <https://www.kdab.com> to meet the people who write code like this.
 
+Blogs and publications: <https://www.kdab.com/resources>
 
-Blogs and publications: https://www.kdab.com/resources
+Videos (Tutorials and more): <https://www.youtube.com/@KDABtv>
 
-Videos (Tutorials and more): https://www.youtube.com/@KDABtv
+Software Developer Training for Qt, Modern C++, Rust, OpenGL and more: <https://training.kdab.com>
 
-Software Developer Training for Qt, Modern C++, Rust, OpenGL and more: https://training.kdab.com  
-
-Software Consulting and Development Services for Embedded and Desktop Applications https://www.kdab.com/services/
-
+Software Consulting and Development Services for Embedded and Desktop Applications <https://www.kdab.com/services/>
 
 If you would like to have a custom plugin for GammaRay to visualize, profile
 or debug your own specific components or applications, get in touch with us
