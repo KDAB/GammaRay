@@ -353,7 +353,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         # -Wgnu-zero-variadic-macro-arguments (part of -pedantic) is triggered by every qCDebug()
         # call and therefore results in a lot of noise. This warning is only notifying us that clang
         # is emulating the GCC behaviour instead of the exact standard wording so we can safely ignore it
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-gnu-zero-variadic-macro-arguments")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-gnu-zero-variadic-macro-arguments -Wno-c++20-extensions")
     endif()
     if(HAVE_GXX_GNUXX11) # QNX needs gnu++0x rather than c++0x for compiling QML V4 private headers
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++0x")
