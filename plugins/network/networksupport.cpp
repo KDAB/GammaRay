@@ -333,13 +333,9 @@ static const MetaEnum::Value<QSsl::KeyType> ssl_key_type_table[] = {
         QSsl::x, #x \
     }
 static const MetaEnum::Value<QSsl::SslProtocol> ssl_protocol_table[] = {
-    E(TlsV1_0),
-    E(TlsV1_1),
     E(TlsV1_2),
     E(AnyProtocol),
     E(SecureProtocols),
-    E(TlsV1_0OrLater),
-    E(TlsV1_1OrLater),
     E(TlsV1_2OrLater),
     E(UnknownProtocol)
 };

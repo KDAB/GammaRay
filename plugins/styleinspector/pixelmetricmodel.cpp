@@ -71,9 +71,11 @@ static const pixel_metric_t pixelMetrics[] = {
     MAKE_PM(PM_IndicatorHeight),
     MAKE_PM(PM_ExclusiveIndicatorWidth),
     MAKE_PM(PM_ExclusiveIndicatorHeight),
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
     MAKE_PM(PM_DialogButtonsSeparator),
     MAKE_PM(PM_DialogButtonsButtonWidth),
     MAKE_PM(PM_DialogButtonsButtonHeight),
+#endif
     MAKE_PM(PM_MdiSubWindowFrameWidth),
     MAKE_PM(PM_MdiSubWindowMinimizedWidth),
     MAKE_PM(PM_HeaderMargin),

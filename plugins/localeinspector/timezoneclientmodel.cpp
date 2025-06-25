@@ -61,7 +61,11 @@ QVariant TimezoneClientModel::headerData(int section, Qt::Orientation orientatio
         case TimezoneModelColumns::IanaIdColumn:
             return tr("IANA Id");
         case TimezoneModelColumns::CountryColumn:
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
             return tr("Country");
+#else
+            return tr("Territory");
+#endif
         case TimezoneModelColumns::StandardDisplayNameColumn:
             return tr("Standard Display Name");
         case TimezoneModelColumns::DSTColumn:

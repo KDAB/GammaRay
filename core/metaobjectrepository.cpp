@@ -141,7 +141,11 @@ void MetaObjectRepository::initQObjectTypes()
 
     MO_ADD_METAOBJECT0(QTimeZone);
     MO_ADD_PROPERTY_RO(QTimeZone, comment);
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
     MO_ADD_PROPERTY_RO(QTimeZone, country);
+#else
+    MO_ADD_PROPERTY_RO(QTimeZone, territory);
+#endif
     MO_ADD_PROPERTY_RO(QTimeZone, hasDaylightTime);
     MO_ADD_PROPERTY_RO(QTimeZone, hasTransitions);
     MO_ADD_PROPERTY_RO(QTimeZone, id);

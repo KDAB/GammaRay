@@ -62,7 +62,11 @@ QVariant TimezoneModel::data(const QModelIndex &index, int role) const
         case TimezoneModelColumns::IanaIdColumn:
             return tz.id();
         case TimezoneModelColumns::CountryColumn:
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
             return QLocale::countryToString(tz.country());
+#else
+            return QLocale::territoryToString(tz.territory());
+#endif
         case TimezoneModelColumns::StandardDisplayNameColumn:
             return tz.displayName(QTimeZone::StandardTime);
         case TimezoneModelColumns::DSTColumn:
