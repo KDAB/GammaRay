@@ -86,8 +86,14 @@ void LocaleDataAccessorRegistry::init()
     LOCALE_SIMPLE_DEFAULT_ACCESSOR(Language,
                                    return QLocale::languageToString(locale.language());)
 
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
     LOCALE_SIMPLE_DEFAULT_ACCESSOR(Country,
                                    return QLocale::countryToString(locale.country());)
+#else
+    LOCALE_SIMPLE_DEFAULT_ACCESSOR(Country,
+                                   return QLocale::territoryToString(locale.territory());)
+#endif
 
     LOCALE_SIMPLE_ACCESSOR(Script,
                            return QLocale::scriptToString(locale.script());)
@@ -199,9 +205,13 @@ void LocaleDataAccessorRegistry::init()
     LOCALE_SIMPLE_ACCESSOR(BCP47,
                            return locale.bcp47Name();)
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
     LOCALE_SIMPLE_ACCESSOR(NativeCountry,
                            return locale.nativeCountryName();)
-
+#else
+    LOCALE_SIMPLE_ACCESSOR(NativeCountry,
+                           return locale.nativeTerritoryName();)
+#endif
     LOCALE_SIMPLE_ACCESSOR(NativeLanguage,
                            return locale.nativeLanguageName();)
 
