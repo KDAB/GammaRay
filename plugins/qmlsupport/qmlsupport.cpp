@@ -136,8 +136,8 @@ static QString qjsValueToString(const QJSValue &v)
         return v.toString();
     } else if (v.isUndefined()) {
         return QStringLiteral("<undefined>");
-    } else if (v.isVariant()) {
-        return VariantHandler::displayString(v.toVariant());
+    } else if (QVariant var = v.toVariant(); var.isValid()) {
+        return VariantHandler::displayString(var);
     }
     return QStringLiteral("<unknown QJSValue>");
 }
