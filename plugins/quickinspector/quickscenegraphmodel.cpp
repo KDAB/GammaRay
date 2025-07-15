@@ -416,7 +416,11 @@ QQuickItem *QuickSceneGraphModel::itemForSgNode(QSGNode *node) const
     while (node && !contains(m_itemNodeItemMap, node)) {
         // If there's no entry for node, take its parent
         auto it = m_childParentMap.find(node);
-        if (it != m_childParentMap.end()) {
+        if (it == m_childParentMap.end()) {
+            // Can happen if the node belongs to another window and itemForSgNode() gets
+            // called during window selection change
+            return nullptr;
+        } else {
             node = it->second;
         }
     }

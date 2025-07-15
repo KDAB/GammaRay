@@ -1,6 +1,10 @@
 Release Highlights
 ==================
 
+Version 3.2.1
+-------------
+ * Fix infinite in loop QuickSceneGraphModel::itemForSgNode() (#1070)
+
 Version 3.2.0
 -------------
  * Source tarballs no longer ship 60MB of KDStateMachineEditor/Graphviz Windows dll binaries
