@@ -1,0 +1,88 @@
+# SPDX-FileCopyrightText: 2023 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#
+# SPDX-License-Identifier: MIT
+
+# Workflow for MinGW
+#
+# We don't officially support MinGW at this point, but first step is keeping the build green.
+# Do not merge with build-qt6.yml, the matrix is sufficiently different and half the steps as well.
+
+name: CI Qt6 MinGW
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    build:
+        runs-on: windows-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                qt_version:
+                    - "6.9.0"
+                preset:
+                    - name: ci-dev-client-only-qt6
+                      tests_with: qt6
+
+                    - name: ci-dev-client-and-ui-qt6
+                      tests_with: qt6
+
+                    - name: ci-dev-probe-only-qt6
+
+        steps:
+            - name: Install Qt with options and default aqtversion
+              uses: jurplel/install-qt-action@v4
+              with:
+                  aqtversion: null # use whatever the default is
+                  modules: qtshadertools qtscxml
+                  arch: win64_llvm_mingw
+                  tools: tools_llvm_mingw1706 tools_ninja
+                  version: ${{ matrix.qt_version }}
+                  cache: true
+
+            - name: Checkout sources
+              uses: actions/checkout@v4
+              with:
+                  submodules: recursive
+
+            - name: Add MinGW to PATH
+              run: |
+                  echo "${Qt6_DIR}/../../../Tools/llvm-mingw1706_64/bin" >> $GITHUB_PATH
+                  echo "${Qt6_DIR}/../../../Tools/Ninja/bin" >> $GITHUB_PATH
+
+            - name: Install ninja-build tool (must be after Qt due PATH changes)
+              uses: turtlesec-no/get-ninja@main
+
+            # Don't make graphviz find wrong libgd
+            - name: Remove Strawberry from PATH
+              run: |
+                  Remove-Item "C:/Strawberry" -Recurse -Force
+
+            - name: Configure project
+              run: >
+                  cmake -S . -G Ninja --preset ${{ matrix.preset.name }}
+                  -DGAMMARAY_WITH_KDSME=ON
+                  -DGAMMARAY_BUILD_DOCS=${{ runner.os == 'Linux' }}
+
+            - name: Build Project
+              run: cmake --build ./build-${{ matrix.preset.name }}
+
+            # Exclude
+            # quicktexturetest
+            # TODO: We don't support running tests yet
+            # - name: Qt6 Run tests on Windows
+            #   if: ${{ runner.os == 'Windows' && matrix.preset.tests_with == 'qt6' }}
+            #   run: >
+            #       ctest --test-dir ./build-${{ matrix.preset.name }} -C 'Release' --output-on-failure
+            #       --exclude-regex "quicktexturetest|launchertest|probesettingstest"
+
+            - name: Read tests log when it fails
+              uses: andstor/file-reader-action@v1
+              if: ${{ failure() }}
+              with:
+                  path: "./build-${{ matrix.preset.name }}/Testing/Temporary/LastTest.log"
