@@ -17,6 +17,14 @@ on:
         branches:
             - master
 
+    workflow_dispatch:
+        inputs:
+            debug_enabled:
+                type: boolean
+                description: "Enable ssh for debugging purposes"
+                required: false
+                default: false
+
 jobs:
     build:
         runs-on: windows-latest
@@ -36,6 +44,12 @@ jobs:
                       runs_tests: false
 
         steps:
+            - name: Setup tmate session
+              if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+              uses: mxschmitt/action-tmate@v3
+              with:
+                  detached: true
+
             - name: Install Qt with options and default aqtversion
               uses: jurplel/install-qt-action@v4
               with:
