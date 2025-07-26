@@ -27,12 +27,13 @@ jobs:
                     - "6.9.0"
                 preset:
                     - name: ci-dev-client-only-qt6
-                      tests_with: qt6
+                      runs_tests: true
 
                     - name: ci-dev-client-and-ui-qt6
-                      tests_with: qt6
+                      runs_tests: true
 
                     - name: ci-dev-probe-only-qt6
+                      runs_tests: false
 
         steps:
             - name: Install Qt with options and default aqtversion
@@ -74,14 +75,11 @@ jobs:
             - name: Build Project
               run: cmake --build ./build-${{ matrix.preset.name }}
 
-            # Exclude
-            # quicktexturetest
-            # TODO: We don't support running tests yet
-            # - name: Qt6 Run tests on Windows
-            #   if: ${{ runner.os == 'Windows' && matrix.preset.tests_with == 'qt6' }}
-            #   run: >
-            #       ctest --test-dir ./build-${{ matrix.preset.name }} -C 'Release' --output-on-failure
-            #       --exclude-regex "quicktexturetest|launchertest|probesettingstest"
+            - name: Run tests
+              if: ${{ matrix.preset.runs_tests }}
+              run: >
+                  ctest --test-dir ./build-${{ matrix.preset.name }} -C 'Release' --output-on-failure
+                  --exclude-regex "^(quicktexturetest|probeabidetectortest|launchertest|clientconnectiontest|probesettingstest)$"
 
             - name: Read tests log when it fails
               uses: andstor/file-reader-action@v1

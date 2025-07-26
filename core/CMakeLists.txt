@@ -244,7 +244,9 @@ if(TARGET Qt::AndroidExtras)
     target_link_libraries(gammaray_core PRIVATE Qt::AndroidExtras)
 endif()
 
-add_backward(gammaray_core)
+if(NOT (WIN32 AND NOT MSVC)) # not working in MinGW
+    add_backward(gammaray_core)
+endif()
 
 if(NOT GAMMARAY_PROBE_ONLY_BUILD)
     install(
