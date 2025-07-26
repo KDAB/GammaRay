@@ -68,6 +68,7 @@ jobs:
                   cmake -S . -G Ninja --preset ${{ matrix.preset.name }}
                   -DGAMMARAY_WITH_KDSME=ON
                   -DWARNINGS_ARE_ERRORS=OFF
+                  -DGAMMARAY_WITH_KDSME=OFF
                   -DGAMMARAY_BUILD_DOCS=${{ runner.os == 'Linux' }}
 
             - name: Build Project
