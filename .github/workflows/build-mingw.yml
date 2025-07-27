@@ -42,6 +42,14 @@ jobs:
 
                     - name: ci-dev-probe-only-qt6
                       runs_tests: false
+                toolchain:
+                    - arch: win64_llvm_mingw
+                      tools_arg: tools_llvm_mingw1706 tools_ninja
+                      mingw_path_segment: llvm-mingw1706_64
+
+                    - arch: win64_mingw
+                      tools_arg: tools_mingw1310 tools_ninja
+                      mingw_path_segment: mingw1310_64
 
         steps:
             - name: Setup tmate session
@@ -55,8 +63,8 @@ jobs:
               with:
                   aqtversion: null # use whatever the default is
                   modules: qtshadertools qtscxml
-                  arch: win64_llvm_mingw
-                  tools: tools_llvm_mingw1706 tools_ninja
+                  arch: ${{ matrix.toolchain.arch }}
+                  tools: ${{ matrix.toolchain.tools_arg }}
                   version: ${{ matrix.qt_version }}
                   cache: true
 
@@ -67,7 +75,7 @@ jobs:
 
             - name: Add MinGW to PATH
               run: |
-                  echo "${Qt6_DIR}/../../../Tools/llvm-mingw1706_64/bin" >> $GITHUB_PATH
+                  echo "${Qt6_DIR}/../../../Tools/${{ matrix.toolchain.mingw_path_segment }}/bin" >> $GITHUB_PATH
                   echo "${Qt6_DIR}/../../../Tools/Ninja/bin" >> $GITHUB_PATH
 
             - name: Install ninja-build tool (must be after Qt due PATH changes)
