@@ -46,10 +46,12 @@ jobs:
                     - arch: win64_llvm_mingw
                       tools_arg: tools_llvm_mingw1706 tools_ninja
                       mingw_path_segment: llvm-mingw1706_64
+                      test_exclude_regex: "^(quicktexturetest|probeabidetectortest|launchertest|clientconnectiontest)$"
 
                     - arch: win64_mingw
                       tools_arg: tools_mingw1310 tools_ninja
                       mingw_path_segment: mingw1310_64
+                      test_exclude_regex: "^(quicktexturetest|launchertest|clientconnectiontest)$"
 
         steps:
             - name: Setup tmate session
@@ -100,8 +102,8 @@ jobs:
             - name: Run tests
               if: ${{ matrix.preset.runs_tests }}
               run: >
-                  ctest --test-dir ./build-${{ matrix.preset.name }} -C 'Release' --output-on-failure
-                  --exclude-regex "^(quicktexturetest|probeabidetectortest|launchertest|clientconnectiontest|probesettingstest)$"
+                  ctest --test-dir ./build-${{ matrix.preset.name }} --output-on-failure
+                  --exclude-regex "${{ matrix.toolchain.test_exclude_regex }}"
 
             - name: Read tests log when it fails
               uses: andstor/file-reader-action@v1
