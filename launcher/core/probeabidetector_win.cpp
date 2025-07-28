@@ -213,6 +213,8 @@ static QString compilerFromLibraries(const QStringList &libraries)
     for (const QString &lib : libraries) {
         if (lib.startsWith(QLatin1String("libgcc"), Qt::CaseInsensitive))
             return "GNU";
+        if (lib.startsWith(QLatin1String("libc++."), Qt::CaseInsensitive))
+            return "Clang";
     }
 
     return "MSVC";

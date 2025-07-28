@@ -4,6 +4,7 @@ Release Highlights
 Version 3.3.0
 -------------
  * Drop Qt 5 support, minimum is 6.5 now
+ * Add support for LLVM MinGW on Windows
  * Update LZ4 to v1.10.0
 
 Version 3.2.1
