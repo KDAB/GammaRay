@@ -132,7 +132,9 @@
                 "GAMMARAY_DISABLE_FEEDBACK": "ON",
                 "GAMMARAY_USE_PCH": "OFF"
             },
-            "inherits": ["dev"]
+            "inherits": [
+                "dev"
+            ]
         },
         {
             "name": "ci-dev-clazy",
@@ -148,14 +150,18 @@
                 "GAMMARAY_DISABLE_FEEDBACK": "ON",
                 "GAMMARAY_USE_PCH": "OFF"
             },
-            "inherits": ["dev"]
+            "inherits": [
+                "dev"
+            ]
         }
     ],
     "buildPresets": [
         {
             "name": "dev-gammaray",
             "configurePreset": "dev",
-            "targets": ["all"]
+            "targets": [
+                "all"
+            ]
         },
         {
             "name": "clazy",
