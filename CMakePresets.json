@@ -18,16 +18,6 @@
             "inherits": "base",
             "displayName": "dev",
             "cacheVariables": {
-                "QT_VERSION_MAJOR": "5",
-                "CMAKE_BUILD_TYPE": "Release",
-                "GAMMARAY_USE_PCH": "ON"
-            }
-        },
-        {
-            "name": "dev-qt6",
-            "inherits": "base",
-            "cacheVariables": {
-                "QT_VERSION_MAJOR": "6",
                 "CMAKE_BUILD_TYPE": "Release",
                 "GAMMARAY_USE_PCH": "ON"
             }
@@ -38,23 +28,9 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-dev-asan",
             "cacheVariables": {
-                "QT_VERSION_MAJOR": "5",
                 "ECM_ENABLE_SANITIZERS": "address,undefined",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
-            }
-        },
-        {
-            "name": "dev-asan6",
-            "displayName": "dev-asan qt6",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build-dev-asan6",
-            "cacheVariables": {
-                "ECM_ENABLE_SANITIZERS": "address,undefined",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "GAMMARAY_USE_PCH": "ON",
-                "QT_VERSION_MAJOR": "6",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             }
         },
@@ -64,7 +40,6 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-dev-ftime-trace",
             "cacheVariables": {
-                "QT_VERSION_MAJOR": "5",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
                 "CMAKE_C_FLAGS_INIT": "-ftime-trace",
@@ -82,25 +57,9 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-dev-clang",
             "cacheVariables": {
-                "QT_VERSION_MAJOR": "5",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
-            },
-            "environment": {
-                "CXX": "clang++",
-                "CCACHE_DISABLE": "ON"
-            }
-        },
-        {
-            "name": "dev-clang6",
-            "displayName": "dev-clang qt6",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build-dev-clang6",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "GAMMARAY_USE_PCH": "ON",
-                "QT_VERSION_MAJOR": "6"
             },
             "environment": {
                 "CXX": "clang++",
@@ -113,7 +72,6 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build-clazy",
             "cacheVariables": {
-                "QT_VERSION_MAJOR": "5",
                 "CMAKE_BUILD_TYPE": "Debug"
             },
             "environment": {
@@ -122,38 +80,12 @@
             }
         },
         {
-            "name": "clazy6",
-            "displayName": "clazy",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build-clazy6",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "QT_VERSION_MAJOR": "6"
-            },
-            "environment": {
-                "CXX": "clazy",
-                "CCACHE_DISABLE": "ON"
-            }
-        },
-        {
-            "name": "ci-dev-client-only-qt5",
+            "name": "ci-dev-client-only",
             "inherits": "dev",
-            "displayName": "ci-dev-client-only-qt5",
-            "description": "Qt5 client-only build",
-            "binaryDir": "${sourceDir}/build-ci-dev-client-only-qt5",
-            "generator": "Ninja",
-            "cacheVariables": {
-                "GAMMARAY_CLIENT_ONLY_BUILD": "ON",
-                "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
-                "GAMMARAY_MULTI_BUILD": "OFF",
-                "WARNINGS_ARE_ERRORS": "ON"
-            }
-        },
-        {
-            "name": "ci-dev-client-only-qt6",
-            "inherits": "dev-qt6",
-            "displayName": "ci-dev-client-only-qt6",
+            "displayName": "ci-dev-client-only",
             "description": "Qt6 client-only build",
+            "binaryDir": "${sourceDir}/build-ci-dev-client-only",
+            "generator": "Ninja",
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "ON",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
@@ -162,21 +94,9 @@
             }
         },
         {
-            "name": "ci-dev-client-and-ui-qt5",
+            "name": "ci-dev-client-and-ui",
             "inherits": "dev",
-            "displayName": "ci-dev-client-and-ui-qt5",
-            "description": "Qt5 client and ui build",
-            "cacheVariables": {
-                "GAMMARAY_CLIENT_ONLY_BUILD": "OFF",
-                "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
-                "GAMMARAY_MULTI_BUILD": "OFF",
-                "WARNINGS_ARE_ERRORS": "ON"
-            }
-        },
-        {
-            "name": "ci-dev-client-and-ui-qt6",
-            "inherits": "dev-qt6",
-            "displayName": "ci-dev-client-and-ui-qt6",
+            "displayName": "ci-dev-client-and-ui",
             "description": "Qt6 client and ui build",
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "OFF",
@@ -186,21 +106,8 @@
             }
         },
         {
-            "name": "ci-dev-probe-only-qt5",
+            "name": "ci-dev-probe-only",
             "inherits": "dev",
-            "description": "Qt5 PROBE_ONLY build",
-            "cacheVariables": {
-                "GAMMARAY_PROBE_ONLY_BUILD": "ON",
-                "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
-                "GAMMARAY_BUILD_UI": "OFF",
-                "GAMMARAY_BUILD_DOCS": "OFF",
-                "GAMMARAY_MULTI_BUILD": "OFF",
-                "WARNINGS_ARE_ERRORS": "ON"
-            }
-        },
-        {
-            "name": "ci-dev-probe-only-qt6",
-            "inherits": "dev-qt6",
             "description": "Qt6 PROBE_ONLY build",
             "cacheVariables": {
                 "GAMMARAY_PROBE_ONLY_BUILD": "ON",
@@ -209,14 +116,13 @@
                 "GAMMARAY_BUILD_DOCS": "OFF",
                 "GAMMARAY_MULTI_BUILD": "OFF",
                 "WARNINGS_ARE_ERRORS": "ON"
-
             }
         },
         {
-            "name": "ci-dev-clang-tidy-qt6",
-            "displayName": "ci-dev-clang-tidy-qt6",
+            "name": "ci-dev-clang-tidy",
+            "displayName": "ci-dev-clang-tidy",
             "description": "Qt6 clang-tidy build",
-            "binaryDir": "${sourceDir}/build-ci-dev-clang-tidy-qt6",
+            "binaryDir": "${sourceDir}/build-ci-dev-clang-tidy",
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
@@ -226,15 +132,13 @@
                 "GAMMARAY_DISABLE_FEEDBACK": "ON",
                 "GAMMARAY_USE_PCH": "OFF"
             },
-            "inherits": [
-                "dev-qt6"
-            ]
+            "inherits": ["dev"]
         },
         {
-            "name": "ci-dev-clazy-qt6",
-            "displayName": "ci-dev-clazy-qt6",
+            "name": "ci-dev-clazy",
+            "displayName": "ci-dev-clazy",
             "description": "Qt6 clazy build",
-            "binaryDir": "${sourceDir}/build-ci-dev-clazy-qt6",
+            "binaryDir": "${sourceDir}/build-ci-dev-clazy",
             "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "clazy",
@@ -244,18 +148,14 @@
                 "GAMMARAY_DISABLE_FEEDBACK": "ON",
                 "GAMMARAY_USE_PCH": "OFF"
             },
-            "inherits": [
-                "dev-qt6"
-            ]
+            "inherits": ["dev"]
         }
     ],
     "buildPresets": [
         {
             "name": "dev-gammaray",
             "configurePreset": "dev",
-            "targets": [
-                "all"
-            ]
+            "targets": ["all"]
         },
         {
             "name": "clazy",
