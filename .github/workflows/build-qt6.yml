@@ -28,20 +28,20 @@ jobs:
           - "6.5.*"
           - "6.9.0" # bump to latest Qt freely
         preset:
-          - name: ci-dev-client-only-qt6
+          - name: ci-dev-client-only
             tests_with: qt6
 
-          - name: ci-dev-client-and-ui-qt6
+          - name: ci-dev-client-and-ui
             tests_with: qt6
 
-          - name: ci-dev-probe-only-qt6
+          - name: ci-dev-probe-only
 
         # GitHub actions is now powered by AppleSilicon macs
         # and these presets are failing
         exclude:
           - os: macos-latest
             preset:
-              name: ci-dev-client-and-ui-qt6
+              name: ci-dev-client-and-ui
 
     steps:
       - name: Install Qt with options and default aqtversion
