@@ -18,11 +18,11 @@ jobs:
           - ubuntu-latest
 
         config:
-          - preset: ci-dev-clang-tidy-qt6
+          - preset: ci-dev-clang-tidy
             qt_version: "6.6"
             qt_modules: qtshadertools qtscxml
 
-          - preset: ci-dev-clazy-qt6
+          - preset: ci-dev-clazy
             qt_version: "6.6"
             qt_modules: qtshadertools qtscxml
             apt_pgks:
