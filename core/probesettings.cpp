@@ -139,6 +139,16 @@ void ProbeSettingsReceiver::readyRead()
     }
 }
 
+inline void waitForBytesWritten(QLocalSocket &socket)
+{
+    while (socket.state() == QLocalSocket::ConnectedState && socket.bytesToWrite() > 0) {
+        if (!socket.waitForBytesWritten()) {
+            qWarning() << Q_FUNC_INFO << "Failed to wait for bytes written";
+            break;
+        }
+    }
+}
+
 void ProbeSettingsReceiver::sendServerAddress(const QUrl &address)
 {
     if (!m_socket || m_socket->state() != QLocalSocket::ConnectedState)
@@ -148,7 +158,7 @@ void ProbeSettingsReceiver::sendServerAddress(const QUrl &address)
     msg << address;
     msg.write(m_socket);
 
-    m_socket->waitForBytesWritten();
+    waitForBytesWritten(*m_socket);
     m_socket->close();
 
     deleteLater();
@@ -165,7 +175,7 @@ void ProbeSettingsReceiver::sendServerLaunchError(const QString &reason)
     msg << reason;
     msg.write(m_socket);
 
-    m_socket->waitForBytesWritten();
+    waitForBytesWritten(*m_socket);
     m_socket->close();
 
     deleteLater();
