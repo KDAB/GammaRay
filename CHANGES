@@ -1,6 +1,10 @@
 Release Highlights
 ==================
 
+Version 3.2.2
+-------------
+* Fix GammaRay GUI not showing up on Windows
+
 Version 3.2.1
 -------------
  * Fix infinite in loop QuickSceneGraphModel::itemForSgNode() (#1070)
