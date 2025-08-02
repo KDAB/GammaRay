@@ -355,25 +355,27 @@ void Launcher::newConnection()
 
 void Launcher::readyRead()
 {
-    while (Message::canReadMessage(d->socket)) {
-        const auto msg = Message::readMessage(d->socket);
-        switch (msg.type()) {
-        case Protocol::ServerAddress: {
-            msg >> d->serverAddress;
-            break;
-        }
-        case Protocol::ServerLaunchError: {
-            QString reason;
-            msg >> reason;
-            std::cerr << "Failed to start server: " << qPrintable(reason)
-                      << std::endl;
-            // TODO emit error signal to also notify qtcreator, etc
-            break;
-        }
-        default:
-            continue;
-        }
+    if (!Message::canReadMessage(d->socket)) {
+        // it's a partial write, wait for rest of message
+        return;
     }
+
+    const auto msg = Message::readMessage(d->socket);
+    switch (msg.type()) {
+    case Protocol::ServerAddress: {
+        msg >> d->serverAddress;
+        break;
+    }
+    case Protocol::ServerLaunchError: {
+        QString reason;
+        msg >> reason;
+        std::cerr << "Failed to start server: " << qPrintable(reason)
+                  << std::endl;
+        // TODO emit error signal to also notify qtcreator, etc
+        break;
+    }
+    }
+
 
     if (d->serverAddress.isEmpty())
         return;
