@@ -139,7 +139,7 @@ void ProbeSettingsReceiver::readyRead()
     }
 }
 
-inline void waitForBytesWritten(QLocalSocket &socket)
+static void waitForBytesWritten(QLocalSocket &socket)
 {
     while (socket.state() == QLocalSocket::ConnectedState && socket.bytesToWrite() > 0) {
         if (!socket.waitForBytesWritten()) {
