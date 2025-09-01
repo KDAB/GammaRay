@@ -648,8 +648,7 @@ public:
 // keep it working in UBSAN
 __attribute__((no_sanitize("vptr")))
 #endif
-void
-QuickInspector::analyzePainting()
+void QuickInspector::analyzePainting()
 {
     if (!m_window || m_window->rendererInterface()->graphicsApi() != QSGRendererInterface::Software || !PaintAnalyzer::isAvailable())
         return;
