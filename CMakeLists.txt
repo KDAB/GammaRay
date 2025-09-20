@@ -502,7 +502,10 @@ if(MINGW)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
 endif()
 if(Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
-    find_package(Qt6WidgetsPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+    set(QT_NO_PRIVATE_MODULE_WARNING ON)
+    find_package(Qt6WidgetsPrivate REQUIRED NO_MODULE)
+    find_package(Qt6QmlPrivate REQUIRED NO_MODULE)
+    find_package(Qt6QuickPrivate REQUIRED NO_MODULE)
 endif()
 
 # these need to included after the last Qt-related find_package() call
