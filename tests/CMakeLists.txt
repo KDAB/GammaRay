@@ -30,7 +30,7 @@ target_compile_definitions(
                              $<TARGET_PROPERTY:Qt${QtTest_VERSION_MAJOR}::Test,INTERFACE_COMPILE_DEFINITIONS>
 ) # for -DQT_NAMESPACE=...
 target_include_directories(
-    test_helpers_obj
+    test_helpers_obj SYSTEM
     PUBLIC $<TARGET_PROPERTY:Qt${QtCore_VERSION_MAJOR}::Core,INTERFACE_INCLUDE_DIRECTORIES>
            $<TARGET_PROPERTY:Qt${QtTest_VERSION_MAJOR}::Test,INTERFACE_INCLUDE_DIRECTORIES>
 )
@@ -49,8 +49,9 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
                                     $<TARGET_PROPERTY:Qt${QtTest_VERSION_MAJOR}::Test,INTERFACE_COMPILE_DEFINITIONS>
     ) # for -DQT_NAMESPACE=...
     target_include_directories(
-        base_probe_test_obj PUBLIC $<TARGET_PROPERTY:Qt${QtCore_VERSION_MAJOR}::Core,INTERFACE_INCLUDE_DIRECTORIES>
-                                   $<TARGET_PROPERTY:Qt${QtTest_VERSION_MAJOR}::Test,INTERFACE_INCLUDE_DIRECTORIES>
+        base_probe_test_obj SYSTEM
+        PUBLIC $<TARGET_PROPERTY:Qt${QtCore_VERSION_MAJOR}::Core,INTERFACE_INCLUDE_DIRECTORIES>
+               $<TARGET_PROPERTY:Qt${QtTest_VERSION_MAJOR}::Test,INTERFACE_INCLUDE_DIRECTORIES>
     )
 
     if(TARGET Qt::Quick)
@@ -68,7 +69,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             base_quick_test_obj PUBLIC $<TARGET_PROPERTY:base_probe_test_obj,INTERFACE_INCLUDE_DIRECTORIES>
         )
         target_include_directories(
-            base_quick_test_obj
+            base_quick_test_obj SYSTEM
             PUBLIC $<TARGET_PROPERTY:Qt${QtQuick_VERSION_MAJOR}::Quick,INTERFACE_INCLUDE_DIRECTORIES>
         )
     endif()
