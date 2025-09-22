@@ -32,7 +32,7 @@ private slots:
 
         auto t1 = new QTranslator;
         t1->setObjectName(QStringLiteral("t1"));
-        QVERIFY(t1->load(QLibraryInfo::path(QLibraryInfo::TranslationsPath) + QStringLiteral("/qt_sv.qm")));
+        QVERIFY(t1->load(QLibraryInfo::path(QLibraryInfo::TranslationsPath) + QStringLiteral("/qt_pt_PT.qm")));
         QVERIFY(!t1->isEmpty());
         QCoreApplication::installTranslator(t1);
         QTest::qWait(1);
@@ -70,7 +70,7 @@ private slots:
 
         auto t1 = new QTranslator;
         t1->setObjectName(QStringLiteral("t1"));
-        QVERIFY(t1->load(QLibraryInfo::path(QLibraryInfo::TranslationsPath) + QStringLiteral("/qt_sv.qm")));
+        QVERIFY(t1->load(QLibraryInfo::path(QLibraryInfo::TranslationsPath) + QStringLiteral("/qt_pt_PT.qm")));
         QVERIFY(!t1->isEmpty());
         QCoreApplication::installTranslator(t1);
         QTest::qWait(1);
