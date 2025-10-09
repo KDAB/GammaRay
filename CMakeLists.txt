@@ -464,6 +464,8 @@ find_package(
         WebEngineWidgets
         Widgets
         WaylandCompositor
+        ScxmlPrivate
+        StateMachinePrivate
 )
 
 if(ANDROID)
