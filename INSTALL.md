@@ -20,8 +20,7 @@ your Qt installation provides private Qt headers.
 i.e. when using distro provided Qt make sure you have:
 
 - Redhat,Fedora: qt6-qtbase-private-devel
-- Debian,Ubuntu: qtbase6-private-dev qtdeclarative6-private-dev
- qtattributionsscanner-qt6 qhelpgenerator-qt6 qdoc-qt6
+- Debian,Ubuntu: qt6-base-private-dev qt6-declarative-private-dev qt6-documentation-tools
 - SUSE: libqt6-qtbase-private-headers-devel libqt6-qtdeclarative-private-headers-devel
 
 Optional FOSS packages (eg. KDSME, etc) provide extra functionality.
