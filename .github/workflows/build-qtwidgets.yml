@@ -1,0 +1,60 @@
+# SPDX-FileCopyrightText: 2025 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#
+# SPDX-License-Identifier: MIT
+
+name: CI Qt Widgets
+
+
+# Build to make sure Gammaray builds against non-QtQuick Qt setups
+# Using separate workflow file to keep it simple (Linux only as use case is most common in embedded)
+# and to avoid make the build-qt6.yml more unreadable.
+
+on:
+  push:
+    branches:
+      - master
+      - 3.2
+  pull_request:
+    branches:
+      - master
+      - 3.2
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+        qt_version:
+          - "6.5.*"
+          - "6.10.0" # bump to latest Qt freely
+        preset:
+          - name: ci-dev-client-only
+          - name: ci-dev-client-and-ui
+          - name: ci-dev-probe-only
+
+    steps:
+      - name: Install Qt with options and default aqtversion
+        uses: jurplel/install-qt-action@v4
+        with:
+          aqtversion: null # use whatever the default is
+          version: ${{ matrix.qt_version }}
+          archives: qtbase icu
+          cache: true
+
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install ninja-build tool (must be after Qt due PATH changes)
+        uses: turtlesec-no/get-ninja@main
+
+      - name: Configure project
+        run: >
+          cmake -S . -G Ninja --preset ${{ matrix.preset.name }}
+
+      - name: Build Project
+        run: cmake --build ./build-${{ matrix.preset.name }}
