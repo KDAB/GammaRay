@@ -32,7 +32,7 @@ jobs:
             matrix:
                 qt_version:
                     - "6.9.0" # Minimum supported/tested on MinGW
-                    - "6.10.0" # Bump to latest freely
+                    - "6.10.1" # Bump to latest freely
                 preset:
                     - name: ci-dev-client-only
                       runs_tests: true

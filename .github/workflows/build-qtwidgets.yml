@@ -29,7 +29,7 @@ jobs:
           - ubuntu-latest
         qt_version:
           - "6.5.*"
-          - "6.10.0" # bump to latest Qt freely
+          - "6.10.1" # bump to latest Qt freely
         preset:
           - name: ci-dev-client-only
           - name: ci-dev-client-and-ui
