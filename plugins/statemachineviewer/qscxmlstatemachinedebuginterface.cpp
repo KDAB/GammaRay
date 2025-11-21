@@ -212,7 +212,7 @@ QString QScxmlStateMachineDebugInterface::transitionLabel(Transition transition)
         return QString();
     }
 
-    return QStringLiteral("%1 (%2)").arg(events.first()).arg(transition);
+    return QStringLiteral("%1 (%2)").arg(events.first()).arg(transition.m_id);
 }
 
 State QScxmlStateMachineDebugInterface::transitionSource(Transition transition) const
