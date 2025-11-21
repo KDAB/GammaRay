@@ -1,6 +1,11 @@
 Release Highlights
 ==================
 
+Version 3.3.1
+-------------
+ * Fix build with Qt 6.10.1
+ * Fix build if QtQuick isn't present
+
 Version 3.3.0
 -------------
  * Drop Qt 5 support, minimum is 6.5 now
