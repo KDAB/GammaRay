@@ -16,7 +16,7 @@
 #include "propertydata.h"
 #include "varianthandler.h"
 
-#include <QAssociativeIterable>
+#include <QtCore> // For "qassociativeiterable.h".
 
 using namespace GammaRay;
 

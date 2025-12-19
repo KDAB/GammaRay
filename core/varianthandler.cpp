@@ -20,7 +20,7 @@
 
 #include <QGuiApplication>
 
-#include <QAssociativeIterable>
+#include <QtCore> // For "qassociativeiterable.h".
 #include <QCursor>
 #include <QDebug>
 #include <QDir>

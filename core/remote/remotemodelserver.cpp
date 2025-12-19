@@ -22,7 +22,7 @@
 #include <common/objectmodel.h>
 
 #include <QAbstractItemModel>
-#include <QAssociativeIterable>
+#include <QtCore> // For "qassociativeiterable.h".
 #include <QBuffer>
 #include <QDataStream>
 #include <QDebug>
