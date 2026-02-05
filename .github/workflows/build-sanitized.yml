@@ -1,0 +1,68 @@
+# SPDX-FileCopyrightText: 2026 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#
+# SPDX-License-Identifier: MIT
+
+name: CI Qt6 Sanitized
+
+on:
+  push:
+    branches:
+      - master
+      - 3.2
+  pull_request:
+    branches:
+      - master
+      - 3.2
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        qt-flavor: # asan|tsan|debug|profile
+          - name: "debug" # no sanitizer, but asserts enabled
+            preset: "dev"
+          # - name: "asan"
+          #   preset: "dev-asan"
+          # - name: "tsan"
+          #   preset: "dev-tsan"
+          # - name: "profile"
+          #   preset: "dev-profile"
+
+    steps:
+      - name: Setup Sanitized Qt
+        uses: KDABLabs/sanitized-qt-action@v1
+        with:
+          qt-tag: "v6.11.0-beta2"
+          qt-flavor: ${{ matrix.qt-flavor.name }}
+
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update -qq
+          sudo apt install -y gdb
+
+      - name: Configure project
+        run: >
+          cmake -S . -G Ninja --preset ${{ matrix.qt-flavor.preset }}
+          -DGAMMARAY_WITH_KDSME=ON -DGAMMARAY_BUILD_DOCS=OFF
+
+      - name: Build Project
+        run: cmake --build ./build-${{ matrix.qt-flavor.preset }}
+
+      - name: Enable gdb attaching
+        run: echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+
+      - name: Run tests on Linux Qt6
+        run: >
+          ctest --test-dir ./build-${{ matrix.qt-flavor.preset }} --output-on-failure
+          --exclude-regex "quickmaterialtest|quicktexturetest|quickinspectortest|quickinspectortest2"
+        env:
+          QT_QPA_PLATFORM: offscreen
+          QT_QUICK_BACKEND: software
+          LSAN_OPTIONS: "detect_leaks=0" # until normal ASAN passes
