@@ -37,8 +37,7 @@
         {
             "name": "dev-ftime-trace",
             "displayName": "dev-ftime-trace",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build-dev-ftime-trace",
+            "inherits": "base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
@@ -54,12 +53,10 @@
         {
             "name": "dev-clang",
             "displayName": "dev-clang",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build-dev-clang",
+            "inherits": "base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
-                "GAMMARAY_USE_PCH": "ON",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+                "GAMMARAY_USE_PCH": "ON"
             },
             "environment": {
                 "CXX": "clang++",
@@ -69,8 +66,7 @@
         {
             "name": "clazy",
             "displayName": "clazy",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build-clazy",
+            "inherits": "base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             },
@@ -84,8 +80,6 @@
             "inherits": "dev",
             "displayName": "ci-dev-client-only",
             "description": "Qt6 client-only build",
-            "binaryDir": "${sourceDir}/build-ci-dev-client-only",
-            "generator": "Ninja",
             "cacheVariables": {
                 "GAMMARAY_CLIENT_ONLY_BUILD": "ON",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
@@ -122,8 +116,6 @@
             "name": "ci-dev-clang-tidy",
             "displayName": "ci-dev-clang-tidy",
             "description": "Qt6 clang-tidy build",
-            "binaryDir": "${sourceDir}/build-ci-dev-clang-tidy",
-            "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
                 "ECM_ENABLE_SANITIZERS": "address",
@@ -140,8 +132,6 @@
             "name": "ci-dev-clazy",
             "displayName": "ci-dev-clazy",
             "description": "Qt6 clazy build",
-            "binaryDir": "${sourceDir}/build-ci-dev-clazy",
-            "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_CXX_COMPILER": "clazy",
                 "ECM_ENABLE_SANITIZERS": "address",
