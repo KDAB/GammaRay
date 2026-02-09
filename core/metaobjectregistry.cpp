@@ -212,7 +212,11 @@ struct MetaTypeCoreHelper final : public QMetaTypeModuleHelper
         return !(str.isEmpty() || str == LiteralWrapper("0") || str == LiteralWrapper("false"));
     }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 11, 0)
+    static const QtPrivate::QMetaTypeInterface *interfaceForType(int type)
+#else
     const QtPrivate::QMetaTypeInterface *interfaceForType(int type) const override
+#endif
     {
         switch (type) {
             QT_FOR_EACH_STATIC_PRIMITIVE_TYPE(QT_METATYPE_CONVERT_ID_TO_TYPE)
@@ -226,16 +230,33 @@ struct MetaTypeCoreHelper final : public QMetaTypeModuleHelper
     }
 };
 
-Q_GLOBAL_STATIC(MetaTypeCoreHelper, qMetaTypeCoreHelper)
+static const QMetaTypeModuleHelper *qMetaTypeCoreHelper()
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 11, 0)
+    static MetaTypeCoreHelper helper {
+        MetaTypeCoreHelper::interfaceForType,
+    };
+#else
+    static MetaTypeCoreHelper helper;
+#endif
+    return &helper;
+}
 
 static const QMetaTypeModuleHelper *qModuleHelperForType(int type)
 {
     if (type <= QMetaType::LastCoreType)
-        return qMetaTypeCoreHelper;
+        return qMetaTypeCoreHelper();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 11, 0)
+    if (type >= QMetaType::FirstGuiType && type <= QMetaType::LastGuiType)
+        return &qMetaTypeGuiHelper;
+    else if (type >= QMetaType::FirstWidgetsType && type <= QMetaType::LastWidgetsType)
+        return &qMetaTypeWidgetsHelper;
+#else
     if (type >= QMetaType::FirstGuiType && type <= QMetaType::LastGuiType)
         return qMetaTypeGuiHelper;
     else if (type >= QMetaType::FirstWidgetsType && type <= QMetaType::LastWidgetsType)
         return qMetaTypeWidgetsHelper;
+#endif
     return nullptr;
 }
 

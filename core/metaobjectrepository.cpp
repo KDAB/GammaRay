@@ -223,7 +223,9 @@ void MetaObjectRepository::initQEventTypes()
     MO_ADD_PROPERTY_RO(QDeferredDeleteEvent, loopLevel);
 
     MO_ADD_METAOBJECT1(QMetaCallEvent, QEvent);
+#if QT_VERSION < QT_VERSION_CHECK(6, 11, 0)
     MO_ADD_PROPERTY_RO(QMetaCallEvent, id);
+#endif
     MO_ADD_PROPERTY_RO(QMetaCallEvent, sender); // problematic because type is const QObject*
     MO_ADD_PROPERTY_RO(QMetaCallEvent, signalId);
 }

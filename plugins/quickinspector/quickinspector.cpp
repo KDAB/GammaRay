@@ -698,7 +698,11 @@ void QuickInspector::setSlowMode(bool slow)
         if (it == connections.end()) {
             connections.insert(window, connect(window, &QQuickWindow::beforeRendering, this, [this, window]() {
                                                auto it = connections.find(window);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 11, 0)
+                                               QUnifiedTimer::instance()->setSpeedModifier(m_slowDownEnabled ? (1. / 5.) : 1.);
+#else
                                                QUnifiedTimer::instance()->setSlowModeEnabled(m_slowDownEnabled);
+#endif
                                                QObject::disconnect(it.value());
                                                connections.erase(it); }, Qt::DirectConnection));
         }
