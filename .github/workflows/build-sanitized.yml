@@ -20,11 +20,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        qt-flavor: # asan|tsan|debug|profile
+        qt-flavor:
           - name: "debug" # no sanitizer, but asserts enabled
             preset: "dev"
           # - name: "asan"
-          #   preset: "dev-asan"
+          #  preset: "dev-asan"
           # - name: "tsan"
           #   preset: "dev-tsan"
           # - name: "profile"
@@ -34,7 +34,7 @@ jobs:
       - name: Setup Sanitized Qt
         uses: KDABLabs/sanitized-qt-action@v1
         with:
-          qt-tag: "v6.11.0-beta2"
+          qt-tag: "v6.12.0-beta4" # Bump to latest freely
           qt-flavor: ${{ matrix.qt-flavor.name }}
 
       - name: Checkout sources
@@ -45,7 +45,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update -qq
-          sudo apt install -y gdb
+          sudo apt install -y gdb libwayland-dev wayland-protocols
 
       - name: Configure project
         run: >
