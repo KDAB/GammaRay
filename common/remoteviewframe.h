@@ -46,6 +46,9 @@ public:
     void setImage(const QImage &image);
     void setImage(const QImage &image, const QTransform &transform);
 
+    void setGraphicsApi(int value);
+    int graphicsApi() const;
+
     /// tool specific frame data
     QVariant data;
 
@@ -55,6 +58,7 @@ private:
     TransferImage m_image;
     QRectF m_viewRect;
     QRectF m_sceneRect;
+    int m_graphicsApi; // Only relevant and used in QtQuick preview.
 };
 }
 
