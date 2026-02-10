@@ -152,6 +152,12 @@ void QuickScenePreviewWidget::resizeEvent(QResizeEvent *e)
 
 void QuickScenePreviewWidget::renderDecoration(QPainter *p, double zoom) const
 {
+    // TODO: only do this for RHI-based graphics APIs (QSGRenderInterface::isApiRhiBased)
+    // We want to skip rendering decorations in the client, if we draw it on the target and this rendering backend cannot discern between the two.
+    if (m_control->serverSideDecorationsEnabled()) {
+        return;
+    }
+
     // Scaling and translations on QuickItemGeometry will be done on demand
 
     if (frame().data.userType() == qMetaTypeId<QuickItemGeometry>()) {

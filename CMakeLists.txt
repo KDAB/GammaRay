@@ -506,6 +506,8 @@ if(Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
     find_package(Qt6WidgetsPrivate REQUIRED NO_MODULE)
     find_package(Qt6QmlPrivate NO_MODULE)
     find_package(Qt6QuickPrivate NO_MODULE)
+    find_package(Qt6QuickWidgetsPrivate NO_MODULE)
+    find_package(Qt6GuiPrivate NO_MODULE)
 endif()
 
 # these need to included after the last Qt-related find_package() call
