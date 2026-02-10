@@ -47,6 +47,12 @@ jobs:
           sudo apt update -qq
           sudo apt install -y gdb
 
+      - name: debug
+        run: |
+          echo "Path: ${PATH}"
+          echo "ld lib path: ${LD_LIBRARY_PATH}"
+          env
+
       - name: Configure project
         run: >
           cmake -S . -G Ninja --preset ${{ matrix.qt-flavor.preset }}
