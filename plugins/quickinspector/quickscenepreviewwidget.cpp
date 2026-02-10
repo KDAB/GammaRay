@@ -19,6 +19,7 @@
 
 #include <QMouseEvent>
 #include <QPainter>
+#include <qsgrendererinterface.h>
 
 using namespace GammaRay;
 static const qint32 QuickScenePreviewWidgetStateVersion = 4;
@@ -152,6 +153,12 @@ void QuickScenePreviewWidget::resizeEvent(QResizeEvent *e)
 
 void QuickScenePreviewWidget::renderDecoration(QPainter *p, double zoom) const
 {
+    // We want to skip rendering decorations in the client, if we draw it on RHI targets and this rendering backend cannot discern between the two.
+    const auto graphicsApi = static_cast<QSGRendererInterface::GraphicsApi>(frame().graphicsApi());
+    if (QSGRendererInterface::isApiRhiBased(graphicsApi) && m_control->serverSideDecorationsEnabled()) {
+        return;
+    }
+
     // Scaling and translations on QuickItemGeometry will be done on demand
 
     if (frame().data.userType() == qMetaTypeId<QuickItemGeometry>()) {
