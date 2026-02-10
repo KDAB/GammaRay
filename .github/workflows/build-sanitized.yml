@@ -20,11 +20,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        qt-flavor: # asan|tsan|debug|profile
+        qt-flavor:
           - name: "debug" # no sanitizer, but asserts enabled
             preset: "dev"
-          # - name: "asan"
-          #   preset: "dev-asan"
+          - name: "asan"
+            preset: "dev-asan"
           # - name: "tsan"
           #   preset: "dev-tsan"
           # - name: "profile"
