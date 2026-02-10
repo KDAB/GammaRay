@@ -54,9 +54,7 @@ jobs:
           env
 
       - name: Configure project
-        run: >
-          cmake -S . -G Ninja --preset ${{ matrix.qt-flavor.preset }}
-          -DGAMMARAY_WITH_KDSME=ON -DGAMMARAY_BUILD_DOCS=OFF
+        run: cmake --preset ${{ matrix.qt-flavor.preset }} -DGAMMARAY_WITH_KDSME=ON -DGAMMARAY_BUILD_DOCS=OFF
 
       - name: Build Project
         run: cmake --build ./build-${{ matrix.qt-flavor.preset }}
