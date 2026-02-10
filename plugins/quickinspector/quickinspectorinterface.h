@@ -51,11 +51,17 @@ public:
 
     enum RenderMode
     {
+        ///< Nothing special is drawn.
         NormalRendering,
+        ///< Backs "Visualize Clipping" in the UI.
         VisualizeClipping,
+        ///< Backs "Visualize Overdraw" in the UI.
         VisualizeOverdraw,
+        ///< Backs "Visualize Batches" in the UI.
         VisualizeBatches,
+        ///< Backs "Visualize Changes" in the UI.
         VisualizeChanges,
+        ///< Backs "Visualize Controls" in the UI.
         VisualizeTraces,
     };
 
