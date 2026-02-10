@@ -962,6 +962,12 @@ void RemoteViewWidget::resizeEvent(QResizeEvent *event)
 
 void RemoteViewWidget::mousePressEvent(QMouseEvent *event)
 {
+    // Don't allow panning or interacting with an unavailable remote view.
+    if (!m_frame.isValid()) {
+        QWidget::mousePressEvent(event);
+        return;
+    }
+
     m_currentMousePosition = mapToSource(QPointF(event->pos()));
 
     auto pan = [this, event]() {
@@ -1074,6 +1080,11 @@ void RemoteViewWidget::pickColor() const
 
 void RemoteViewWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    // Don't allow panning or interacting with an unavailable remote view.
+    if (!m_frame.isValid()) {
+        return;
+    }
+
     m_currentMousePosition = mapToSource(QPointF(event->pos()));
 
     auto pan = [this, event]() {
