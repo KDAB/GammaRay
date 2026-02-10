@@ -292,7 +292,7 @@ void RenderModeRequest::apply()
     if (connection)
         disconnect(connection);
 
-    if (window && window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
+    if (window && window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
         return;
 
     if (window) {
@@ -574,6 +574,7 @@ void QuickInspector::sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFram
         frame.data = QVariant::fromValue(grabbedFrame.itemsGeometry);
     else if (!grabbedFrame.itemsGeometry.isEmpty())
         frame.data = QVariant::fromValue(grabbedFrame.itemsGeometry.at(0));
+    frame.setGraphicsApi(m_window->rendererInterface()->graphicsApi());
     m_remoteView->sendFrame(frame);
 }
 
@@ -612,10 +613,10 @@ void QuickInspector::checkFeatures()
         return;
     }
 
-    if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL)
-        f = AllCustomRenderModes;
-    else if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
+    if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
         f = AnalyzePainting;
+    else
+        f = AllCustomRenderModes;
 
     emit features(f);
 }
