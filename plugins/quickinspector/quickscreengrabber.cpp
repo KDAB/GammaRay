@@ -797,9 +797,7 @@ UnsupportedScreenGrabber::UnsupportedScreenGrabber(QQuickWindow *window)
 {
 }
 
-UnsupportedScreenGrabber::~UnsupportedScreenGrabber()
-{
-}
+UnsupportedScreenGrabber::~UnsupportedScreenGrabber() = default;
 
 void UnsupportedScreenGrabber::requestGrabWindow(const QRectF & /*userViewport*/)
 {
@@ -832,8 +830,10 @@ void UnsupportedScreenGrabber::requestGrabWindow(const QRectF & /*userViewport*/
 
 void UnsupportedScreenGrabber::drawDecorations()
 {
+    // Intentionally dummied out because this grabber doesn't do anything useful
 }
 
 void UnsupportedScreenGrabber::updateOverlay()
 {
+    // Intentionally dummied out because this grabber doesn't do anything useful
 }

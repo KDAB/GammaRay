@@ -94,6 +94,9 @@ public:
     QVector<QuickItemGeometry> itemsGeometry;
 };
 
+/**
+ * @brief Base for all screen grabbers that decorate and return a pixmap for the window.
+ */
 class AbstractScreenGrabber : public QObject
 {
     Q_OBJECT
@@ -127,7 +130,13 @@ public:
     explicit AbstractScreenGrabber(QQuickWindow *window);
     ~AbstractScreenGrabber() override;
 
+    /**
+     * @return The graphics API used to render @p window.
+     */
     static RenderInfo::GraphicsApi graphicsApiFor(QQuickWindow *window);
+    /**
+     * @return Screen grabber compatible with the given @p window.
+     */
     static std::unique_ptr<AbstractScreenGrabber> get(QQuickWindow *window);
 
     QQuickWindow *window() const;
@@ -156,6 +165,9 @@ protected:
     void doDrawDecorations(QPainter &painter);
     void gatherRenderInfo();
 
+    /**
+     * @brief Draw decorations on the target window.
+     */
     virtual void drawDecorations() = 0;
 
     virtual void updateOverlay();
@@ -201,6 +213,9 @@ private:
 };
 #endif
 
+/**
+ * @brief Screen grabber meant for software rendering.
+ */
 class SoftwareScreenGrabber : public AbstractScreenGrabber
 {
     Q_OBJECT
@@ -222,6 +237,9 @@ private:
     QPointF m_lastItemPosition;
 };
 
+/**
+ * @brief Screen grabber used for unsupported rendering backends. Doesn't do anything useful otherwise.
+ */
 class UnsupportedScreenGrabber : public AbstractScreenGrabber
 {
     Q_OBJECT
