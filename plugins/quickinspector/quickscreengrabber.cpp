@@ -251,9 +251,17 @@ AbstractScreenGrabber::AbstractScreenGrabber(QQuickWindow *window)
     qRegisterMetaType<GrabbedFrame>();
 
     placeOn(ItemOrLayoutFacade());
+
+    // Install an event filter to pick up on expose events
+    if (m_window)
+        m_window->installEventFilter(this);
 }
 
-GammaRay::AbstractScreenGrabber::~AbstractScreenGrabber() = default;
+GammaRay::AbstractScreenGrabber::~AbstractScreenGrabber()
+{
+    if (m_window)
+        m_window->removeEventFilter(this);
+}
 
 QQuickWindow *AbstractScreenGrabber::window() const
 {
@@ -416,6 +424,19 @@ QuickItemGeometry AbstractScreenGrabber::initFromItem(QQuickItem *item)
     itemGeometry.traceName = ObjectDataProvider::name(item);
 
     return itemGeometry;
+}
+
+bool AbstractScreenGrabber::eventFilter(QObject *object, QEvent *event)
+{
+    if (event->type() == QEvent::Type::Expose) {
+        // If the window is no longer rendering, clear the image so the unavailable text is shown again.
+        // Otherwise, the viewport is frozen on the last grabbed frame - and it never actually updates when the user interacts with it.
+        if (!m_window->isExposed()) {
+            m_grabbedFrame.image = QImage();
+            emit sceneGrabbed(m_grabbedFrame);
+        }
+    }
+    return QObject::eventFilter(object, event);
 }
 
 void AbstractScreenGrabber::gatherRenderInfo()

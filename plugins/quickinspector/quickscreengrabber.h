@@ -160,6 +160,7 @@ protected:
 
     virtual void updateOverlay();
     static QuickItemGeometry initFromItem(QQuickItem *item);
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private:
     void itemParentChanged(QQuickItem *parent);
