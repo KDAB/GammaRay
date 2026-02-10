@@ -627,9 +627,14 @@ void OpenGLScreenGrabber::windowAfterRendering()
             QPoint offset;
             rc->renderWindow(&offset);
 
+            // If we are rendering into a window, we need to take into account the space between us and the bottom of the window (if any)
+            const auto renderWindow = rc->renderWindowFor(m_window);
+            if (renderWindow != nullptr) {
+                yOff = renderWindow->height() - m_renderInfo.windowSize.height() - offset.y();
+            }
             xOff = offset.x();
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
-            yOff = 0;
+            yOff = static_cast<int>(std::floor(yOff * m_renderInfo.dpr));
             xOff = static_cast<int>(std::floor(xOff * m_renderInfo.dpr));
 #else
             const auto viewportHeight = viewport[3];
