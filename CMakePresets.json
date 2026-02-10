@@ -31,7 +31,8 @@
                 "ECM_ENABLE_SANITIZERS": "address,undefined",
                 "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_USE_PCH": "ON",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "QT_NO_ADD_SANITIZER_OPTIONS": "ON"
             }
         },
         {
