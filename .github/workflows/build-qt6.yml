@@ -123,11 +123,12 @@ jobs:
 
         # Exclude
         # quicktexturetest
+        # quickmaterialtest - Enable on Windows once QTBUG-144137 (affects 6.10)
       - name: Qt6 Run tests on Windows
         if: ${{ runner.os == 'Windows' && matrix.preset.tests_with == 'qt6' }}
         run: >
           ctest --test-dir ./build-${{ matrix.preset.name }} -C 'Release' --output-on-failure
-          --exclude-regex "quicktexturetest|launchertest|probesettingstest"
+          --exclude-regex "quickmaterialtest|quicktexturetest|launchertest|probesettingstest"
 
       - name: Read tests log when it fails
         uses: andstor/file-reader-action@v1
