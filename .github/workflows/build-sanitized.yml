@@ -66,3 +66,4 @@ jobs:
           QT_QPA_PLATFORM: offscreen
           QT_QUICK_BACKEND: software
           LSAN_OPTIONS: "detect_leaks=0" # until normal ASAN passes
+          UBSAN_OPTIONS: "print_stacktrace=1"
