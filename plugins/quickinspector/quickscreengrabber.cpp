@@ -22,6 +22,8 @@
 #include <QPainter>
 #include <QQuickWindow>
 #include <QQuickRenderControl>
+#include <QQuickOpenGLUtils>
+#include <QQuickWidget>
 
 #ifndef QT_NO_OPENGL
 #include <QOpenGLContext>
@@ -32,14 +34,14 @@
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
 #include <private/qquickwindow_p.h>
+#include <private/qquickwidget_p.h>
 
 #include <private/qsgsoftwarerenderer_p.h>
-
-#include <QQuickOpenGLUtils>
 
 #include <algorithm>
 #include <functional>
 #include <cmath>
+#include <rhi/qrhi.h>
 
 namespace GammaRay {
 
@@ -223,13 +225,18 @@ bool ItemOrLayoutFacade::isLayout() const
 
 std::unique_ptr<AbstractScreenGrabber> AbstractScreenGrabber::get(QQuickWindow *window)
 {
+    const auto graphicApi = graphicsApiFor(window);
+    if (QSGRendererInterface::isApiRhiBased(static_cast<QSGRendererInterface::GraphicsApi>(graphicApi))) {
+        return std::make_unique<RhiScreenGrabber>(window);
+    }
+
     switch (graphicsApiFor(window)) {
 #ifndef QT_NO_OPENGL
     case RenderInfo::OpenGL:
-        return std::unique_ptr<AbstractScreenGrabber>(new OpenGLScreenGrabber(window));
+        return std::make_unique<OpenGLScreenGrabber>(window);
 #endif
     case RenderInfo::Software:
-        return std::unique_ptr<AbstractScreenGrabber>(new SoftwareScreenGrabber(window));
+        return std::make_unique<SoftwareScreenGrabber>(window);
     default:
         return std::unique_ptr<AbstractScreenGrabber>(new UnsupportedScreenGrabber(window));
     }
@@ -841,4 +848,311 @@ void UnsupportedScreenGrabber::drawDecorations()
 void UnsupportedScreenGrabber::updateOverlay()
 {
     // Intentionally dummied out because this grabber doesn't do anything useful
+}
+
+RhiScreenGrabber::RhiScreenGrabber(QQuickWindow *window)
+    : AbstractScreenGrabber(window)
+{
+    // Force DirectConnection else Auto lead to Queued which is not good.
+    connect(m_window.data(), &QQuickWindow::afterSynchronizing, this, &RhiScreenGrabber::windowAfterSynchronizing, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::afterRendering, this, &RhiScreenGrabber::windowAfterRendering, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::afterRenderPassRecording, this, &RhiScreenGrabber::windowAfterRenderPassRecording, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::beforeRendering, this, &RhiScreenGrabber::windowBeforeRendering, Qt::DirectConnection);
+
+    result = new QRhiReadbackResult();
+    result->completed = [this] {
+        const auto rhi = m_window->rhi();
+
+        const QImage::Format imageFormat = [this] {
+            // Can't handle all the possible formats, but any missing ones will be displayed to the user so they can file a bugreport.
+            switch (result->format) {
+            case QRhiTexture::BGRA8:
+                return QImage::Format_ARGB32_Premultiplied;
+            case QRhiTexture::RGBA8:
+                return QImage::Format_RGBA8888_Premultiplied;
+            case QRhiTexture::RGB10A2:
+                return QImage::Format_BGR30;
+            case QRhiTexture::RGBA16F:
+                return QImage::Format_RGBA16FPx4;
+            default:
+                return QImage::Format_Invalid;
+            }
+        }();
+
+        if (imageFormat != QImage::Format_Invalid) {
+            m_grabbedFrame.image = QImage(
+                reinterpret_cast<const uchar *>(result->data.constData()),
+                result->pixelSize.width(),
+                result->pixelSize.height(),
+                imageFormat);
+            m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
+
+            m_grabbedFrame.transform.reset();
+            if (rhi->isYUpInFramebuffer()) {
+                m_grabbedFrame.transform.scale(1.0, -1.0);
+                m_grabbedFrame.transform.translate(0, -result->pixelSize.height() / m_renderInfo.dpr);
+            }
+
+            emit sceneGrabbed(m_grabbedFrame);
+        } else {
+            m_grabbedFrame.image = QImage(m_window->size() * m_window->effectiveDevicePixelRatio(), QImage::Format_ARGB32);
+            m_grabbedFrame.image.fill(Qt::black);
+            m_grabbedFrame.image.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
+
+            QPainter p(&m_grabbedFrame.image);
+            p.setRenderHint(QPainter::TextAntialiasing);
+            QColor gray(Qt::black);
+            gray.setAlpha(200);
+            p.fillRect(QRect(QPoint {}, m_window->size()), gray);
+            p.setPen(Qt::white);
+            auto font = qApp->font();
+            font.setPointSize(font.pointSize() + 1);
+            p.setFont(font);
+            QString txt = QLatin1String("RHI texture format %1 is not supported yet").arg(VariantHandler::displayString(result->format));
+            p.drawText(QRect { QPoint(0, 0), m_window->size() }, Qt::AlignCenter | Qt::TextWordWrap, txt);
+
+            emit sceneGrabbed(m_grabbedFrame);
+        }
+    };
+}
+
+RhiScreenGrabber::~RhiScreenGrabber() = default;
+
+void RhiScreenGrabber::requestGrabWindow(const QRectF &userViewport)
+{
+    setGrabbingMode(true, userViewport);
+}
+
+void RhiScreenGrabber::drawDecorations()
+{
+    // Intentionally dummied out because we don't use this function.
+}
+
+void RhiScreenGrabber::setGrabbingMode(bool isGrabbing, const QRectF &userViewport)
+{
+    QMutexLocker locker(&m_mutex);
+
+    if (m_isGrabbing == isGrabbing)
+        return;
+
+    m_isGrabbing = isGrabbing;
+    m_userViewport = userViewport;
+
+    emit grabberReadyChanged(!m_isGrabbing);
+
+    if (m_isGrabbing)
+        updateOverlay();
+}
+
+void RhiScreenGrabber::windowAfterSynchronizing()
+{
+    // We are in the rendering thread at this point
+    // And the gui thread is locked
+
+    gatherRenderInfo();
+}
+
+void RhiScreenGrabber::windowBeforeRendering()
+{
+    Q_ASSERT(m_window != nullptr);
+
+    // We are in the rendering thread at this point
+    // And the gui thread is NOT locked
+
+    QMutexLocker locker(&m_mutex);
+
+    QRhi *rhi = m_window->rhi();
+    if (!rhi)
+        return;
+
+    // FIXME: need to handle RHI losses / scenegraph re-init.
+    if (!m_pipeline) {
+        const auto getShader = [](const QString &fileName) -> QShader {
+            QFile file(fileName);
+            if (file.open(QIODevice::ReadOnly))
+                return QShader::fromSerialized(file.readAll());
+
+            return QShader();
+        };
+
+        QShader vertexShader = getShader(":/gammaray_quickinspector_shaders/shaders/rhi_inspector_decorations.vert.qsb");
+        if (!vertexShader.isValid())
+            qFatal("Could not load vertex shader");
+        QShader fragmentShader = getShader(":/gammaray_quickinspector_shaders/shaders/rhi_inspector_decorations.frag.qsb");
+        if (!fragmentShader.isValid())
+            qFatal("Could not load fragment shader");
+
+        recreateDecorationTexture();
+
+        m_sampler = rhi->newSampler(
+            QRhiSampler::Nearest,
+            QRhiSampler::Nearest,
+            QRhiSampler::None,
+            QRhiSampler::Repeat,
+            QRhiSampler::Repeat,
+            QRhiSampler::Repeat);
+        m_sampler->create();
+
+        m_pipeline = rhi->newGraphicsPipeline();
+        m_pipeline->setTopology(QRhiGraphicsPipeline::TriangleStrip);
+
+        QRhiGraphicsPipeline::TargetBlend blend;
+        blend.enable = true;
+        m_pipeline->setTargetBlends({ blend });
+
+        m_pipeline->setShaderStages({ { QRhiShaderStage::Vertex, vertexShader },
+                                      { QRhiShaderStage::Fragment, fragmentShader } });
+
+        m_pipeline->setShaderResourceBindings(m_srb);
+        if (const auto swapChain = m_window->swapChain()) {
+            m_pipeline->setRenderPassDescriptor(swapChain->currentFrameRenderTarget()->renderPassDescriptor());
+        } else if (const auto p = widgetPrivate()) {
+            m_pipeline->setRenderPassDescriptor(p->rtRp);
+        }
+        m_pipeline->create();
+    }
+
+    // FIXME this looks sketchy, mutex wise
+    if (m_decorationsEnabled) {
+        QRhiCommandBuffer *cb = nextCommandBuffer();
+        QRhiResourceUpdateBatch *resourceUpdates = rhi->nextResourceUpdateBatch();
+
+        QImage decorations(m_renderInfo.windowSize, QImage::Format_ARGB32_Premultiplied);
+        decorations.fill(Qt::transparent);
+
+        QPainter p(&decorations);
+        doDrawDecorations(p);
+        p.end();
+
+        resourceUpdates->uploadTexture(m_texture, decorations);
+        cb->resourceUpdate(resourceUpdates);
+    }
+}
+
+void RhiScreenGrabber::windowAfterRenderPassRecording()
+{
+    Q_ASSERT(m_window != nullptr);
+
+    // We are in the rendering thread at this point
+    // And the gui thread is NOT locked
+
+    QMutexLocker locker(&m_mutex);
+
+    // FIXME: m_decorationsEnabled is read from the render thread,
+    // but it doesn't look like it's mutex-protected in the other codepaths!
+    if (m_decorationsEnabled) {
+        QRhiCommandBuffer *cb = nextCommandBuffer();
+
+        QSize outputPixelSize;
+        if (const auto swapChain = m_window->swapChain()) {
+            outputPixelSize = swapChain->currentFrameRenderTarget()->pixelSize();
+        } else if (const auto p = widgetPrivate()) {
+            if (p->rt)
+                outputPixelSize = p->rt->pixelSize();
+        }
+        if (outputPixelSize.isEmpty())
+            return;
+
+        cb->setViewport({ 0.0f, 0.0f, static_cast<float>(outputPixelSize.width()), static_cast<float>(outputPixelSize.height()) });
+
+        cb->setGraphicsPipeline(m_pipeline);
+        cb->setShaderResources();
+        cb->draw(4);
+    }
+}
+
+void RhiScreenGrabber::windowAfterRendering()
+{
+    Q_ASSERT(m_window != nullptr);
+
+    QMutexLocker locker(&m_mutex);
+
+    // We are in the rendering thread at this point
+    // And the gui thread is NOT locked
+
+    QRhi *rhi = m_window->rhi();
+    if (m_isGrabbing && rhi) {
+        QRhiResourceUpdateBatch *resourceUpdates = rhi->nextResourceUpdateBatch();
+        if (resourceUpdates) {
+            if (m_window->swapChain()) {
+                // Read from the swapchain's back-buffer.
+                constexpr QRhiReadbackDescription readbackDesc;
+                resourceUpdates->readBackTexture(readbackDesc, result);
+            } else if (auto p = widgetPrivate()) {
+                // Read from the intermediatary texture of this widget.
+                const QRhiReadbackDescription readbackDesc(p->outputTexture);
+                resourceUpdates->readBackTexture(readbackDesc, result);
+            }
+        }
+
+        const auto cb = nextCommandBuffer();
+        if (cb)
+            cb->resourceUpdate(resourceUpdates);
+    }
+
+    if (m_isGrabbing) {
+        locker.unlock();
+        setGrabbingMode(false, QRectF());
+    } else {
+        emit sceneChanged();
+    }
+}
+
+void RhiScreenGrabber::updateOverlay()
+{
+    Q_ASSERT(m_window != nullptr);
+
+    // Re-create texture on window size changes
+    if (m_texture)
+        recreateDecorationTexture();
+
+    AbstractScreenGrabber::updateOverlay();
+}
+
+QRhiCommandBuffer *RhiScreenGrabber::nextCommandBuffer() const
+{
+    Q_ASSERT(m_window != nullptr);
+
+    QRhiSwapChain *swapChain = m_window->swapChain();
+    if (swapChain)
+        return swapChain->currentFrameCommandBuffer();
+
+    const auto rc = QQuickWindowPrivate::get(m_window)->renderControl;
+    if (rc)
+        return rc->commandBuffer();
+
+    return nullptr;
+}
+
+QQuickWidgetPrivate *RhiScreenGrabber::widgetPrivate() const
+{
+    Q_ASSERT(m_window != nullptr);
+
+    const auto widget = m_window->property("_q_parentWidget").value<QQuickWidget *>();
+    if (widget)
+        return QQuickWidgetPrivate::get(widget);
+
+    return nullptr;
+}
+
+void RhiScreenGrabber::recreateDecorationTexture()
+{
+    const auto rhi = m_window->rhi();
+    if (!rhi)
+        return;
+
+    if (m_texture->pixelSize() != m_renderInfo.windowSize) {
+        m_texture = rhi->newTexture(QRhiTexture::BGRA8, m_renderInfo.windowSize);
+        m_texture->create();
+
+        m_srb = rhi->newShaderResourceBindings();
+        m_srb->setBindings({ QRhiShaderResourceBinding::sampledTexture(
+            0,
+            QRhiShaderResourceBinding::FragmentStage,
+            m_texture,
+            m_sampler) });
+        m_srb->create();
+
+        m_pipeline->setShaderResourceBindings(m_srb);
+    }
 }

@@ -23,6 +23,13 @@
 
 #include <memory>
 
+class QQuickWidgetPrivate;
+class QRhiCommandBuffer;
+class QRhiSampler;
+class QRhiTexture;
+class QRhiShaderResourceBindings;
+class QRhiGraphicsPipeline;
+struct QRhiReadbackResult;
 QT_BEGIN_NAMESPACE
 class QQuickWindow;
 #ifndef QT_NO_OPENGL
@@ -254,6 +261,53 @@ private:
     void updateOverlay() override;
 
     QPointF m_lastItemPosition;
+};
+
+/**
+ * @brief Screen grabber that uses QRhi instead of a specific graphics interface.
+ */
+class RhiScreenGrabber : public AbstractScreenGrabber
+{
+    Q_OBJECT
+public:
+    explicit RhiScreenGrabber(QQuickWindow *window);
+    ~RhiScreenGrabber() override;
+
+    void requestGrabWindow(const QRectF &userViewport) override;
+
+protected:
+    void drawDecorations() override;
+
+private:
+    void setGrabbingMode(bool isGrabbingMode, const QRectF &userViewport);
+    // TODO: ensure these are in the same order as in QQuickWindow
+    void windowAfterSynchronizing();
+    void windowBeforeRendering();
+    void windowAfterRenderPassRecording();
+    void windowAfterRendering();
+    void updateOverlay() override;
+    /**
+     * @brief Takes care of grabbing the next command buffer, either from the swapchain or the render control.
+     *
+     * @note The returned value may be null in some rare circumstances.
+     */
+    QRhiCommandBuffer *nextCommandBuffer() const;
+    /**
+     * @brief Returns the QQuickWidgetPrivate, if this window is backed by a QQuickWidget.
+     */
+    QQuickWidgetPrivate *widgetPrivate() const;
+    /**
+     * @brief Re-creates the off-screen decoration texture as needed.
+     */
+    void recreateDecorationTexture();
+
+    bool m_isGrabbing = false;
+    QRhiReadbackResult *result = nullptr;
+    QMutex m_mutex;
+    QRhiGraphicsPipeline *m_pipeline = nullptr;
+    QRhiShaderResourceBindings *m_srb = nullptr;
+    QRhiTexture *m_texture = nullptr;
+    QRhiSampler *m_sampler = nullptr;
 };
 
 }

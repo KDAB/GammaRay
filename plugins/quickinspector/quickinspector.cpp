@@ -292,7 +292,7 @@ void RenderModeRequest::apply()
     if (connection)
         disconnect(connection);
 
-    if (window && window->rendererInterface()->graphicsApi() != QSGRendererInterface::OpenGL)
+    if (window && window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
         return;
 
     if (window) {
@@ -612,10 +612,10 @@ void QuickInspector::checkFeatures()
         return;
     }
 
-    if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL)
-        f = AllCustomRenderModes;
-    else if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
+    if (m_window->rendererInterface()->graphicsApi() == QSGRendererInterface::Software)
         f = AnalyzePainting;
+    else
+        f = AllCustomRenderModes;
 
     emit features(f);
 }
