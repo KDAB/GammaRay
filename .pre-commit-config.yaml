@@ -21,11 +21,11 @@ repos:
   - id: destroyed-symlinks
   - id: check-executables-have-shebangs
 - repo: https://github.com/pre-commit/mirrors-clang-format
-  rev: v21.1.2
+  rev: v21.1.8
   hooks:
   - id: clang-format
 - repo: https://github.com/PyCQA/pylint
-  rev: v4.0.2
+  rev: v4.0.4
   hooks:
   - id: pylint
     exclude: ^(.cmake-format.py|conan/.*/conanfile.py)
@@ -46,7 +46,7 @@ repos:
   - id: cmake-format
     exclude: (cmake/Toolchain-QNX|.py.cmake|.h.cmake|.rc.cmake|Doxyfile.cmake|gammaray.qhcp.cmake)
 - repo: https://github.com/markdownlint/markdownlint
-  rev: v0.12.0
+  rev: v0.15.0
   hooks:
   - id: markdownlint
     entry: mdl
