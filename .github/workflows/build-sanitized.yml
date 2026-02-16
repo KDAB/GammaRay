@@ -20,11 +20,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        qt-flavor: # asan|tsan|debug|profile
+        qt-flavor:
           - name: "debug" # no sanitizer, but asserts enabled
             preset: "dev"
-          # - name: "asan"
-          #   preset: "dev-asan"
+          - name: "asan"
+            preset: "dev-asan"
           # - name: "tsan"
           #   preset: "dev-tsan"
           # - name: "profile"
@@ -47,10 +47,14 @@ jobs:
           sudo apt update -qq
           sudo apt install -y gdb
 
+      - name: debug
+        run: |
+          echo "Path: ${PATH}"
+          echo "ld lib path: ${LD_LIBRARY_PATH}"
+          env
+
       - name: Configure project
-        run: >
-          cmake -S . -G Ninja --preset ${{ matrix.qt-flavor.preset }}
-          -DGAMMARAY_WITH_KDSME=ON -DGAMMARAY_BUILD_DOCS=OFF
+        run: cmake --preset ${{ matrix.qt-flavor.preset }} -DGAMMARAY_WITH_KDSME=ON -DGAMMARAY_BUILD_DOCS=OFF
 
       - name: Build Project
         run: cmake --build ./build-${{ matrix.qt-flavor.preset }}
