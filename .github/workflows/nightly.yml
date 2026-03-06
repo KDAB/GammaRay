@@ -5,6 +5,7 @@
 name: CI Nightly
 
 on:
+  workflow_dispatch:
   schedule:
   - cron: '0 3 * * *'
 
@@ -45,10 +46,10 @@ jobs:
           sudo apt update -qq
           echo ${{ join(matrix.config.apt_pgks, ' ') }} | xargs sudo apt install -y
 
-      - uses: actions/checkout@v4
-
-      - name: Fetch Git submodules
-        run: git submodule update --init --recursive
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Configure project
         run: >
