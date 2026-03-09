@@ -5,7 +5,9 @@ Version 3.4.0
 -------------
  * Add support for Qt 6.11
  * Take into account the space between above or below a QQuickWidget
-
+ * Don't allow interacting or panning an unavailable remote view
+ * Don't show an image in the remote view for unexposed QtQuick windows
+ 
 Version 3.3.1
 -------------
  * Fix build with Qt 6.10.1
