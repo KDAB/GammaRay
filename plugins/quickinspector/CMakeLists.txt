@@ -79,12 +79,27 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         )
     endif()
 
+    qt_add_shaders(
+        gammaray_quickinspector
+        "gammaray_quickinspector_shaders"
+        PRECOMPILE
+        OPTIMIZED
+        PREFIX
+        "/gammaray_quickinspector_shaders/"
+        FILES
+        "shaders/rhi_inspector_decorations.vert"
+        "shaders/rhi_inspector_decorations.frag"
+    )
+
     target_link_libraries(
         gammaray_quickinspector
         gammaray_quickinspector_shared
         gammaray_core
         Qt::Quick
         Qt::QuickPrivate
+        Qt::QuickWidgets
+        Qt::QuickWidgetsPrivate
+        Qt::GuiPrivate
         gammaray_kitemmodels
     )
 
