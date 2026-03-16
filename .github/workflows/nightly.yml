@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Install Qt ${{ matrix.config.qt_version }} with options and default aqtversion
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.config.qt_version }}
           modules: ${{ matrix.config.qt_modules }}
@@ -47,7 +47,7 @@ jobs:
           echo ${{ join(matrix.config.apt_pgks, ' ') }} | xargs sudo apt install -y
 
       - name: Checkout sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
