@@ -60,6 +60,7 @@ AttachDialog::AttachDialog(QWidget *parent, Qt::WindowFlags f)
     ui->view->sortByColumn(ProcessModel::PIDColumn, Qt::DescendingOrder);
     ui->view->setSortingEnabled(true);
 
+    ui->view->setTextElideMode(Qt::ElideMiddle);
     ui->view->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     ui->view->setSelectionBehavior(QAbstractItemView::SelectRows);
