@@ -52,6 +52,9 @@
         \li \c -i, \c --injector \c <injector>
         \li Specify injector type to use (see below).
     \row
+        \li \c -o, \c --injector-override \c <executable>
+        \li Override the injector executable if handled (requires \c{-i/--injector})
+    \row
         \li \c --inprocess
         \li Use the Gammaray 1.x in-process UI. This is not necessary in most cases,
         apart from using tools that do not work remotely.
