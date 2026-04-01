@@ -25,7 +25,7 @@
         {
             "name": "dev-asan",
             "displayName": "dev-asan",
-            "generator": "Ninja",
+            "generator": "Unix Makefiles",
             "binaryDir": "${sourceDir}/build-dev-asan",
             "cacheVariables": {
                 "ECM_ENABLE_SANITIZERS": "address,undefined",
