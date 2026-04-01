@@ -68,9 +68,19 @@ void RemoteViewFrame::setImage(const QImage &image, const QTransform &transform)
     m_image.setTransform(transform);
 }
 
+void RemoteViewFrame::setGraphicsApi(const int value)
+{
+    m_graphicsApi = value;
+}
+
+int RemoteViewFrame::graphicsApi() const
+{
+    return m_graphicsApi;
+}
+
 QDataStream &operator<<(QDataStream &stream, const RemoteViewFrame &frame)
 {
-    stream << frame.m_image << frame.data << frame.m_viewRect << frame.m_sceneRect;
+    stream << frame.m_image << frame.data << frame.m_viewRect << frame.m_sceneRect << frame.m_graphicsApi;
     return stream;
 }
 
@@ -80,6 +90,7 @@ QDataStream &operator>>(QDataStream &stream, RemoteViewFrame &frame)
     stream >> frame.data;
     stream >> frame.m_viewRect;
     stream >> frame.m_sceneRect;
+    stream >> frame.m_graphicsApi;
     return stream;
 }
 }
