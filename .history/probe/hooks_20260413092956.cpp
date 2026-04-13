@@ -133,10 +133,6 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
     if (!qApp) {
         return;
     }
-    
-    Hooks::installHooks();
-    Probe::startupHookReceived();
-
     log_injection("gammaray_probe_attach()\n");
     new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects | ProbeCreator::ResendServerAddress);
 } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
