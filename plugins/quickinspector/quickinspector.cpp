@@ -529,7 +529,7 @@ void QuickInspector::objectCreated(QObject *object)
                     }
                 }
             }
-            
+
             if (engine) {
                 m_probe->discoverObject(engine);
             }

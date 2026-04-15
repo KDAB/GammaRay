@@ -133,7 +133,7 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
     if (!qApp) {
         return;
     }
-    
+
     Hooks::installHooks();
     Probe::startupHookReceived();
 

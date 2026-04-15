@@ -872,8 +872,10 @@ void Probe::discoverObject(QObject *object)
 
     const auto children = object->children();
     for (QObject *child : children) {
-        if (!child) continue;
-        if (m_validObjects.contains(child)) continue;
+        if (!child)
+            continue;
+        if (m_validObjects.contains(child))
+            continue;
         discoverObject(child);
     }
 }
