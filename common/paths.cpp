@@ -60,7 +60,8 @@ void setRootPath(const QString &rootPath)
 void setRelativeRootPath(const char *relativeRootPath)
 {
     Q_ASSERT(relativeRootPath);
-    setRootPath(QCoreApplication::applicationDirPath() + QDir::separator()
+    setRootPath(QFileInfo(QCoreApplication::applicationFilePath()).canonicalPath()
+                + QDir::separator()
                 + QLatin1String(relativeRootPath));
 }
 
