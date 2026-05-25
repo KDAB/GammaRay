@@ -27,6 +27,7 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLPaintDevice>
+#include <QQuickOpenGLUtils>
 #endif
 
 #include <private/qquickanchors_p.h>
@@ -34,8 +35,6 @@
 #include <private/qquickwindow_p.h>
 
 #include <private/qsgsoftwarerenderer_p.h>
-
-#include <QQuickOpenGLUtils>
 
 #include <algorithm>
 #include <functional>
