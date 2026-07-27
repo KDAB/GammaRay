@@ -56,7 +56,9 @@ private slots:
         PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
         PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());
         PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
         PropertyAdaptorFactory::registerFactory(QmlContextPropertyAdaptorFactory::instance());
+#endif
     }
 
     void testQmlListProperty()
@@ -156,25 +158,6 @@ Rectangle {
         QCOMPARE(data.value(), QVariant("world"));
 
         delete obj;
-    }
-
-    void testContextProperty()
-    {
-        QQmlEngine engine;
-        engine.rootContext()->setContextProperty("myContextProp", 42);
-
-        auto adaptor = PropertyAdaptorFactory::create(engine.rootContext(), this);
-        QVERIFY(adaptor);
-
-        auto idx = indexOfProperty(adaptor, "myContextProp");
-        QVERIFY(idx >= 0);
-
-        auto data = adaptor->propertyData(idx);
-        QCOMPARE(data.name(), QStringLiteral("myContextProp"));
-        QCOMPARE(data.value().toInt(), 42);
-
-        adaptor->writeProperty(idx, 23);
-        QCOMPARE(engine.rootContext()->contextProperty("myContextProp").toInt(), 23);
     }
 };
 

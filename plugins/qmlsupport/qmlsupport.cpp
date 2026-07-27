@@ -318,7 +318,9 @@ QmlSupport::QmlSupport(Probe *probe, QObject *parent)
     PropertyAdaptorFactory::registerFactory(QmlListPropertyAdaptorFactory::instance());
     PropertyAdaptorFactory::registerFactory(QmlAttachedPropertyAdaptorFactory::instance());
     PropertyAdaptorFactory::registerFactory(QJSValuePropertyAdaptorFactory::instance());
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
     PropertyAdaptorFactory::registerFactory(QmlContextPropertyAdaptorFactory::instance());
+#endif
 
     PropertyController::registerExtension<QmlContextExtension>();
     PropertyController::registerExtension<QmlTypeExtension>();

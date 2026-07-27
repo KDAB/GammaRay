@@ -17,12 +17,13 @@
 
 #include <private/qqmlcontext_p.h>
 #include <private/qqmlcontextdata_p.h>
-#include <private/qv4identifierhashdata_p.h>
 
 #include <QDebug>
 #include <QQmlContext>
 
 using namespace GammaRay;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
 
 QmlContextPropertyAdaptor::QmlContextPropertyAdaptor(QObject *parent)
     : PropertyAdaptor(parent)
@@ -107,3 +108,5 @@ QmlContextPropertyAdaptorFactory *QmlContextPropertyAdaptorFactory::instance()
         s_instance = new QmlContextPropertyAdaptorFactory;
     return s_instance;
 }
+
+#endif

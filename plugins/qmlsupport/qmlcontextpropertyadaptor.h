@@ -19,6 +19,8 @@
 
 #include <QVector>
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 12, 0)
+
 namespace GammaRay {
 class QmlContextPropertyAdaptor : public PropertyAdaptor
 {
@@ -48,5 +50,7 @@ private:
     static QmlContextPropertyAdaptorFactory *s_instance;
 };
 }
+
+#endif
 
 #endif
