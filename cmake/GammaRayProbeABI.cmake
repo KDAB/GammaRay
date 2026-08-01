@@ -52,17 +52,25 @@ if(WIN32)
     # on Mac we apparently always get i386 on x86
 elseif(APPLE)
     if(NOT CMAKE_SYSTEM_PROCESSOR)
-        message(
-            FATAL_ERROR
-                "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!"
-        )
+        list(LENGTH CMAKE_OSX_ARCHITECTURES _num_archs)
+        if(_num_archs EQUAL 1)
+            set(_apple_processor ${CMAKE_OSX_ARCHITECTURES})
+        else()
+            message(
+                FATAL_ERROR
+                    "Unknown target architecture. Make sure to specify CMAKE_SYSTEM_PROCESSOR in your toolchain file!"
+            )
+        endif()
+    else()
+        set(_apple_processor ${CMAKE_SYSTEM_PROCESSOR})
     endif()
-    if(CMAKE_SYSTEM_PROCESSOR MATCHES "i386" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+
+    if(_apple_processor MATCHES "i386" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
         set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-x86_64")
-    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+    elseif(_apple_processor MATCHES "x86_64" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
         set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-i686")
     else()
-        set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${CMAKE_SYSTEM_PROCESSOR}")
+        set(GAMMARAY_PROBE_ABI "${GAMMARAY_PROBE_ABI}-${_apple_processor}")
     endif()
 
     # on Android we derive this from ANDROID_ABI
