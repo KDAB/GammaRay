@@ -42,7 +42,8 @@ jobs:
           - os: macos-latest
             preset:
               name: ci-dev-client-and-ui
-
+          - os: macos-latest
+            qt_version: "6.5.*" # Qt 6.5 not supported on latest macos: ld: framework 'AGL' not found
     steps:
       - name: Install Qt with options and default aqtversion
         uses: jurplel/install-qt-action@v4
