@@ -1,6 +1,10 @@
 Release Highlights
 ==================
 
+Version 3.4.1
+-------------
+ * Fix build with Qt 6.12
+
 Version 3.4.0
 -------------
  * Add support for Qt 6.11
