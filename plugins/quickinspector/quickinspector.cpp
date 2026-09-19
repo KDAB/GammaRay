@@ -512,16 +512,27 @@ void QuickInspector::objectCreated(QObject *object)
 {
     if (QQuickWindow *window = qobject_cast<QQuickWindow *>(object)) {
         if (QQuickView *view = qobject_cast<QQuickView *>(object)) {
-            m_probe->discoverObject(view->engine());
+            if (view->engine()) {
+                m_probe->discoverObject(view->engine());
+            }
         } else {
             QQmlContext *context = QQmlEngine::contextForObject(window);
             QQmlEngine *engine = context ? context->engine() : nullptr;
 
             if (!engine) {
-                engine = qmlEngine(window->contentItem()->childItems().value(0));
+                // engine = qmlEngine(window->contentItem()->childItems().value(0));
+                QQuickItem *contentItem = window->contentItem();
+                if (contentItem) {
+                    const auto children = contentItem->childItems();
+                    if (!children.isEmpty()) {
+                        engine = qmlEngine(children.first());
+                    }
+                }
             }
 
-            m_probe->discoverObject(engine);
+            if (engine) {
+                m_probe->discoverObject(engine);
+            }
         }
     }
 }

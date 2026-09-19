@@ -865,7 +865,17 @@ void Probe::discoverObject(QObject *object)
         return;
 
     objectAdded(object);
-    foreach (QObject *child, object->children()) {
+
+    // foreach (QObject *child, object->children()) {
+    //     discoverObject(child);
+    // }
+
+    const auto children = object->children();
+    for (QObject *child : children) {
+        if (!child)
+            continue;
+        if (m_validObjects.contains(child))
+            continue;
         discoverObject(child);
     }
 }
