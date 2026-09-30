@@ -79,12 +79,30 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         )
     endif()
 
+    # Only needed for the RHI screen grabber for >=6.6
+    if(QT_VERSION_MAJOR EQUAL 6 AND Qt${QT_VERSION_MAJOR}Core_VERSION_MINOR GREATER_EQUAL 6)
+        find_package(Qt${QT_VERSION_MAJOR}ShaderTools REQUIRED)
+        qt_add_shaders(
+            gammaray_quickinspector
+            "gammaray_quickinspector_shaders"
+            PRECOMPILE
+            PREFIX
+            "/gammaray_quickinspector_shaders/"
+            FILES
+            "shaders/rhi_inspector_decorations.vert"
+            "shaders/rhi_inspector_decorations.frag"
+        )
+    endif()
+
     target_link_libraries(
         gammaray_quickinspector
         gammaray_quickinspector_shared
         gammaray_core
         Qt::Quick
         Qt::QuickPrivate
+        Qt::QuickWidgets
+        Qt::QuickWidgetsPrivate
+        Qt::GuiPrivate
         gammaray_kitemmodels
     )
 
