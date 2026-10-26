@@ -98,6 +98,7 @@ private:
         std::vector<RemoteModelNodeState::NodeStates> state; // column -> state (cache outdated, waiting for data, etc)
 
         int rowHint = -1; // for internal use by modelIndexForNode
+        bool requestAgain = false; // a data request of this row got lost, see resetLoadingState
     };
 
     void clear();
@@ -122,6 +123,7 @@ private:
     /// This is needed when rows have been added or removed before @p startRow, since
     /// pending replies might have a wrong index.
     void resetLoadingState(Node *node, int startRow) const;
+    void requestAgain(Node *node) const;
 
     QVariant requestCreationDeclarationLocation(const QModelIndex &, int role) const;
 
@@ -164,6 +166,7 @@ private:
     };
 
     mutable QMap<RequestType, QVector<Protocol::ModelIndex>> m_pendingRequests;
+    mutable bool m_requestAgain = false;
     QTimer *m_pendingRequestsTimer;
 
     QString m_serverObject;

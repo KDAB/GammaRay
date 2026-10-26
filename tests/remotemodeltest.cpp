@@ -410,6 +410,41 @@ private slots:
         QTRY_COMPARE(rowData(&client), listModel.stringList());
     }
 
+    // rows inserted together with others shift the rows whose data was requested meanwhile, that
+    // data has to arrive even when nobody asks for it again, like a proxy that filtered these rows
+    // out as they only had placeholder data
+    void testInsertRowsWithFilterProxy()
+    {
+        QStandardItemModel model;
+        for (int i = 0; i < 10; ++i)
+            model.appendRow(new QStandardItem(QStringLiteral("entry%1").arg(i)));
+
+        FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.FilterModel"), this);
+        server.setModel(&model);
+        server.modelMonitored(true);
+
+        FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.FilterModel"), this);
+        connect(&server, &FakeRemoteModelServer::message, &client, &RemoteModel::newMessage);
+        connect(&client, &FakeRemoteModel::message, &server, &RemoteModelServer::newRequest);
+
+        QSortFilterProxyModel proxy;
+        proxy.setSourceModel(&client);
+        proxy.setFilterFixedString(QStringLiteral("entry"));
+        proxy.sort(0);
+        QAbstractItemModelTester modelTest(&proxy);
+
+        QTRY_COMPARE(client.rowCount(), 10);
+        for (int row = 0; row < client.rowCount(); ++row)
+            QVERIFY(waitForData(client.index(row, 0)));
+        QTRY_COMPARE(proxy.rowCount(), 10);
+
+        for (int i = 0; i < 5; ++i)
+            model.insertRow(i * 2, new QStandardItem(QStringLiteral("entry%1").arg(10 + i)));
+
+        QTRY_COMPARE(proxy.rowCount(), 15);
+        QCOMPARE(proxy.index(14, 0).data().toString(), QStringLiteral("entry9"));
+    }
+
     void testRemoveColumns()
     {
         QStandardItemModel model(2, 3);
