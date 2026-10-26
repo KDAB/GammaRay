@@ -94,6 +94,7 @@
             "displayName": "ci-dev-client-only",
             "description": "Qt6 client-only build",
             "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_CLIENT_ONLY_BUILD": "ON",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
                 "GAMMARAY_MULTI_BUILD": "OFF",
@@ -106,6 +107,7 @@
             "displayName": "ci-dev-client-and-ui",
             "description": "Qt6 client and ui build",
             "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_CLIENT_ONLY_BUILD": "OFF",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
                 "GAMMARAY_MULTI_BUILD": "OFF",
@@ -117,6 +119,7 @@
             "inherits": "dev",
             "description": "Qt6 PROBE_ONLY build",
             "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
                 "GAMMARAY_PROBE_ONLY_BUILD": "ON",
                 "GAMMARAY_INSTALL_QT_LAYOUT": "ON",
                 "GAMMARAY_BUILD_UI": "OFF",
@@ -130,6 +133,7 @@
             "displayName": "ci-dev-clang-tidy",
             "description": "Qt6 clang-tidy build",
             "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
                 "ECM_ENABLE_SANITIZERS": "address",
                 "GAMMARAY_BUILD_DOCS": "OFF",
@@ -146,6 +150,7 @@
             "displayName": "ci-dev-clazy",
             "description": "Qt6 clazy build",
             "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_CXX_COMPILER": "clazy",
                 "ECM_ENABLE_SANITIZERS": "address",
                 "GAMMARAY_BUILD_DOCS": "ON",
