@@ -159,7 +159,7 @@ QModelIndex QuickSceneGraphModel::index(int row, int column, const QModelIndex &
         return {};
     }
 
-    const QVector<QSGNode *> children = it->second;
+    const QVector<QSGNode *> &children = it->second;
 
     if (row < 0 || column < 0 || row >= children.size() || column >= columnCount())
         return {};
@@ -183,11 +183,22 @@ void QuickSceneGraphModel::clear()
 static QVector<QSGNode *> sortedChildren(QSGNode *node)
 {
     QVector<QSGNode *> children;
-    children.reserve(node->childCount());
     for (QSGNode *childNode = node->firstChild(); childNode; childNode = childNode->nextSibling())
         children.append(childNode);
     std::sort(children.begin(), children.end());
     return children;
+}
+
+// childList is sorted, and a node can't be in the list of children twice
+static bool hasSameChildren(QSGNode *node, const QVector<QSGNode *> &childList)
+{
+    int count = 0;
+    for (QSGNode *childNode = node->firstChild(); childNode; childNode = childNode->nextSibling()) {
+        if (count == childList.size() || !std::binary_search(childList.cbegin(), childList.cend(), childNode))
+            return false;
+        ++count;
+    }
+    return count == childList.size();
 }
 
 void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
@@ -195,8 +206,16 @@ void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
     if (!node)
         return;
 
-    const QVector<QSGNode *> newChildList = sortedChildren(node);
     QVector<QSGNode *> &childList = m_parentChildMap[node];
+
+    // nothing changed in the common case, check that without allocating anything
+    if (hasSameChildren(node, childList)) {
+        for (int row = 0; row < childList.size(); ++row)
+            populateFromNode(childList.at(row), emitSignals);
+        return;
+    }
+
+    const QVector<QSGNode *> newChildList = sortedChildren(node);
 
     QModelIndex myIndex; // don't call indexForNode(node) here yet, in the common case of few changes we waste a lot of time here
     bool hasMyIndex = false;
@@ -304,7 +323,7 @@ void QuickSceneGraphModel::collectItemNodes(QQuickItem *item)
     m_itemItemNodeMap[item] = itemNode;
     m_itemNodeItemMap[itemNode] = item;
 
-    foreach (QQuickItem *child, item->childItems())
+    for (QQuickItem *child : std::as_const(priv->childItems))
         collectItemNodes(child);
 }
 
