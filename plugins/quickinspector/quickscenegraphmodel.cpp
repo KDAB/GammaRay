@@ -72,7 +72,7 @@ void QuickSceneGraphModel::updateSGTree(bool emitSignals)
         m_parentChildMap[nullptr][0] = m_rootNode;
 
         populateFromNode(m_rootNode, emitSignals);
-        collectItemNodes(m_window->contentItem());
+        m_itemNodesDirty = true;
     }
 }
 
@@ -171,6 +171,7 @@ void QuickSceneGraphModel::clear()
 {
     m_childParentMap.clear();
     m_parentChildMap.clear();
+    m_itemNodesDirty = true;
 }
 
 // indexForNode() is expensive, so only use it when really needed
@@ -310,7 +311,19 @@ void QuickSceneGraphModel::removeNode(QSGNode *node, bool emitSignals)
         endRemoveRows();
 }
 
-void QuickSceneGraphModel::collectItemNodes(QQuickItem *item)
+// only needed when looking up items, so not done after every frame
+void QuickSceneGraphModel::updateItemNodes() const
+{
+    if (!m_itemNodesDirty)
+        return;
+    m_itemNodesDirty = false;
+    m_itemItemNodeMap.clear();
+    m_itemNodeItemMap.clear();
+    if (m_window)
+        collectItemNodes(m_window->contentItem());
+}
+
+void QuickSceneGraphModel::collectItemNodes(QQuickItem *item) const
 {
     if (!item)
         return;
@@ -354,6 +367,7 @@ QModelIndex QuickSceneGraphModel::indexForNode(QSGNode *node) const
 
 QSGNode *QuickSceneGraphModel::sgNodeForItem(QQuickItem *item) const
 {
+    updateItemNodes();
     auto it = m_itemItemNodeMap.find(item);
     if (it != m_itemItemNodeMap.end()) {
         return it->second;
@@ -363,6 +377,7 @@ QSGNode *QuickSceneGraphModel::sgNodeForItem(QQuickItem *item) const
 
 QQuickItem *QuickSceneGraphModel::itemForSgNode(QSGNode *node) const
 {
+    updateItemNodes();
     while (node && !contains(m_itemNodeItemMap, node)) {
         // If there's no entry for node, take its parent
         auto it = m_childParentMap.find(node);

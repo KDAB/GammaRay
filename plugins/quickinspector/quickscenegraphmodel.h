@@ -59,7 +59,8 @@ private:
     void clear();
     QSGNode *currentRootNode() const;
     void populateFromNode(QSGNode *node, bool emitSignals);
-    void collectItemNodes(QQuickItem *item);
+    void updateItemNodes() const;
+    void collectItemNodes(QQuickItem *item) const;
     bool recursivelyFindChild(QSGNode *root, QSGNode *child) const;
     void addSubTree(QSGNode *node, bool emitSignals);
     void removeNode(QSGNode *node, bool emitSignals);
@@ -70,8 +71,9 @@ private:
     QSGNode *m_rootNode;
     std::unordered_map<QSGNode *, QSGNode *> m_childParentMap;
     std::unordered_map<QSGNode *, QVector<QSGNode *>> m_parentChildMap;
-    std::unordered_map<QQuickItem *, QSGNode *> m_itemItemNodeMap;
-    std::unordered_map<QSGNode *, QQuickItem *> m_itemNodeItemMap;
+    mutable std::unordered_map<QQuickItem *, QSGNode *> m_itemItemNodeMap;
+    mutable std::unordered_map<QSGNode *, QQuickItem *> m_itemNodeItemMap;
+    mutable bool m_itemNodesDirty = true;
 };
 }
 
