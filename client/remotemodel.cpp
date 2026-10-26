@@ -229,22 +229,30 @@ QVariant RemoteModel::requestCreationDeclarationLocation(const QModelIndex &inde
     QVariant declarationLoc = QVariant::fromValue(SourceLocation {});
     QVariant creationLoc = QVariant::fromValue(SourceLocation {});
 
+    // the nested event loop processes all other changes until the reply arrives, so the row can go
+    // away meanwhile
+    const QPersistentModelIndex persistentIndex(index);
     QEventLoop loop;
 
-    auto conn = connect(this, &RemoteModel::declarationCreationLocationsReceived, this, [&creationLoc, &declarationLoc, &loop](const QVariant &d, const QVariant &c) { // clazy:exclude=lambda-in-connect
+    connect(this, &RemoteModel::declarationCreationLocationsReceived, &loop, [&creationLoc, &declarationLoc, &loop](const QVariant &d, const QVariant &c) {
         if (d.isValid())
             declarationLoc = d;
         if (c.isValid())
             creationLoc = c;
         loop.quit();
     });
+    // the reply to a request from before a reset is ignored
+    connect(this, &QAbstractItemModel::modelReset, &loop, &QEventLoop::quit);
 
     loop.exec();
 
-    disconnect(conn);
-    auto node = nodeForIndex(index);
-    node->data[0].insert(ObjectModel::DeclarationLocationRole, declarationLoc);
-    node->data[0].insert(ObjectModel::CreationLocationRole, creationLoc);
+    if (persistentIndex.isValid()) {
+        auto node = nodeForIndex(persistentIndex);
+        if (node->hasColumnData()) {
+            node->data[persistentIndex.column()].insert(ObjectModel::DeclarationLocationRole, declarationLoc);
+            node->data[persistentIndex.column()].insert(ObjectModel::CreationLocationRole, creationLoc);
+        }
+    }
 
     if (role == ObjectModel::CreationLocationRole)
         return creationLoc;
