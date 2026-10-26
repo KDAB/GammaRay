@@ -448,9 +448,8 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         Q_ASSERT(orientation == Qt::Horizontal || orientation == Qt::Vertical);
         Q_ASSERT(section >= 0);
         auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
-        if (headers.isEmpty())
-            break;
-        Q_ASSERT(headers.size() > section);
+        if (section >= headers.size())
+            break; // the section got removed after we asked for it
         headers[section] = std::move(data);
         if ((orientation == Qt::Horizontal && m_root->columnCount > section)
             || (orientation == Qt::Vertical && m_root->rowCount > section))

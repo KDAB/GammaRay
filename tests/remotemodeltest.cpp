@@ -559,6 +559,20 @@ private slots:
         QCOMPARE(header(&c.client, 2, Qt::Horizontal), QStringLiteral("C"));
     }
 
+    // the server answers the request after it removed the section
+    void testHeaderReplyAfterColumnsRemoved()
+    {
+        QStandardItemModel model(2, 3);
+        model.setHorizontalHeaderLabels({ "A", "B", "C" });
+        Connection c(&model);
+        QTRY_COMPARE(c.client.columnCount(), 3);
+
+        model.removeColumn(2);
+        header(&c.client, 2, Qt::Horizontal);
+        QTRY_COMPARE(c.client.columnCount(), 2);
+        QTRY_COMPARE(header(&c.client, 1, Qt::Horizontal), QStringLiteral("B"));
+    }
+
     void testInsertColumns()
     {
         QStandardItemModel model(2, 2);
