@@ -542,6 +542,23 @@ private slots:
         QCOMPARE(c.client.flags(c.client.index(1, 0)), model.flags(model.index(1, 0)));
     }
 
+    void testHeaders()
+    {
+        QStandardItemModel model(2, 3);
+        model.setHorizontalHeaderLabels({ "A", "B", "C" });
+        model.setVerticalHeaderLabels({ "first", "second" });
+        Connection c(&model);
+        QTRY_COMPARE(c.client.columnCount(), 3);
+
+        QTRY_COMPARE(header(&c.client, 1, Qt::Horizontal), QStringLiteral("B"));
+        QTRY_COMPARE(header(&c.client, 2, Qt::Horizontal), QStringLiteral("C"));
+        QTRY_COMPARE(header(&c.client, 1, Qt::Vertical), QStringLiteral("second"));
+
+        model.setHeaderData(1, Qt::Horizontal, QStringLiteral("changed"));
+        QTRY_COMPARE(header(&c.client, 1, Qt::Horizontal), QStringLiteral("changed"));
+        QCOMPARE(header(&c.client, 2, Qt::Horizontal), QStringLiteral("C"));
+    }
+
     void testInsertColumns()
     {
         QStandardItemModel model(2, 2);
