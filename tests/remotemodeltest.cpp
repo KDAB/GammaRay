@@ -27,6 +27,10 @@
 #include <QScopeGuard>
 #include <QStringListModel>
 #include <QTest>
+#include <QTimer>
+
+#include <common/objectmodel.h>
+#include <common/sourcelocation.h>
 
 #include <memory>
 
@@ -665,6 +669,41 @@ private slots:
         model.changeRowsWithSignals(1, 28);
 
         QTRY_COMPARE(c.client.rowCount(), 30);
+    }
+
+    // waiting for the source location is a nested event loop, which also processes other changes
+    void testSourceLocationDuringReset()
+    {
+        QStringListModel model({ "a", "b" });
+        Connection c(&model);
+        QTRY_COMPARE(c.client.rowCount(), 2);
+        QVERIFY(waitForData(c.client.index(0, 0)));
+
+        // the reset makes the client ignore the answer, as it's from before the reset
+        model.setStringList({ "a", "b" });
+        bool timedOut = false;
+        QTimer::singleShot(5000, &c.client, [&] {
+            timedOut = true;
+            emit c.client.declarationCreationLocationsReceived({}, {});
+        });
+        c.client.index(0, 0).data(ObjectModel::DeclarationLocationRole);
+        QVERIFY(!timedOut);
+        QTRY_COMPARE(rowData(&c.client), QStringList({ "a", "b" }));
+    }
+
+    void testSourceLocationRowRemoved()
+    {
+        QStringListModel model({ "a", "b", "c" });
+        Connection c(&model);
+        QTRY_COMPARE(c.client.rowCount(), 3);
+        QVERIFY(waitForData(c.client.index(0, 0)));
+
+        // processed while waiting for the answer
+        model.removeRows(0, 1);
+        const auto location = c.client.index(0, 0).data(ObjectModel::DeclarationLocationRole);
+        QVERIFY(!location.value<SourceLocation>().isValid());
+        QTRY_COMPARE(c.client.rowCount(), 2);
+        QCOMPARE(rowData(&c.client), QStringList({ "b", "c" }));
     }
 
     // the client must not trust row numbers that don't match what it knows
