@@ -54,6 +54,7 @@
 #include <private/qhooks_p.h>
 #include <algorithm>
 #include <iostream>
+#include <utility>
 #include <cstdio>
 
 #define IF_DEBUG(x)
@@ -605,7 +606,10 @@ void Probe::processQueuedObjectChanges()
 
     m_queuedObjectChanges.clear();
 
-    for (QObject *obj : std::as_const(m_pendingReparents)) {
+    // take the list, the handlers below can queue further reparents, those are processed in the
+    // next run
+    const auto pendingReparents = std::exchange(m_pendingReparents, {});
+    for (QObject *obj : pendingReparents) {
         if (!isValidObject(obj))
             continue;
         if (filterObject(obj)) // the move might have put it under a hidden parent
@@ -613,7 +617,6 @@ void Probe::processQueuedObjectChanges()
         else
             emit objectReparented(obj);
     }
-    m_pendingReparents.clear();
 }
 
 // pre-condition: lock is held already, our thread

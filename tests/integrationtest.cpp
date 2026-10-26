@@ -134,6 +134,52 @@ private slots:
         }
         QVERIFY(!Probe::instance());
     }
+
+    // handlers of a delayed reparent can queue further reparents, which must not get lost
+    void reparentFromDelayedReparent()
+    {
+        {
+            QCoreApplication app(argc, argv);
+            createProbe();
+            auto treeModel = Probe::instance()->objectTreeModel();
+            const auto find = [treeModel](QObject *obj) {
+                return treeModel->match(treeModel->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue(obj), 1,
+                                        Qt::MatchExactly | Qt::MatchRecursive)
+                    .value(0);
+            };
+
+            QObject obj1;
+            QObject obj2;
+            QTRY_VERIFY(find(&obj1).isValid() && find(&obj2).isValid());
+
+            QObject *parent1 = nullptr;
+            QObject *parent2 = nullptr;
+            {
+                ProbeGuard guard; // not known to the probe yet, so the reparents are delayed
+                parent1 = new QObject;
+                parent2 = new QObject;
+            }
+
+            bool reparented = false;
+            connect(Probe::instance(), &Probe::objectReparented, this, [&](QObject *obj) {
+                if (obj == &obj1 && !reparented) {
+                    reparented = true;
+                    obj2.setParent(parent2);
+                }
+            });
+
+            obj1.setParent(parent1);
+            QTRY_VERIFY(reparented);
+            QTRY_COMPARE(find(&obj2).parent(), find(parent2));
+            QCOMPARE(find(&obj1).parent(), find(parent1));
+
+            obj1.setParent(nullptr);
+            obj2.setParent(nullptr);
+            delete parent1;
+            delete parent2;
+        }
+        QVERIFY(!Probe::instance());
+    }
 };
 
 QTEST_APPLESS_MAIN(IntegrationTest)
