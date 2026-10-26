@@ -148,6 +148,11 @@ public:
         endRemoveRows();
     }
 
+    void changeRowsWithSignals(int first, int last)
+    {
+        emit dataChanged(index(first), index(last));
+    }
+
 private:
     QStringList m_rows;
 };
@@ -642,6 +647,24 @@ private slots:
         model.setStringList({ "x", "y", "z" });
         QTRY_COMPARE(c.client.rowCount(), 3);
         QCOMPARE(rowData(&c.client), QStringList({ "x", "y", "z" }));
+    }
+
+    void testDataChangedOutOfSync()
+    {
+        UnsignaledListModel model;
+        for (int i = 0; i < 3; ++i)
+            model.appendWithoutSignals(QString::number(i));
+        Connection c(&model);
+        QTRY_COMPARE(c.client.rowCount(), 3);
+        QCOMPARE(rowData(&c.client).size(), 3);
+
+        for (int i = 3; i < 30; ++i)
+            model.appendWithoutSignals(QString::number(i));
+        const auto outOfSyncGuard = FakeRemoteModel::allowOutOfSync();
+        QTest::ignoreMessage(QtWarningMsg, QRegularExpression(QStringLiteral("out of sync")));
+        model.changeRowsWithSignals(1, 28);
+
+        QTRY_COMPARE(c.client.rowCount(), 30);
     }
 
     // the client must not trust row numbers that don't match what it knows

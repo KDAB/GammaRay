@@ -467,6 +467,10 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
 
         Q_ASSERT(beginIndex.last().row <= endIndex.last().row);
         Q_ASSERT(beginIndex.last().column <= endIndex.last().column);
+        if (endIndex.last().row >= node->parent->rowCount || endIndex.last().column >= node->parent->columnCount) {
+            resetOutOfSync(msg.type());
+            break;
+        }
 
         // mark content as outdated (will be refetched on next request)
         for (int row = beginIndex.last().row; row <= endIndex.last().row; ++row) {
