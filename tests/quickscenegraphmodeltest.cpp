@@ -355,6 +355,10 @@ private slots:
         QTRY_COMPARE(deletedSpy.size(), 1);
         QCOMPARE(deletedSpy.at(0).at(0).value<QSGNode *>(), node);
         QVERIFY(verify());
+
+        // the lookups don't know the deleted item anymore, the pointers are only compared
+        QCOMPARE(m_model->sgNodeForItem(rect), nullptr);
+        QVERIFY(!m_model->indexForNode(node).isValid());
     }
 
     void testWindowChange()
