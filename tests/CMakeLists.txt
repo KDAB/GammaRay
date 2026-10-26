@@ -549,11 +549,17 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
 
         # not using gammaray_add_test(), a fixed number of iterations makes it run quickly as a test
         add_executable(
-            quickscenegraphmodelbench quickscenegraphmodelbench.cpp ../plugins/quickinspector/quickscenegraphmodel.cpp
-                                      ../plugins/quickinspector/quickscenegraphmodel.h
+            quickscenegraphmodelbench ../plugins/quickinspector/quickscenegraphmodel.cpp
+                                      ../plugins/quickinspector/quickscenegraphmodel.h quickscenegraphmodelbench.cpp
         )
         gammaray_set_rpath(quickscenegraphmodelbench ${BIN_INSTALL_DIR})
-        target_link_libraries(quickscenegraphmodelbench gammaray_core Qt::Test Qt::Quick Qt::QuickPrivate)
+        target_link_libraries(
+            quickscenegraphmodelbench
+            gammaray_core
+            Qt::Test
+            Qt::Quick
+            Qt::QuickPrivate
+        )
         add_test(NAME quickscenegraphmodelbench COMMAND quickscenegraphmodelbench -iterations 1)
 
         # sw renderer support is only available in Qt 5.9.3 or newer
