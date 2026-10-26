@@ -61,6 +61,8 @@ private:
     void populateFromNode(QSGNode *node, bool emitSignals);
     void collectItemNodes(QQuickItem *item);
     bool recursivelyFindChild(QSGNode *root, QSGNode *child) const;
+    void addSubTree(QSGNode *node, bool emitSignals);
+    void removeNode(QSGNode *node, bool emitSignals);
     void pruneSubTree(QSGNode *node);
 
     QPointer<QQuickWindow> m_window;
