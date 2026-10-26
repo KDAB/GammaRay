@@ -990,28 +990,25 @@ void RemoteModel::doMoveRows(RemoteModel::Node *sourceParentNode, int sourceStar
     Q_ASSERT(sourceEnd >= sourceStart);
     Q_ASSERT(sourceParentNode->rowCount > sourceEnd);
 
-    const int destEnd = destStart + sourceEnd - sourceStart;
     const int amount = sourceEnd - sourceStart + 1;
 
     const QModelIndex qmiSourceParent = modelIndexForNode(sourceParentNode, 0);
     const QModelIndex qmiDestParent = modelIndexForNode(destParentNode, 0);
     beginMoveRows(qmiSourceParent, sourceStart, sourceEnd, qmiDestParent, destStart);
 
-    // make room in the destination
-    destParentNode->children.insert(destStart, amount, nullptr);
-
-    // move nodes
-    for (int i = 0; i < amount; ++i) {
-        Node *node = sourceParentNode->children.at(sourceStart + i);
-        node->parent = destParentNode;
-        destParentNode->children[destStart + i] = node;
-    }
-
-    // shrink source
+    // take the nodes out of the source first, making room in the destination first would shift
+    // them when moving within the same parent
+    const QVector<Node *> nodes = sourceParentNode->children.mid(sourceStart, amount);
     sourceParentNode->children.remove(sourceStart, amount);
-
-    // adjust row count
     sourceParentNode->rowCount -= amount;
+
+    // destStart refers to the rows before the move
+    const int insertPos = (sourceParentNode == destParentNode && destStart > sourceEnd) ? destStart - amount : destStart;
+    destParentNode->children.insert(insertPos, amount, nullptr);
+    for (int i = 0; i < amount; ++i) {
+        nodes.at(i)->parent = destParentNode;
+        destParentNode->children[insertPos + i] = nodes.at(i);
+    }
     destParentNode->rowCount += amount;
     Q_ASSERT(sourceParentNode->rowCount == sourceParentNode->children.size());
     Q_ASSERT(destParentNode->rowCount == destParentNode->children.size());
@@ -1023,7 +1020,7 @@ void RemoteModel::doMoveRows(RemoteModel::Node *sourceParentNode, int sourceStar
 
     endMoveRows();
     resetLoadingState(sourceParentNode, sourceStart);
-    resetLoadingState(destParentNode, destEnd);
+    resetLoadingState(destParentNode, insertPos);
 }
 
 void RemoteModel::doInsertColumns(RemoteModel::Node *parentNode, int first, int last)
