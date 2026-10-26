@@ -53,6 +53,22 @@ private:
         QTest::keyClick(view(), Qt::Key_Right);
     }
 
+    // walks the whole proxy, so mappings exist for all of it, and returns the number of rows
+    static int compareWithSource(QSortFilterProxyModel *proxy, const QModelIndex &proxyParent = {})
+    {
+        const int rows = proxy->rowCount(proxyParent);
+        if (rows != proxy->sourceModel()->rowCount(proxy->mapToSource(proxyParent)))
+            return -1;
+        int count = rows;
+        for (int row = 0; row < rows; ++row) {
+            const int childCount = compareWithSource(proxy, proxy->index(row, 0, proxyParent));
+            if (childCount < 0)
+                return -1;
+            count += childCount;
+        }
+        return count;
+    }
+
 private slots:
     static void initTestCase()
     {
@@ -76,6 +92,34 @@ private slots:
         inspector->setServerSideDecorationsEnabled(false);
         inspector->selectWindow(0);
         QTest::qWait(1);
+    }
+
+    void testModelsNodeMove()
+    {
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/sgnodemovetest.qml")));
+        auto proxy = qobject_cast<QSortFilterProxyModel *>(sgModel);
+        QVERIFY(proxy);
+        const int nodeCount = compareWithSource(proxy);
+        QVERIFY(nodeCount > 0);
+
+        auto container = view()->rootObject()->findChild<QQuickItem *>(QStringLiteral("container"));
+        QVERIFY(container);
+
+        // inserts a clip node below the item node, which takes over the existing child nodes
+        container->setClip(true);
+        QTRY_COMPARE(compareWithSource(proxy), nodeCount + 1);
+
+        container->setClip(false);
+        QTRY_COMPARE(compareWithSource(proxy), nodeCount);
+
+        container->setClip(true);
+        QTRY_COMPARE(compareWithSource(proxy), nodeCount + 1);
+        const auto children = container->childItems();
+        for (auto child : children) {
+            delete child;
+            QTest::qWait(20);
+            QVERIFY(compareWithSource(proxy) > 0);
+        }
     }
 
     void testModelsReparent()

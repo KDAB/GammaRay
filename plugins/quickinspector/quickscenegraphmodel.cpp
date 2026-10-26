@@ -180,185 +180,116 @@ void QuickSceneGraphModel::clear()
         hasMyIndex = true;            \
     }
 
+static QVector<QSGNode *> sortedChildren(QSGNode *node)
+{
+    QVector<QSGNode *> children;
+    children.reserve(node->childCount());
+    for (QSGNode *childNode = node->firstChild(); childNode; childNode = childNode->nextSibling())
+        children.append(childNode);
+    std::sort(children.begin(), children.end());
+    return children;
+}
+
 void QuickSceneGraphModel::populateFromNode(QSGNode *node, bool emitSignals)
 {
     if (!node)
         return;
 
+    const QVector<QSGNode *> newChildList = sortedChildren(node);
     QVector<QSGNode *> &childList = m_parentChildMap[node];
-    QVector<QSGNode *> newChildList;
-
-    newChildList.reserve(node->childCount());
-    for (QSGNode *childNode = node->firstChild(); childNode; childNode = childNode->nextSibling())
-        newChildList.append(childNode);
 
     QModelIndex myIndex; // don't call indexForNode(node) here yet, in the common case of few changes we waste a lot of time here
     bool hasMyIndex = false;
 
-    std::sort(newChildList.begin(), newChildList.end());
-
-    auto i = childList.begin();
-    auto j = newChildList.constBegin();
-
-    while (i != childList.end() && j != newChildList.constEnd()) {
-        if (*i < *j) { // handle deleted node
-            emit nodeDeleted(*i);
-            GET_INDEX
-            if (emitSignals) {
-                const auto idx = std::distance(childList.begin(), i);
-                beginRemoveRows(myIndex, idx, idx);
-            }
-            pruneSubTree(*i);
-            i = childList.erase(i);
-            if (emitSignals)
-                endRemoveRows();
-        } else if (*i > *j) { // handle added node
-            GET_INDEX
-            const auto idx = std::distance(childList.begin(), i);
-            if (contains(m_childParentMap, *j)) { // move from elsewhere in our tree
-                const auto sourceIdx = indexForNode(*j);
-                Q_ASSERT(sourceIdx.isValid());
-#if 0
-                if (emitSignals)
-                    beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex,
-                                  idx);
-                m_parentChildMap[m_childParentMap.value(*j)].remove(sourceIdx.row());
-                m_childParentMap.insert(*j, node);
-                i = childList.insert(i, *j);
-                if (emitSignals)
-                    endMoveRows();
-#else
-                if (emitSignals) {
-                    beginRemoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row());
-                }
-
-                auto cit = m_childParentMap.find(*j);
-                if (cit != m_childParentMap.end()) {
-                    QSGNode *node = cit->second;
-                    m_parentChildMap[node].remove(sourceIdx.row());
-
-                    m_childParentMap.erase(cit);
-                }
-
-                if (emitSignals) {
-                    endRemoveRows();
-                    beginInsertRows(myIndex, idx, idx);
-                }
-
-                m_childParentMap[*j] = node;
-                i = childList.insert(i, *j);
-                if (emitSignals) {
-                    endInsertRows();
-                }
-#endif
-                populateFromNode(*j, emitSignals);
-            } else { // entirely new
-                if (emitSignals)
-                    beginInsertRows(myIndex, idx, idx);
-                m_childParentMap[*j] = node;
-                i = childList.insert(i, *j);
-                if (emitSignals)
-                    endInsertRows();
-                populateFromNode(*j, false);
-            }
-            ++i;
-            ++j;
-        } else { // already known node, no change
-            populateFromNode(*j, emitSignals);
-            ++i;
-            ++j;
+    // Remove the children that are gone, either deleted or moved elsewhere. We can't tell these
+    // apart, as a deleted node must not be touched anymore. Moved nodes are added again where we
+    // find them. Doing this first ensures that the lists of our ancestors only contain their
+    // actual children, so nothing below modifies a list that is iterated further up.
+    for (int last = childList.size() - 1; last >= 0;) {
+        if (std::binary_search(newChildList.cbegin(), newChildList.cend(), childList.at(last))) {
+            --last;
+            continue;
         }
-    }
-    if (i == childList.end() && j != newChildList.constEnd()) {
-        // Add remaining new items to list and inform the client
-        // process the remaining items in pairs of n entirely new ones and 0-1 moved ones
+        int first = last;
+        while (first > 0 && !std::binary_search(newChildList.cbegin(), newChildList.cend(), childList.at(first - 1)))
+            --first;
+
+        for (int row = first; row <= last; ++row)
+            emit nodeDeleted(childList.at(row));
         GET_INDEX
-        while (j != newChildList.constEnd()) {
-            const auto newBegin = j;
-            while (j != newChildList.constEnd() && !contains(m_childParentMap, *j))
-                ++j;
-
-            // newBegin to j - 1 is new, j is either moved or end
-            if (newBegin != j) { // new elements
-                if (emitSignals) {
-                    const auto idx = childList.size();
-                    const auto count = std::distance(newBegin, j);
-                    beginInsertRows(myIndex, idx, idx + count - 1);
-                }
-
-                for (auto it = newBegin; it != j; ++it) {
-                    m_childParentMap[*it] = node;
-                    childList.append(*it);
-                }
-
-                for (auto it = newBegin; it != j; ++it)
-                    populateFromNode(*it, false);
-                if (emitSignals)
-                    endInsertRows();
-            }
-
-            if (j != newChildList.constEnd() && contains(m_childParentMap, *j)) { // one moved element, important to recheck if this is still a move, in case the above has removed it meanwhile...
-                const auto sourceIdx = indexForNode(*j);
-                Q_ASSERT(sourceIdx.isValid());
-#if 0
-                if (emitSignals) {
-                    const auto idx = childList.size();
-                    beginMoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row(), myIndex,
-                                  idx);
-                }
-                m_parentChildMap[m_childParentMap.value(*j)].remove(sourceIdx.row());
-                m_childParentMap.insert(*j, node);
-                childList.append(*j);
-                if (emitSignals)
-                    endMoveRows();
-#else
-                if (emitSignals) {
-                    beginRemoveRows(sourceIdx.parent(), sourceIdx.row(), sourceIdx.row());
-                }
-
-                auto it = m_childParentMap.find(*j);
-                if (it != m_childParentMap.end()) {
-                    QSGNode *childNode = it->second;
-                    m_parentChildMap[childNode].remove(sourceIdx.row());
-                    m_childParentMap.erase(*j);
-                }
-
-                if (emitSignals) {
-                    endRemoveRows();
-                    const auto idx = childList.size();
-                    beginInsertRows(myIndex, idx, idx);
-                }
-                m_childParentMap[*j] = node;
-                childList.append(*j);
-                if (emitSignals) {
-                    endInsertRows();
-                }
-#endif
-                populateFromNode(*j, emitSignals);
-                ++j;
-            }
-        }
-    } else if (i != childList.end()) { // Inform the client about the removed rows
-        GET_INDEX
-        const auto idx = std::distance(childList.begin(), i);
-        const auto count = std::distance(i, childList.end());
-
-        for (auto it = i; it != childList.end(); ++it)
-            emit nodeDeleted(*it);
-
         if (emitSignals)
-            beginRemoveRows(myIndex, idx, idx + count - 1);
-        for (; i != childList.end(); ++i)
-            pruneSubTree(*i);
-        childList.remove(idx, count);
+            beginRemoveRows(myIndex, first, last);
+        for (int row = first; row <= last; ++row)
+            pruneSubTree(childList.at(row));
+        childList.remove(first, last - first + 1);
         if (emitSignals)
             endRemoveRows();
+        last = first - 1;
+    }
+
+    // childList is a subset of newChildList now, insert the missing ones in blocks of consecutive rows
+    int row = 0;
+    for (int j = 0; j < newChildList.size();) {
+        if (row < childList.size() && childList.at(row) == newChildList.at(j)) {
+            populateFromNode(newChildList.at(j), emitSignals);
+            ++row;
+            ++j;
+            continue;
+        }
+        int end = j;
+        while (end < newChildList.size() && (row >= childList.size() || childList.at(row) != newChildList.at(end)))
+            ++end;
+
+        // build the new subtrees completely before announcing them, they are unreachable through
+        // the model until they are in childList
+        for (int k = j; k < end; ++k)
+            addSubTree(newChildList.at(k), emitSignals);
+
+        GET_INDEX
+        if (emitSignals)
+            beginInsertRows(myIndex, row, row + end - j - 1);
+        for (int k = j; k < end; ++k)
+            m_childParentMap[newChildList.at(k)] = node;
+        childList.insert(row, end - j, nullptr);
+        std::copy(newChildList.cbegin() + j, newChildList.cbegin() + end, childList.begin() + row);
+        if (emitSignals)
+            endInsertRows();
+        row += end - j;
+        j = end;
     }
 
     Q_ASSERT(childList == newChildList);
 }
 
 #undef GET_INDEX
+
+void QuickSceneGraphModel::addSubTree(QSGNode *node, bool emitSignals)
+{
+    // we still know this node from its previous position, which hasn't been processed yet
+    if (contains(m_childParentMap, node))
+        removeNode(node, emitSignals);
+
+    const QVector<QSGNode *> children = sortedChildren(node);
+    for (QSGNode *child : children) {
+        addSubTree(child, emitSignals);
+        m_childParentMap[child] = node;
+    }
+    m_parentChildMap[node] = children;
+}
+
+void QuickSceneGraphModel::removeNode(QSGNode *node, bool emitSignals)
+{
+    const QModelIndex index = indexForNode(node);
+    Q_ASSERT(index.isValid());
+    QSGNode *parentNode = m_childParentMap.at(node);
+
+    if (emitSignals)
+        beginRemoveRows(index.parent(), index.row(), index.row());
+    pruneSubTree(node);
+    m_parentChildMap[parentNode].remove(index.row());
+    if (emitSignals)
+        endRemoveRows();
+}
 
 void QuickSceneGraphModel::collectItemNodes(QQuickItem *item)
 {
