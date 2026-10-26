@@ -537,6 +537,16 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             )
         endif()
 
+        gammaray_add_test(
+            quickscenegraphmodeltest
+            quickscenegraphmodeltest.cpp
+            quickinspectortest.qrc
+            ../plugins/quickinspector/quickscenegraphmodel.cpp
+            ../plugins/quickinspector/quickscenegraphmodel.h
+            $<TARGET_OBJECTS:modeltestobj>
+        )
+        target_link_libraries(quickscenegraphmodeltest gammaray_core Qt::Quick Qt::QuickPrivate)
+
         # sw renderer support is only available in Qt 5.9.3 or newer
         add_test(NAME quickinspectortest2_softwarecontext COMMAND quickinspectortest2)
         set_tests_properties(
