@@ -62,7 +62,7 @@ private:
     template<typename F>
     void timeChanges(F change)
     {
-        const int iterations = 10;
+        const int iterations = 4; // even, so the changes are undone at the end
         qint64 total = 0;
         for (int i = 0; i < iterations; ++i) {
             change(i);
@@ -106,8 +106,9 @@ private slots:
     {
         m_view = std::make_unique<QQuickView>();
         m_view->resize(400, 400);
-        // increase when benchmarking as needed, 50 groups with 100 items give a scene with about 20k nodes
-        createScene(10, 50);
+        // small enough to run quickly as a test, increase when benchmarking as needed, 50 groups
+        // with 100 items each give a scene with about 20k nodes
+        createScene(5, 20);
         m_view->show();
         QVERIFY(QTest::qWaitForWindowExposed(m_view.get()));
         QVERIFY(renderFrame());
