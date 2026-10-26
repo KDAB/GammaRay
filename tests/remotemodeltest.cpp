@@ -28,6 +28,8 @@
 #include <QStringListModel>
 #include <QTest>
 
+#include <memory>
+
 using namespace GammaRay;
 
 static void fakeRegisterServer()
@@ -154,6 +156,29 @@ class RemoteModelTest : public QObject
 {
     Q_OBJECT
 private:
+    // a server for model and a client connected to it
+    struct Connection
+    {
+        explicit Connection(QAbstractItemModel *model)
+            : server(QStringLiteral("com.kdab.GammaRay.UnitTest.Model"))
+            , client(QStringLiteral("com.kdab.GammaRay.UnitTest.Model"))
+        {
+            server.setModel(model);
+            server.modelMonitored(true);
+            QObject::connect(&server, &FakeRemoteModelServer::message, &client, &RemoteModel::newMessage);
+            QObject::connect(&client, &FakeRemoteModel::message, &server, &RemoteModelServer::newRequest);
+        }
+
+        FakeRemoteModelServer server;
+        FakeRemoteModel client;
+        QAbstractItemModelTester modelTest { &client };
+    };
+
+    static QString header(QAbstractItemModel *model, int section, Qt::Orientation orientation)
+    {
+        return model->headerData(section, orientation).toString(); // triggers fetching it
+    }
+
     // fetches the data of all top-level rows
     static QStringList rowData(const QAbstractItemModel *model)
     {
@@ -471,6 +496,121 @@ private slots:
         QVERIFY(waitForData(client.index(1, 1)));
         QCOMPARE(client.index(1, 0).data().toString(), QStringLiteral("1-0"));
         QCOMPARE(client.index(1, 1).data().toString(), QStringLiteral("1-2"));
+    }
+
+    void testDataChanged()
+    {
+        QStandardItemModel model;
+        for (int i = 0; i < 3; ++i)
+            model.appendRow(new QStandardItem(QStringLiteral("entry%1").arg(i)));
+        Connection c(&model);
+        QTRY_COMPARE(c.client.rowCount(), 3);
+        QCOMPARE(rowData(&c.client), QStringList({ "entry0", "entry1", "entry2" }));
+
+        QSignalSpy spy(&c.client, &QAbstractItemModel::dataChanged);
+        model.item(1)->setText(QStringLiteral("changed"));
+        QTRY_COMPARE(rowData(&c.client), QStringList({ "entry0", "changed", "entry2" }));
+        QVERIFY(!spy.isEmpty());
+    }
+
+    void testSetData()
+    {
+        QStandardItemModel model;
+        model.appendRow(new QStandardItem(QStringLiteral("entry0")));
+        Connection c(&model);
+        QTRY_COMPARE(c.client.rowCount(), 1);
+        QVERIFY(waitForData(c.client.index(0, 0)));
+
+        c.client.setData(c.client.index(0, 0), QStringLiteral("edited"), Qt::EditRole);
+        QTRY_COMPARE(model.item(0)->text(), QStringLiteral("edited"));
+        QTRY_COMPARE(c.client.index(0, 0).data().toString(), QStringLiteral("edited"));
+    }
+
+    void testFlags()
+    {
+        QStandardItemModel model;
+        auto item = new QStandardItem(QStringLiteral("entry0"));
+        item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsDragEnabled);
+        model.appendRow(item);
+        model.appendRow(new QStandardItem(QStringLiteral("entry1")));
+        Connection c(&model);
+        QTRY_COMPARE(c.client.rowCount(), 2);
+        QVERIFY(waitForData(c.client.index(0, 0)));
+        QVERIFY(waitForData(c.client.index(1, 0)));
+
+        QCOMPARE(c.client.flags(c.client.index(0, 0)), model.flags(model.index(0, 0)));
+        QCOMPARE(c.client.flags(c.client.index(1, 0)), model.flags(model.index(1, 0)));
+    }
+
+    void testInsertColumns()
+    {
+        QStandardItemModel model(2, 2);
+        for (int row = 0; row < 2; ++row) {
+            for (int column = 0; column < 2; ++column)
+                model.setItem(row, column, new QStandardItem(QStringLiteral("%1-%2").arg(row).arg(column)));
+        }
+        Connection c(&model);
+        QTRY_COMPARE(c.client.columnCount(), 2);
+        QVERIFY(waitForData(c.client.index(1, 0)));
+        QVERIFY(waitForData(c.client.index(1, 1)));
+
+        model.insertColumn(1, { new QStandardItem(QStringLiteral("new0")), new QStandardItem(QStringLiteral("new1")) });
+        QTRY_COMPARE(c.client.columnCount(), 3);
+        QVERIFY(waitForData(c.client.index(1, 1)));
+        QCOMPARE(c.client.index(1, 0).data().toString(), QStringLiteral("1-0"));
+        QCOMPARE(c.client.index(1, 1).data().toString(), QStringLiteral("new1"));
+        QCOMPARE(c.client.index(1, 2).data().toString(), QStringLiteral("1-1"));
+    }
+
+    void testChildRows()
+    {
+        QStandardItemModel model;
+        auto parent = new QStandardItem(QStringLiteral("parent"));
+        parent->appendRow(new QStandardItem(QStringLiteral("child0")));
+        model.appendRow(parent);
+        Connection c(&model);
+        QTRY_COMPARE(c.client.rowCount(), 1);
+        const auto parentIndex = c.client.index(0, 0);
+        QTRY_COMPARE(c.client.rowCount(parentIndex), 1);
+
+        parent->appendRow(new QStandardItem(QStringLiteral("child1")));
+        parent->insertRow(0, new QStandardItem(QStringLiteral("child-1")));
+        QTRY_COMPARE(c.client.rowCount(parentIndex), 3);
+        QVERIFY(waitForData(c.client.index(0, 0, parentIndex)));
+        QVERIFY(waitForData(c.client.index(2, 0, parentIndex)));
+        QCOMPARE(c.client.index(0, 0, parentIndex).data().toString(), QStringLiteral("child-1"));
+        QCOMPARE(c.client.index(2, 0, parentIndex).data().toString(), QStringLiteral("child1"));
+        QCOMPARE(c.client.parent(c.client.index(2, 0, parentIndex)), parentIndex);
+
+        parent->removeRow(1);
+        QTRY_COMPARE(c.client.rowCount(parentIndex), 2);
+        QCOMPARE(c.client.index(1, 0, parentIndex).data().toString(), QStringLiteral("child1"));
+    }
+
+    // a sort is a layout change
+    void testSortOnServer()
+    {
+        QStandardItemModel model;
+        for (const auto &text : { "c", "a", "b" })
+            model.appendRow(new QStandardItem(QString::fromLatin1(text)));
+        Connection c(&model);
+        QTRY_COMPARE(c.client.rowCount(), 3);
+        QCOMPARE(rowData(&c.client), QStringList({ "c", "a", "b" }));
+
+        c.client.sort(0, Qt::AscendingOrder);
+        QTRY_COMPARE(rowData(&c.client), QStringList({ "a", "b", "c" }));
+    }
+
+    void testModelReset()
+    {
+        QStringListModel model({ "a", "b" });
+        Connection c(&model);
+        QTRY_COMPARE(c.client.rowCount(), 2);
+        QCOMPARE(rowData(&c.client), QStringList({ "a", "b" }));
+
+        model.setStringList({ "x", "y", "z" });
+        QTRY_COMPARE(c.client.rowCount(), 3);
+        QCOMPARE(rowData(&c.client), QStringList({ "x", "y", "z" }));
     }
 
     // the client must not trust row numbers that don't match what it knows
