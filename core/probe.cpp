@@ -581,15 +581,19 @@ void Probe::processQueuedObjectChanges()
     Q_ASSERT(QThread::currentThread() == thread());
 
     const auto queuedObjectChanges = m_queuedObjectChanges; // copy, in case this gets modified while we iterate (which can actually happen)
+    // Announce the destructions first. Those objects are gone already, but until their rows are
+    // removed the object models show them as "<deleted>". Rows inserted next to them would then
+    // be added while the filter data of their siblings changed without any dataChanged(), which
+    // corrupts the mapping of a recursively filtering QSortFilterProxyModel.
+    // This keeps the order between a destruction and a creation at the same address, since the
+    // old object's destruction is always queued before the new object's creation.
     for (const auto &change : queuedObjectChanges) {
-        switch (change.type) {
-        case ObjectChange::Create:
-            objectFullyConstructed(change.obj);
-            break;
-        case ObjectChange::Destroy:
+        if (change.type == ObjectChange::Destroy)
             emit objectDestroyed(change.obj);
-            break;
-        }
+    }
+    for (const auto &change : queuedObjectChanges) {
+        if (change.type == ObjectChange::Create)
+            objectFullyConstructed(change.obj);
     }
 
     IF_DEBUG(cout << Q_FUNC_INFO << " done" << endl;)
