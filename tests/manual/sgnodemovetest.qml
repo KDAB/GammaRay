@@ -19,16 +19,39 @@ Rectangle {
 
     Item {
         objectName: "container"
-        anchors.fill: parent
+        width: parent.width
+        height: parent.height / 2
 
         Repeater {
+            objectName: "repeater"
             model: 6
             Rectangle {
+                objectName: "rect" + index
                 x: index * 40
                 width: 30
                 height: 30
                 color: "red"
+
+                Rectangle {
+                    objectName: "innerRect" + index
+                    width: 10
+                    height: 10
+                    color: "blue"
+                }
             }
+        }
+    }
+
+    Item {
+        objectName: "container2"
+        y: parent.height / 2
+        width: parent.width
+        height: parent.height / 2
+
+        Rectangle {
+            width: 30
+            height: 30
+            color: "green"
         }
     }
 }
