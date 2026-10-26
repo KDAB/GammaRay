@@ -497,7 +497,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         const Qt::Orientation orientation = static_cast<Qt::Orientation>(ori);
         auto &headers = orientation == Qt::Horizontal ? m_horizontalHeaders : m_verticalHeaders;
 
-        for (int i = first; i < last && i < headers.size(); ++i)
+        for (int i = first; i <= last && i < headers.size(); ++i)
             headers[i].clear();
 
         emit headerDataChanged(orientation, first, last);
