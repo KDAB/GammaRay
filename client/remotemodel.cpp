@@ -1066,7 +1066,7 @@ void RemoteModel::doRemoveColumns(RemoteModel::Node *parentNode, int first, int 
             continue;
         node->data.remove(first, delColCount);
         node->flags.remove(first, delColCount);
-        node->state.erase(node->state.begin() + first, node->state.begin() + last);
+        node->state.erase(node->state.begin() + first, node->state.begin() + last + 1);
     }
 
     // adjust column count

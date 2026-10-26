@@ -366,6 +366,34 @@ private slots:
         QTRY_COMPARE(rowData(&client), listModel.stringList());
     }
 
+    void testRemoveColumns()
+    {
+        QStandardItemModel model(2, 3);
+        for (int row = 0; row < 2; ++row) {
+            for (int column = 0; column < 3; ++column)
+                model.setItem(row, column, new QStandardItem(QStringLiteral("%1-%2").arg(row).arg(column)));
+        }
+
+        FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.ColumnModel"), this);
+        server.setModel(&model);
+        server.modelMonitored(true);
+
+        FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.ColumnModel"), this);
+        connect(&server, &FakeRemoteModelServer::message, &client, &RemoteModel::newMessage);
+        connect(&client, &FakeRemoteModel::message, &server, &RemoteModelServer::newRequest);
+
+        QAbstractItemModelTester modelTest(&client);
+        QTRY_COMPARE(client.columnCount(), 3);
+        for (int column = 0; column < 3; ++column)
+            QVERIFY(waitForData(client.index(1, column)));
+
+        model.removeColumn(1);
+        QTRY_COMPARE(client.columnCount(), 2);
+        QVERIFY(waitForData(client.index(1, 1)));
+        QCOMPARE(client.index(1, 0).data().toString(), QStringLiteral("1-0"));
+        QCOMPARE(client.index(1, 1).data().toString(), QStringLiteral("1-2"));
+    }
+
 };
 
 QTEST_MAIN(RemoteModelTest)
