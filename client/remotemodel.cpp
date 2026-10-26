@@ -850,6 +850,11 @@ void RemoteModel::requestDataAndFlags(const QModelIndex &index) const
 
 void RemoteModel::doRequests() const
 {
+    if (m_requestAgain) {
+        m_requestAgain = false;
+        requestAgain(m_root);
+    }
+
     QMutableMapIterator<RequestType, QVector<Protocol::ModelIndex>> it(m_pendingRequests);
 
     while (it.hasNext()) {
@@ -954,10 +959,32 @@ void RemoteModel::resetLoadingState(RemoteModel::Node *node, int startRow) const
     for (int row = startRow; row < node->rowCount; ++row) {
         Node *child = node->children.at(row);
         for (auto it = child->state.begin(); it != child->state.end(); ++it) {
-            if ((*it) & RemoteModelNodeState::Loading)
+            if ((*it) & RemoteModelNodeState::Loading) {
                 (*it) = (*it) & ~RemoteModelNodeState::Loading;
+                // the reply can't find this row anymore, and the cell might not be asked for again,
+                // e.g. when a proxy filtered the row out based on the placeholder data, so request it
+                // again later, once for all changes that are processed together
+                child->requestAgain = true;
+                m_requestAgain = true;
+                m_pendingRequestsTimer->start();
+            }
         }
         resetLoadingState(child, 0);
+    }
+}
+
+void RemoteModel::requestAgain(RemoteModel::Node *node) const
+{
+    for (Node *child : std::as_const(node->children)) {
+        if (child->requestAgain) {
+            child->requestAgain = false;
+            for (int column = 0; column < ( int )child->state.size(); ++column) {
+                const auto state = child->state.at(column);
+                if ((state & RemoteModelNodeState::Outdated) && !(state & RemoteModelNodeState::Loading))
+                    requestDataAndFlags(modelIndexForNode(child, column));
+            }
+        }
+        requestAgain(child);
     }
 }
 
