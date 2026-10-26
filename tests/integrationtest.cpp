@@ -96,6 +96,44 @@ private slots:
         }
         QVERIFY(!Probe::instance());
     }
+
+    // reparenting a known object to a parent the probe doesn't know yet has to add the parent
+    // first, the object tree can't move a row to a parent it doesn't have
+    void reparentToUntrackedParent()
+    {
+        {
+            QCoreApplication app(argc, argv);
+            createProbe();
+            auto treeModel = Probe::instance()->objectTreeModel();
+            const auto find = [treeModel](QObject *obj) {
+                return treeModel->match(treeModel->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue(obj), 1,
+                                        Qt::MatchExactly | Qt::MatchRecursive)
+                    .value(0);
+            };
+
+            QObject obj;
+            QTRY_VERIFY(find(&obj).isValid()); // also waits for the probe's event filter
+
+            QObject *newParent = nullptr;
+            {
+                ProbeGuard guard; // not known to the probe yet
+                newParent = new QObject;
+            }
+            QVERIFY(!Probe::instance()->isValidObject(newParent));
+
+            obj.setParent(newParent);
+            QVERIFY(Probe::instance()->isValidObject(newParent));
+
+            QVERIFY(find(newParent).isValid());
+            // the move itself is processed delayed
+            QTRY_COMPARE(find(&obj).parent(), find(newParent));
+            QCOMPARE(treeModel->rowCount(find(newParent)), 1);
+
+            obj.setParent(nullptr);
+            delete newParent;
+        }
+        QVERIFY(!Probe::instance());
+    }
 };
 
 QTEST_APPLESS_MAIN(IntegrationTest)
