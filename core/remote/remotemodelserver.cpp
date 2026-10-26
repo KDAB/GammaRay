@@ -277,6 +277,33 @@ QMap<int, QVariant> RemoteModelServer::filterItemData(QMap<int, QVariant> &&item
 
 bool RemoteModelServer::canSerialize(const QVariant &value) const
 {
+    // most values are of a few types that can always be serialized, the checks below would cost a
+    // lot for every single one of them
+    switch (value.userType()) {
+    case QMetaType::Bool:
+    case QMetaType::Int:
+    case QMetaType::UInt:
+    case QMetaType::LongLong:
+    case QMetaType::ULongLong:
+    case QMetaType::Double:
+    case QMetaType::Float:
+    case QMetaType::QChar:
+    case QMetaType::QString:
+    case QMetaType::QStringList:
+    case QMetaType::QByteArray:
+    case QMetaType::QSize:
+    case QMetaType::QSizeF:
+    case QMetaType::QPoint:
+    case QMetaType::QPointF:
+    case QMetaType::QRect:
+    case QMetaType::QRectF:
+    case QMetaType::QColor:
+    case QMetaType::QPixmap:
+        return true;
+    default:
+        break;
+    }
+
     if (qstrcmp(value.typeName(), "QJSValue") == 0 || qstrcmp(value.typeName(), "QJsonObject") == 0 || qstrcmp(value.typeName(), "QJsonValue") == 0 || qstrcmp(value.typeName(), "QJsonArray") == 0) {
         // QJSValue tries to serialize nested elements and asserts if that fails
         // too bad it can contain QObject* as nested element, which obviously can't be serialized...
