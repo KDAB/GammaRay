@@ -13,10 +13,17 @@
 
 #include "baseprobetest.h"
 
+#include <common/objectmodel.h>
+#include <core/probe.h>
+#include <core/probeguard.h>
+
 #include <QCoreApplication>
 #include <QMetaObject>
 #include <QObject>
+#include <QSignalSpy>
 #include <QTest>
+
+#include <algorithm>
 
 using namespace GammaRay;
 
@@ -48,6 +55,44 @@ private slots:
         {
             QCoreApplication app(argc, argv);
             createProbe();
+        }
+        QVERIFY(!Probe::instance());
+    }
+
+    // announcing a parent first runs slots that can discover the child already (like the widget
+    // inspector does for the model of a view), which must not announce the child twice
+    void discoverObjectFromObjectCreated()
+    {
+        {
+            QCoreApplication app(argc, argv);
+            createProbe();
+
+            QObject *parent = nullptr;
+            QObject *child = nullptr;
+            {
+                ProbeGuard guard; // not known to the probe yet
+                parent = new QObject;
+                child = new QObject(parent);
+            }
+            QVERIFY(!Probe::instance()->isValidObject(parent));
+            QVERIFY(!Probe::instance()->isValidObject(child));
+
+            connect(Probe::instance(), &Probe::objectCreated, this, [=](QObject *obj) {
+                if (obj == parent)
+                    Probe::instance()->discoverObject(child);
+            });
+            QSignalSpy createdSpy(Probe::instance(), &Probe::objectCreated);
+
+            Probe::instance()->discoverObject(child);
+
+            const auto timesCreated = std::count_if(createdSpy.cbegin(), createdSpy.cend(), [child](const QList<QVariant> &args) {
+                return args.at(0).value<QObject *>() == child;
+            });
+            QCOMPARE(timesCreated, 1);
+            auto listModel = Probe::instance()->objectListModel();
+            QCOMPARE(listModel->match(listModel->index(0, 0), ObjectModel::ObjectRole, QVariant::fromValue(child), -1, Qt::MatchExactly).size(), 1);
+
+            delete parent;
         }
         QVERIFY(!Probe::instance());
     }

@@ -547,8 +547,13 @@ void Probe::objectAdded(QObject *obj, bool fromCtor)
     }
 
     // make sure we already know the parent
-    if (obj->parent() && !instance()->m_validObjects.contains(obj->parent()))
+    if (obj->parent() && !instance()->m_validObjects.contains(obj->parent())) {
         objectAdded(obj->parent(), fromCtor);
+        // announcing the parent runs slots connected to objectCreated(), and those might have
+        // discovered obj already (e.g. the widget inspector does that for the model of a view)
+        if (instance()->m_validObjects.contains(obj))
+            return;
+    }
     Q_ASSERT(!obj->parent() || instance()->m_validObjects.contains(obj->parent()));
 
     instance()->m_validObjects << obj;
