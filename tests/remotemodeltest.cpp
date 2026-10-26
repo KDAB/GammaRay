@@ -23,6 +23,7 @@
 #include <QSignalSpy>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QStringListModel>
 #include <QTest>
 
 using namespace GammaRay;
@@ -109,6 +110,18 @@ class RemoteModelTest : public QObject
 {
     Q_OBJECT
 private:
+    // fetches the data of all top-level rows
+    static QStringList rowData(const QAbstractItemModel *model)
+    {
+        QStringList rows;
+        for (int row = 0; row < model->rowCount(); ++row) {
+            const auto index = model->index(row, 0);
+            if (!waitForData(index))
+                return {};
+            rows.push_back(index.data().toString());
+        }
+        return rows;
+    }
     static bool waitForData(const QModelIndex &idx)
     {
         if (idx.data(RemoteModelRole::LoadingState).value<RemoteModelNodeState::NodeStates>() == RemoteModelNodeState::NoState)
@@ -314,6 +327,45 @@ private slots:
         // QEXPECT_FAIL("", "QSFPM misbehavior, no idea yet where this is coming from", Continue);
         QCOMPARE(proxy.rowCount(pi1), 2);
     }
+
+    static void testMoveRows_data()
+    {
+        QTest::addColumn<int>("first");
+        QTest::addColumn<int>("last");
+        QTest::addColumn<int>("destination");
+
+        QTest::newRow("one row up") << 3 << 3 << 1;
+        QTest::newRow("one row down") << 1 << 1 << 4;
+        QTest::newRow("several rows up") << 3 << 4 << 0;
+        QTest::newRow("several rows up, overlapping") << 1 << 3 << 0;
+        QTest::newRow("several rows down") << 0 << 1 << 5;
+        QTest::newRow("to the end") << 0 << 0 << 6;
+    }
+
+    void testMoveRows()
+    {
+        QFETCH(int, first);
+        QFETCH(int, last);
+        QFETCH(int, destination);
+
+        QStringListModel listModel({ "0", "1", "2", "3", "4", "5" });
+
+        FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.MoveModel"), this);
+        server.setModel(&listModel);
+        server.modelMonitored(true);
+
+        FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.MoveModel"), this);
+        connect(&server, &FakeRemoteModelServer::message, &client, &RemoteModel::newMessage);
+        connect(&client, &FakeRemoteModel::message, &server, &RemoteModelServer::newRequest);
+
+        QAbstractItemModelTester modelTest(&client);
+        QTRY_COMPARE(client.rowCount(), 6);
+        QCOMPARE(rowData(&client), listModel.stringList());
+
+        QVERIFY(listModel.moveRows({}, first, last - first + 1, {}, destination));
+        QTRY_COMPARE(rowData(&client), listModel.stringList());
+    }
+
 };
 
 QTEST_MAIN(RemoteModelTest)
