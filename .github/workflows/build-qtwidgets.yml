@@ -46,8 +46,6 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@v7
-        with:
-          submodules: recursive
 
       - name: Install ninja-build tool (must be after Qt due PATH changes)
         uses: turtlesec-no/get-ninja@main

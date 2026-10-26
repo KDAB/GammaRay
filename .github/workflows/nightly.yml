@@ -48,8 +48,6 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@v7
-        with:
-          submodules: recursive
 
       - name: Configure project
         run: >
