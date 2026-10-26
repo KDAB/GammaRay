@@ -354,6 +354,7 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                 continue; // we didn't ask for this, probably outdated response for a moved node
 
             Q_ASSERT(node->rowCount < -1 && node->columnCount == -1);
+            --m_loadingCount;
 
             const QModelIndex qmi = modelIndexForNode(node, 0);
 
@@ -418,8 +419,11 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
                 node->data[column] = std::move(itemData);
                 node->flags[column] = static_cast<Qt::ItemFlags>(flags);
                 node->state[column] = state & ~(RemoteModelNodeState::Loading | RemoteModelNodeState::Empty | RemoteModelNodeState::Outdated);
+                --m_loadingCount;
 
                 if ((flags & Qt::ItemNeverHasChildren) && column == 0) {
+                    if (node->rowCount < -1)
+                        --m_loadingCount; // we don't need the requested row count anymore
                     node->rowCount = 0;
                     node->columnCount = node->data.size();
                 }
@@ -643,10 +647,13 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
             emit layoutAboutToBeChanged();
             foreach (const auto &persistentIndex, persistentIndexList())
                 changePersistentIndex(persistentIndex, QModelIndex());
-            if (hint == 0)
+            if (hint == 0) {
+                m_loadingCount -= loadingCountOfChildren(m_root) + (m_root->rowCount < -1 ? 1 : 0);
                 m_root->clearChildrenStructure();
-            else
+            } else {
+                m_loadingCount -= loadingCountOfChildren(m_root);
                 m_root->clearChildrenData();
+            }
             emit layoutChanged();
             break;
         }
@@ -716,10 +723,13 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         }
 
         for (auto node : std::as_const(parentNodes)) {
-            if (hint == 0)
+            if (hint == 0) {
+                m_loadingCount -= loadingCountOfChildren(node) + (node->rowCount < -1 ? 1 : 0);
                 node->clearChildrenStructure();
-            else
+            } else {
+                m_loadingCount -= loadingCountOfChildren(node);
                 node->clearChildrenData();
+            }
         }
         emit layoutChanged(); // TODO Qt5 support with exact sub-trees
         break;
@@ -826,6 +836,7 @@ void RemoteModel::requestRowColumnCount(const QModelIndex &index) const
     if (node->rowCount < -1) // already requesting
         return;
     node->rowCount = -2;
+    ++m_loadingCount;
 
     auto &indexes = m_pendingRequests[RowColumnCount];
     indexes.push_back(Protocol::fromQModelIndex(index));
@@ -848,6 +859,7 @@ void RemoteModel::requestDataAndFlags(const QModelIndex &index) const
     node->allocateColumns();
     Q_ASSERT(( int )node->state.size() > index.column());
     node->state[index.column()] = state | RemoteModelNodeState::Loading; // mark pending request
+    ++m_loadingCount;
 
     auto &indexes = m_pendingRequests[DataAndFlags];
     indexes.push_back(Protocol::fromQModelIndex(index));
@@ -923,6 +935,7 @@ void RemoteModel::clear()
 
     delete m_root;
     m_root = new Node;
+    m_loadingCount = 0;
     m_horizontalHeaders.clear();
     m_verticalHeaders.clear();
     endResetModel();
@@ -961,17 +974,24 @@ bool RemoteModel::checkSyncBarrier(const Message &msg)
 
 void RemoteModel::resetLoadingState(RemoteModel::Node *node, int startRow) const
 {
+    // the common case, walking all following rows for every change would be expensive
+    if (m_loadingCount <= 0)
+        return;
+
     if (node->rowCount < 0) {
+        if (node->rowCount < -1)
+            --m_loadingCount;
         node->rowCount = -1; // reset row count loading state
         return;
     }
 
     Q_ASSERT(node->children.size() == node->rowCount);
-    for (int row = startRow; row < node->rowCount; ++row) {
+    for (int row = startRow; row < node->rowCount && m_loadingCount > 0; ++row) {
         Node *child = node->children.at(row);
         for (auto it = child->state.begin(); it != child->state.end(); ++it) {
             if ((*it) & RemoteModelNodeState::Loading) {
                 (*it) = (*it) & ~RemoteModelNodeState::Loading;
+                --m_loadingCount;
                 // the reply can't find this row anymore, and the cell might not be asked for again,
                 // e.g. when a proxy filtered the row out based on the placeholder data, so request it
                 // again later, once for all changes that are processed together
@@ -982,6 +1002,24 @@ void RemoteModel::resetLoadingState(RemoteModel::Node *node, int startRow) const
         }
         resetLoadingState(child, 0);
     }
+}
+
+int RemoteModel::loadingCount(const RemoteModel::Node *node)
+{
+    int count = node->rowCount < -1 ? 1 : 0;
+    for (const auto state : node->state) {
+        if (state & RemoteModelNodeState::Loading)
+            ++count;
+    }
+    return count + loadingCountOfChildren(node);
+}
+
+int RemoteModel::loadingCountOfChildren(const RemoteModel::Node *node)
+{
+    int count = 0;
+    for (const Node *child : node->children)
+        count += loadingCount(child);
+    return count;
 }
 
 void RemoteModel::requestAgain(RemoteModel::Node *node) const
@@ -1040,8 +1078,11 @@ void RemoteModel::doRemoveRows(RemoteModel::Node *parentNode, int first, int las
         m_verticalHeaders.remove(first, last - first + 1);
 
     // delete nodes
-    for (int i = first; i <= last; ++i)
+    for (int i = first; i <= last; ++i) {
+        if (m_loadingCount > 0)
+            m_loadingCount -= loadingCount(parentNode->children.at(i));
         delete parentNode->children.at(i);
+    }
     parentNode->children.remove(first, last - first + 1);
 
     // adjust row count
@@ -1136,6 +1177,9 @@ void RemoteModel::doRemoveColumns(RemoteModel::Node *parentNode, int first, int 
             continue;
         node->data.remove(first, delColCount);
         node->flags.remove(first, delColCount);
+        m_loadingCount -= std::count_if(node->state.begin() + first, node->state.begin() + last + 1, [](RemoteModelNodeState::NodeStates state) {
+            return state & RemoteModelNodeState::Loading;
+        });
         node->state.erase(node->state.begin() + first, node->state.begin() + last + 1);
     }
 

@@ -124,6 +124,8 @@ private:
     /// pending replies might have a wrong index.
     void resetLoadingState(Node *node, int startRow) const;
     void requestAgain(Node *node) const;
+    static int loadingCount(const Node *node);
+    static int loadingCountOfChildren(const Node *node);
 
     QVariant requestCreationDeclarationLocation(const QModelIndex &, int role) const;
 
@@ -167,6 +169,8 @@ private:
 
     mutable QMap<RequestType, QVector<Protocol::ModelIndex>> m_pendingRequests;
     mutable bool m_requestAgain = false;
+    // cells and row counts that wait for a reply, there is nothing to reset when there are none
+    mutable int m_loadingCount = 0;
     QTimer *m_pendingRequestsTimer;
 
     QString m_serverObject;
