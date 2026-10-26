@@ -56,7 +56,12 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v7
         with:
-          submodules: recursive
+          submodules: ${{ runner.os == 'Windows' && 'recursive' || 'true' }}
+
+      # graphviz's own submodules are only needed to build it on Windows
+      - name: Checkout graphviz
+        if: ${{ runner.os != 'Windows' }}
+        run: git -C 3rdparty/KDStateMachineEditor submodule update --init --depth 1 3rdparty/graphviz
 
       - name: Install Dependencies on Linux
         if: ${{ runner.os == 'Linux' }}
