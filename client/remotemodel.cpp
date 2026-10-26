@@ -30,6 +30,7 @@
 using namespace GammaRay;
 
 void (*RemoteModel::s_registerClientCallback)() = nullptr;
+bool RemoteModel::s_assertInSync = true;
 
 RemoteModel::Node::~Node()
 {
@@ -512,7 +513,10 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         Node *parentNode = nodeForIndex(parentIndex);
         if (!parentNode || parentNode->rowCount < 0)
             return; // we don't know the parent yet, so we don't care about changes to it either
-        Q_ASSERT(first <= parentNode->rowCount);
+        if (first > parentNode->rowCount) {
+            resetOutOfSync(msg.type());
+            break;
+        }
         doInsertRows(parentNode, first, last);
         break;
     }
@@ -526,7 +530,10 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         Node *parentNode = nodeForIndex(parentIndex);
         if (!parentNode || parentNode->rowCount < 0)
             return; // we don't know the parent yet, so we don't care about changes to it either
-        Q_ASSERT(first < parentNode->rowCount);
+        if (last >= parentNode->rowCount) {
+            resetOutOfSync(msg.type());
+            break;
+        }
         doRemoveRows(parentNode, first, last);
         break;
     }
@@ -543,6 +550,11 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
 
         const bool sourceKnown = sourceParent && sourceParent->rowCount >= 0;
         const bool destKnown = destParent && destParent->rowCount >= 0;
+
+        if ((sourceKnown && sourceLast >= sourceParent->rowCount) || (destKnown && destChild > destParent->rowCount)) {
+            resetOutOfSync(msg.type());
+            break;
+        }
 
         // case 1: source and destination not locally cached -> nothing to do
         if (!sourceKnown && !destKnown)
@@ -578,6 +590,10 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         Node *parentNode = nodeForIndex(parentIndex);
         if (!parentNode || parentNode->rowCount < 0)
             return; // we don't know the parent yet, so we don't care about changes to it either
+        if (first > parentNode->columnCount) {
+            resetOutOfSync(msg.type());
+            break;
+        }
 
         doInsertColumns(parentNode, first, last);
         break;
@@ -592,6 +608,10 @@ void RemoteModel::newMessage(const GammaRay::Message &msg)
         Node *parentNode = nodeForIndex(parentIndex);
         if (!parentNode || parentNode->rowCount < 0)
             return; // we don't know the parent yet, so we don't care about changes to it either
+        if (last >= parentNode->columnCount) {
+            resetOutOfSync(msg.type());
+            break;
+        }
 
         doRemoveColumns(parentNode, first, last);
         break;
@@ -890,6 +910,18 @@ void RemoteModel::clear()
     m_horizontalHeaders.clear();
     m_verticalHeaders.clear();
     endResetModel();
+}
+
+void RemoteModel::resetOutOfSync(Protocol::MessageType type)
+{
+    // The protocol keeps us in sync as long as the source model reports all of its changes
+    // correctly, so getting here means that the source model (or our handling of a message) has
+    // a bug that needs fixing. Following the change would corrupt our data, so recover by
+    // reloading everything, but make the bug visible.
+    qWarning() << "RemoteModel" << m_serverObject << "is out of sync with the source model on message" << type
+               << ", resetting. This is a bug, most likely the source model changed without telling anyone.";
+    Q_ASSERT_X(!s_assertInSync, "RemoteModel", "out of sync with the source model");
+    clear();
 }
 
 void RemoteModel::connectToServer()

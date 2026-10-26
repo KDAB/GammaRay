@@ -23,6 +23,8 @@
 #include <QSignalSpy>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QRegularExpression>
+#include <QScopeGuard>
 #include <QStringListModel>
 #include <QTest>
 
@@ -90,6 +92,13 @@ public:
         FakeRemoteModel::s_registerClientCallback = &fakeRegisterServer;
     }
 
+    // the client asserts when it gets out of sync, for tests that break the source model on purpose
+    static auto allowOutOfSync()
+    {
+        s_assertInSync = false;
+        return qScopeGuard([] { s_assertInSync = true; });
+    }
+
 signals:
     void message(const GammaRay::Message &);
 
@@ -105,6 +114,41 @@ private:
     }
 };
 }
+
+// changes its rows without telling anyone, like a broken source model would
+class UnsignaledListModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    using QAbstractListModel::QAbstractListModel;
+
+    int rowCount(const QModelIndex &parent = {}) const override
+    {
+        return parent.isValid() ? 0 : m_rows.size();
+    }
+
+    QVariant data(const QModelIndex &index, int role) const override
+    {
+        if (role != Qt::DisplayRole)
+            return {};
+        return m_rows.at(index.row());
+    }
+
+    void appendWithoutSignals(const QString &row)
+    {
+        m_rows.push_back(row);
+    }
+
+    void removeRowWithSignals(int row)
+    {
+        beginRemoveRows({}, row, row);
+        m_rows.removeAt(row);
+        endRemoveRows();
+    }
+
+private:
+    QStringList m_rows;
+};
 
 class RemoteModelTest : public QObject
 {
@@ -394,6 +438,37 @@ private slots:
         QCOMPARE(client.index(1, 1).data().toString(), QStringLiteral("1-2"));
     }
 
+    // the client must not trust row numbers that don't match what it knows
+    void testSourceModelOutOfSync()
+    {
+        UnsignaledListModel listModel;
+        for (int i = 0; i < 3; ++i)
+            listModel.appendWithoutSignals(QString::number(i));
+
+        FakeRemoteModelServer server(QStringLiteral("com.kdab.GammaRay.UnitTest.OutOfSyncModel"), this);
+        server.setModel(&listModel);
+        server.modelMonitored(true);
+
+        FakeRemoteModel client(QStringLiteral("com.kdab.GammaRay.UnitTest.OutOfSyncModel"), this);
+        connect(&server, &FakeRemoteModelServer::message, &client, &RemoteModel::newMessage);
+        connect(&client, &FakeRemoteModel::message, &server, &RemoteModelServer::newRequest);
+
+        QAbstractItemModelTester modelTest(&client);
+        QTRY_COMPARE(client.rowCount(), 3);
+        QCOMPARE(rowData(&client).size(), 3);
+
+        for (int i = 3; i < 30; ++i)
+            listModel.appendWithoutSignals(QString::number(i));
+        // the client only knows 3 rows
+        const auto outOfSyncGuard = FakeRemoteModel::allowOutOfSync();
+        QTest::ignoreMessage(QtWarningMsg, QRegularExpression(QStringLiteral("out of sync")));
+        listModel.removeRowWithSignals(28);
+
+        // the client starts over, and then shows what the source model has
+        QTRY_COMPARE(client.rowCount(), 29);
+        QCOMPARE(rowData(&client).size(), 29);
+        QCOMPARE(rowData(&client).last(), QStringLiteral("29"));
+    }
 };
 
 QTEST_MAIN(RemoteModelTest)

@@ -101,6 +101,7 @@ private:
     };
 
     void clear();
+    void resetOutOfSync(Protocol::MessageType type);
     void connectToServer();
 
     bool checkSyncBarrier(const Message &msg);
@@ -182,6 +183,7 @@ private:
 
     // hooks for unit tests
     static void (*s_registerClientCallback)();
+    static bool s_assertInSync;
     void registerClient(const QString &serverObject);
     virtual void sendMessage(const Message &msg) const;
     friend class FakeRemoteModel;
