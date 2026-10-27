@@ -426,6 +426,8 @@ int PaintBufferModel::rowCount(const QModelIndex &parent) const
     if (!m_privateBuffer || parent.column() > 0)
         return 0;
     if (parent.isValid()) {
+        if (parent.internalId() != TopLevelId) // arguments have no children
+            return 0;
         const auto cmd = m_privateBuffer->commands.at(parent.row());
         return cmdTypes[cmd.id].argumentCount;
     }
@@ -434,6 +436,8 @@ int PaintBufferModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex PaintBufferModel::index(int row, int column, const QModelIndex &parent) const
 {
+    if (!hasIndex(row, column, parent))
+        return {};
     if (!parent.isValid())
         return createIndex(row, column, TopLevelId);
     return createIndex(row, column, parent.row());
