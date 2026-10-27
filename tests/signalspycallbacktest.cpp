@@ -13,7 +13,14 @@
 
 #include "baseprobetest.h"
 
+#include <QAbstractEventDispatcher>
+#include <QEventLoop>
 #include <QPointer>
+#include <QTimer>
+#include <QVector>
+
+#include <algorithm>
+#include <utility>
 
 using namespace GammaRay;
 
@@ -40,9 +47,20 @@ public slots:
     }
 };
 
+// the emissions the signal begin callback reported, as caller and method index
+static QVector<std::pair<QObject *, int>> s_emissions;
+
 class SignalSpyCallbackTest : public BaseProbeTest
 {
     Q_OBJECT
+private:
+    static bool hasEmission(QObject *caller)
+    {
+        return std::any_of(s_emissions.cbegin(), s_emissions.cend(), [caller](const std::pair<QObject *, int> &emission) {
+            return emission.first == caller;
+        });
+    }
+
 private slots:
     void testSenderDeletion()
     {
@@ -66,6 +84,51 @@ private slots:
         delete s1.data();
         delete s2.data();
     } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+
+    // the callback sees the application's signals, but not every one of them
+    void testSignalBeginCallback()
+    {
+        if (!Probe::instance())
+            createProbe();
+        SignalSpyCallbackSet callbacks;
+        callbacks.signalBeginCallback = [](QObject *caller, int methodIndex, void **) {
+            s_emissions.push_back({ caller, methodIndex });
+        };
+        Probe::instance()->registerSignalSpyCallbackSet(callbacks);
+
+        Sender sender;
+        s_emissions.clear();
+        sender.emitSignal();
+        const QVector<std::pair<QObject *, int>> expected { { &sender, Sender::staticMetaObject.indexOfSignal("mySignal()") } };
+        QCOMPARE(s_emissions, expected);
+
+        // not destroyed(), which Qt only emits when something is connected to it
+        auto obj = new QObject;
+        bool destroyed = false;
+        connect(obj, &QObject::destroyed, this, [&destroyed] { destroyed = true; });
+        s_emissions.clear();
+        delete obj;
+        QVERIFY(destroyed);
+        QVERIFY(!hasEmission(obj));
+
+        // not the event dispatcher's signals, it emits these when the event loop waits
+        auto dispatcher = QAbstractEventDispatcher::instance();
+        QVERIFY(dispatcher);
+        int aboutToBlock = 0;
+        const auto connection = connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, [&aboutToBlock] { ++aboutToBlock; });
+        s_emissions.clear();
+        QEventLoop loop; // QTest::qWait() doesn't block in the event dispatcher
+        QTimer::singleShot(10, &loop, &QEventLoop::quit);
+        loop.exec();
+        disconnect(connection);
+        QVERIFY(aboutToBlock > 0);
+        QVERIFY(!hasEmission(dispatcher));
+
+        // not the signals of GammaRay's own objects
+        s_emissions.clear();
+        Probe::instance()->selectObject(&sender);
+        QVERIFY(!hasEmission(Probe::instance()));
+    }
 
     static void cleanupTestCase()
     {

@@ -42,6 +42,7 @@
 #include <common/streamoperators.h>
 #include <common/paths.h>
 
+#include <QAbstractEventDispatcher>
 #include <QGuiApplication>
 #include <QWindow>
 #include <QDir>
@@ -73,11 +74,16 @@ QAtomicPointer<Probe> Probe::s_instance = QAtomicPointer<Probe>(nullptr);
 namespace GammaRay {
 static void signal_begin_callback(QObject *caller, int method_index, void **argv)
 {
-    // Ignore event dispatcher signals
-    if (caller->inherits("QAbstractEventDispatcher"))
+    // called for every signal emission, so do the cheap checks first, and compare meta objects
+    // instead of class names
+    if (method_index == 0 || !Probe::instance())
         return;
 
-    if (method_index == 0 || !Probe::instance() || Probe::instance()->filterObject(caller))
+    // Ignore event dispatcher signals
+    if (caller->metaObject()->inherits(&QAbstractEventDispatcher::staticMetaObject))
+        return;
+
+    if (Probe::instance()->filterObject(caller))
         return;
 
     method_index = Util::signalIndexToMethodIndex(caller->metaObject(), method_index);
