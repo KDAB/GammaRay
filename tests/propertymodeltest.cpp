@@ -272,6 +272,20 @@ private slots:
         QVERIFY(model.rowCount(childRow) > 0);
     }
 
+    // expanding a property that points back to the object would never end
+    void testLoop()
+    {
+        ChainObject root;
+        root.setChild(&root);
+
+        AggregatedPropertyModel model;
+        QAbstractItemModelTester modelTest(&model);
+        model.setObject(&root);
+        const auto childRow = searchFixedIndex(&model, QStringLiteral("child"));
+        QVERIFY(childRow.isValid());
+        QCOMPARE(model.rowCount(childRow), 0);
+    }
+
     static void testGadgetRO()
     {
         PropertyTestObject obj;
