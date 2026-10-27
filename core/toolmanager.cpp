@@ -170,11 +170,7 @@ void ToolManager::objectAdded(QObject *obj)
     Q_ASSERT(QThread::currentThread() == thread());
     Q_ASSERT(Probe::instance()->isValidObject(obj));
 
-    // m_knownMetaObjects allows us to skip the expensive recursive search for matching tools
-    if (!m_knownMetaObjects.contains(obj->metaObject())) {
-        objectAdded(obj->metaObject());
-        m_knownMetaObjects.insert(obj->metaObject());
-    }
+    objectAdded(obj->metaObject());
 }
 
 void ToolManager::objectAdded(const QMetaObject *mo)
@@ -182,6 +178,12 @@ void ToolManager::objectAdded(const QMetaObject *mo)
     // note: hot path, don't do expensive operations here
 
     Q_ASSERT(thread() == QThread::currentThread());
+    // the tools for a class only need to be looked for once, and its base classes have been
+    // handled together with it, which allows us to skip the expensive search for matching tools
+    if (m_knownMetaObjects.contains(mo))
+        return;
+    m_knownMetaObjects.insert(mo);
+
     // as plugins can depend on each other, start from the base classes
     if (mo->superClass())
         objectAdded(mo->superClass());
