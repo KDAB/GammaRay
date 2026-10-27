@@ -302,6 +302,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     target_link_libraries(integrationtest gammaray_core Qt::CorePrivate)
     gammaray_add_probe_test(probetest probetest.cpp)
     target_link_libraries(probetest gammaray_core)
+    gammaray_add_probe_test(objectmodeltest objectmodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
+    target_link_libraries(objectmodeltest gammaray_core)
 endif()
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
