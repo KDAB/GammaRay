@@ -84,9 +84,41 @@ private slots:
                 const auto argument = model.index(arg, 0, command);
                 QCOMPARE(argument.parent(), command);
                 QVERIFY(!argument.data().toString().isEmpty());
+                // arguments are leaves
+                QCOMPARE(model.rowCount(argument), 0);
             }
         }
         QVERIFY(hasArguments);
+
+        // there is nothing behind the end
+        QVERIFY(!model.index(model.rowCount(), 0, {}).isValid());
+        QVERIFY(!model.index(0, model.columnCount(), {}).isValid());
+        const auto command = model.index(0, 0, {});
+        QVERIFY(!model.index(model.rowCount(command), 0, command).isValid());
+    }
+
+    // the row of an argument is no command index, the third argument of the image is in the row of
+    // the pixmap command
+    static void testArgumentsAreLeaves()
+    {
+        PaintBuffer buffer;
+        QPainter painter(&buffer);
+        QPixmap pixmap(8, 8);
+        pixmap.fill(Qt::blue);
+        painter.drawPixmap(QPoint(0, 0), pixmap);
+        QImage image(4, 4, QImage::Format_ARGB32);
+        image.fill(Qt::green);
+        painter.drawImage(QRectF(10, 10, 8, 8), image, QRectF(0, 0, 4, 4));
+        painter.end();
+
+        PaintBufferModel model;
+        QAbstractItemModelTester tester(&model);
+        model.setPaintBuffer(buffer);
+        QCOMPARE(model.index(2, 0, {}).data().toString(), QStringLiteral("DrawPixmapPos"));
+        const auto imageCommand = model.index(findCommand(model, QStringLiteral("DrawImageRect")), 0, {});
+        QCOMPARE(model.rowCount(imageCommand), 3);
+        for (int arg = 0; arg < 3; ++arg)
+            QCOMPARE(model.rowCount(model.index(arg, 0, imageCommand)), 0);
     }
 
     static void testData()
