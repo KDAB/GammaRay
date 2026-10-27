@@ -202,6 +202,23 @@ private slots:
         delete parent;
     }
 
+    // a new parent that was below the moved object, and moved away before, but the probe reports
+    // that move only after this one
+    static void testReparentBelowFormerDescendant()
+    {
+        ObjectPool pool;
+        auto a = pool.create();
+        auto b = pool.create(a);
+        processQueue();
+
+        b->setParent(nullptr); // reported later
+        a->setParent(b); // reported right away
+        processQueue();
+        const auto errors = checkModels(pool, { a, b });
+        QVERIFY2(errors.isEmpty(), qPrintable(errors.join(QLatin1Char('\n'))));
+        delete b;
+    }
+
     // every move to a parent without children adds an entry to the tree model's map, at some point
     // that makes it grow while the model still refers to the entry of the old parent
     static void testReparentToParentsWithoutChildren()
