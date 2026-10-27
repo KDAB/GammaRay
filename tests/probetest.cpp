@@ -219,6 +219,23 @@ private slots:
         delete b;
     }
 
+    // the move of a child is reported later than the destruction of the parent it left
+    static void testParentDeletedBeforeChildMoveReported()
+    {
+        ObjectPool pool;
+        auto parent = pool.create();
+        auto child = pool.create(parent);
+        pool.create(child);
+        processQueue();
+
+        child->setParent(nullptr); // reported later
+        delete parent; // reported right away
+        processQueue();
+        const auto errors = checkModels(pool, { parent, child });
+        QVERIFY2(errors.isEmpty(), qPrintable(errors.join(QLatin1Char('\n'))));
+        delete child;
+    }
+
     // every move to a parent without children adds an entry to the tree model's map, at some point
     // that makes it grow while the model still refers to the entry of the old parent
     static void testReparentToParentsWithoutChildren()
