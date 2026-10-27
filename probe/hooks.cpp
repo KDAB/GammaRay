@@ -105,6 +105,16 @@ static void installQHooks()
     qtHookData[QHooks::Startup] = reinterpret_cast<quintptr>(&gammaray_startup_hook);
 }
 
+static void uninstallQHooks()
+{
+    qtHookData[QHooks::AddQObject] = reinterpret_cast<quintptr>(gammaray_next_addObject);
+    qtHookData[QHooks::RemoveQObject] = reinterpret_cast<quintptr>(gammaray_next_removeObject);
+    qtHookData[QHooks::Startup] = reinterpret_cast<quintptr>(gammaray_next_startup_hook);
+    gammaray_next_addObject = nullptr;
+    gammaray_next_removeObject = nullptr;
+    gammaray_next_startup_hook = nullptr;
+}
+
 bool Hooks::hooksInstalled()
 {
     return qtHookData[QHooks::AddQObject] == reinterpret_cast<quintptr>(&gammaray_addObject);
@@ -116,6 +126,14 @@ void Hooks::installHooks()
         return;
 
     installQHooks();
+}
+
+void Hooks::uninstallHooks()
+{
+    if (!hooksInstalled())
+        return;
+
+    uninstallQHooks();
 }
 
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
@@ -133,6 +151,8 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
     if (!qApp) {
         return;
     }
+    // detaching put back the hooks we replaced
+    Hooks::installHooks();
     log_injection("gammaray_probe_attach()\n");
     new ProbeCreator(ProbeCreator::Create | ProbeCreator::FindExistingObjects | ProbeCreator::ResendServerAddress);
 } // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)

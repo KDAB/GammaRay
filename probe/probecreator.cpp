@@ -15,6 +15,8 @@
 #include "probecreator.h"
 
 #include <common/endpoint.h>
+#include "hooks.h"
+
 #include <core/probe.h>
 
 #include <QCoreApplication>
@@ -74,6 +76,8 @@ void ProbeCreator::createProbe()
 
     Probe::createProbe(m_flags & FindExistingObjects);
     Q_ASSERT(Probe::isInitialized());
+    // when detaching, put back the hooks we replaced, attaching again installs them again
+    connect(Probe::instance(), &Probe::aboutToDetach, Probe::instance(), &Hooks::uninstallHooks);
 
     deleteLater();
 }

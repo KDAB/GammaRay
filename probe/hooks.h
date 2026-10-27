@@ -49,6 +49,11 @@ bool hooksInstalled();
 
 /** Install hooks, either by function overwriting or using qhooks. */
 void installHooks();
+
+/** Put back the hooks that installHooks() replaced, unless hooks installed after ours call
+ *  ours.
+ */
+void uninstallHooks();
 }
 }
 

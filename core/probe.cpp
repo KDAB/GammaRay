@@ -51,7 +51,6 @@
 #include <QThread>
 #include <QTimer>
 #include <private/qobject_p.h>
-#include <private/qhooks_p.h>
 #include <algorithm>
 #include <iostream>
 #include <utility>
@@ -231,11 +230,6 @@ Probe::~Probe()
 {
     emit aboutToDetach();
     IF_DEBUG(cerr << "detaching GammaRay probe" << endl;)
-
-    // Remove hooks
-    qtHookData[QHooks::AddQObject] = 0;
-    qtHookData[QHooks::RemoveQObject] = 0;
-    qtHookData[QHooks::Startup] = 0;
 
     qt_register_signal_spy_callbacks(m_previousSignalSpyCallbackSet);
 
