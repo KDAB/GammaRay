@@ -43,10 +43,14 @@ protected:
 
 private slots:
     void slotPropertyChanged(int first, int last);
+    void slotPropertyAboutToBeAdded(int first, int last);
     void slotPropertyAdded(int first, int last);
+    void slotPropertyAboutToBeRemoved(int first, int last);
     void slotPropertyRemoved(int first, int last);
 
 private:
+    int offsetOf(const QObject *adaptor) const;
+
     QVector<PropertyAdaptor *> m_propertyAdaptors;
 };
 }

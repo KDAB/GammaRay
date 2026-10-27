@@ -118,7 +118,7 @@ private slots:
     {
         ChangingPropertyObject obj;
         AggregatedPropertyModel model;
-        // ModelTest modelTest(&model);
+        QAbstractItemModelTester modelTest(&model);
         model.setObject(&obj);
         QVERIFY(model.rowCount() >= 4);
 
@@ -197,9 +197,8 @@ private slots:
         QObject child;
         obj.setProperty("childObject", QVariant::fromValue<QObject *>(&child));
 
-        // no QAbstractItemModelTester, as DynamicPropertyAdaptor only learns about a removed
-        // property after the fact, and reports the removal with the following rows already moved
         AggregatedPropertyModel model;
+        QAbstractItemModelTester modelTest(&model);
         model.setObject(&obj);
         const auto row = searchFixedIndex(&model, QStringLiteral("childObject"));
         QVERIFY(row.isValid());
