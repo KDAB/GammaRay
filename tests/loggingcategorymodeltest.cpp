@@ -80,6 +80,16 @@ private slots:
         QTRY_COMPARE(rowsFor(*m_model, "gammaray.test.created"), 1);
     }
 
+    // Qt calls the filter for all categories whenever the rules change
+    void testRulesChanged()
+    {
+        QTRY_COMPARE(rowsFor(*m_model, "gammaray.test.existing"), 1);
+        QLoggingCategory::setFilterRules(QStringLiteral("gammaray.test.existing.debug=false"));
+        QLoggingCategory::setFilterRules(QStringLiteral("gammaray.test.existing.debug=true"));
+        QTest::qWait(10);
+        QCOMPARE(rowsFor(*m_model, "gammaray.test.existing"), 1);
+    }
+
     void testCheckStates_data()
     {
         QTest::addColumn<int>("column");
