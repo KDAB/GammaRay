@@ -185,6 +185,37 @@ private slots:
         delete Probe::instance();
     }
 
+    // every move to a parent without children adds an entry to the tree model's map, at some point
+    // that makes it grow while the model still refers to the entry of the old parent
+    static void testReparentToParentsWithoutChildren()
+    {
+        ObjectPool pool;
+        QSet<QObject *> everCreated;
+        std::vector<QObject *> objects;
+        for (int i = 0; i < 500; ++i) {
+            objects.push_back(pool.create(pool.create()));
+            everCreated.insert(objects.back());
+            everCreated.insert(objects.back()->parent());
+        }
+        processQueue();
+        std::vector<QObject *> newParents;
+        for (int i = 0; i < 500; ++i) {
+            newParents.push_back(pool.create());
+            everCreated.insert(newParents.back());
+        }
+        processQueue();
+        for (int i = 0; i < 500; ++i)
+            objects[i]->setParent(newParents[i]);
+        processQueue();
+        const auto errors = checkModels(pool, everCreated);
+        QVERIFY2(errors.isEmpty(), qPrintable(errors.mid(0, 10).join(QLatin1Char('\n'))));
+        for (auto obj : std::as_const(pool.alive)) {
+            if (!obj->parent())
+                obj->deleteLater();
+        }
+        processQueue();
+    }
+
     // objectCreated() is only emitted once the object is fully constructed
     static void testAnnouncedFullyConstructed()
     {
