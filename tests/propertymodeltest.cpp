@@ -25,8 +25,39 @@
 #include <QSignalSpy>
 #include <QTest>
 
+#include <memory>
+#include <vector>
+
 using namespace GammaRay;
 using namespace TestHelpers;
+
+// an object with a child object, to build property trees of any depth
+class ChainObject : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QObject *child READ child WRITE setChild NOTIFY childChanged)
+public:
+    explicit ChainObject(QObject *parent = nullptr)
+        : QObject(parent)
+    {
+    }
+
+    QObject *child() const
+    {
+        return m_child;
+    }
+    void setChild(QObject *child)
+    {
+        m_child = child;
+        emit childChanged();
+    }
+
+signals:
+    void childChanged();
+
+private:
+    QObject *m_child = nullptr;
+};
 
 class PropertyModelTest : public BaseProbeTest
 {
@@ -110,6 +141,78 @@ private slots:
         QCOMPARE(changeSpy.size(), 3);
         QCOMPARE(addSpy.size(), 1);
         QCOMPARE(removeSpy.size(), 1);
+    }
+
+    // Replacing a sub-tree deletes all its adaptors, the model must not keep anything of the deeper
+    // levels. New adaptors can get the addresses of the deleted ones, and must not end up with
+    // their rows then (issue #1133).
+    void testReplaceSubTree()
+    {
+        ChainObject root;
+        AggregatedPropertyModel model;
+        QAbstractItemModelTester modelTest(&model);
+        model.setObject(&root);
+
+        // every new chain has more dynamic properties than the previous one, so mixing up the
+        // adaptors of two chains shows in the row counts
+        std::vector<std::unique_ptr<ChainObject>> chains;
+        for (int iteration = 0; iteration < 10; ++iteration) {
+            const int depth = 4;
+            std::vector<ChainObject *> chain;
+            for (int level = 0; level < depth; ++level) {
+                chains.push_back(std::make_unique<ChainObject>());
+                auto obj = chains.back().get();
+                for (int i = 0; i <= iteration; ++i)
+                    obj->setProperty(QByteArray("dyn" + QByteArray::number(i)).constData(), i);
+                if (!chain.empty())
+                    chain.back()->setChild(obj);
+                chain.push_back(obj);
+            }
+            root.setChild(chain.front());
+
+            // expand the whole chain, which creates the adaptors
+            QModelIndex parent;
+            for (int level = 0; level < depth; ++level) {
+                QModelIndex index;
+                for (int row = 0; row < model.rowCount(parent); ++row) {
+                    if (model.index(row, 0, parent).data().toString() == QLatin1String("child"))
+                        index = model.index(row, 0, parent);
+                }
+                QVERIFY(index.isValid());
+                AggregatedPropertyModel freshModel;
+                freshModel.setObject(chain.at(level));
+                QCOMPARE(model.rowCount(index), freshModel.rowCount());
+                parent = index;
+            }
+
+            // a change deep down in the chain must find all of its rows
+            chain.back()->setProperty("dyn0", -1);
+        }
+    }
+
+    // the adaptors of removed rows must go away with them, and not report changes anymore
+    static void testRemoveExpandedProperty()
+    {
+        QObject obj;
+        QObject child;
+        obj.setProperty("childObject", QVariant::fromValue<QObject *>(&child));
+
+        // no QAbstractItemModelTester, as DynamicPropertyAdaptor only learns about a removed
+        // property after the fact, and reports the removal with the following rows already moved
+        AggregatedPropertyModel model;
+        model.setObject(&obj);
+        const auto row = searchFixedIndex(&model, QStringLiteral("childObject"));
+        QVERIFY(row.isValid());
+        QVERIFY(model.rowCount(row) > 0); // creates the adaptor for child
+
+        QSignalSpy removeSpy(&model, &QAbstractItemModel::rowsRemoved);
+        obj.setProperty("childObject", QVariant());
+        QCOMPARE(removeSpy.size(), 1);
+        QVERIFY(!searchFixedIndex(&model, QStringLiteral("childObject")).isValid());
+
+        QSignalSpy addSpy(&model, &QAbstractItemModel::rowsInserted);
+        child.setProperty("dynamicProperty", 1);
+        QCOMPARE(addSpy.size(), 0);
     }
 
     static void testGadgetRO()
