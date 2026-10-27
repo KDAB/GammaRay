@@ -24,9 +24,18 @@
 #include <QSignalSpy>
 #include <QWidget>
 
+#include <algorithm>
+
 using namespace GammaRay;
 
 Q_DECLARE_METATYPE(QVector<GammaRay::ToolInfo>)
+
+class TestAction : public QAction
+{
+    Q_OBJECT
+public:
+    using QAction::QAction;
+};
 
 class ToolManagerTest : public BaseProbeTest
 {
@@ -118,6 +127,22 @@ private slots:
         QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::ObjectInspector")));
         QVERIFY(supportedToolIds.contains(QStringLiteral("GammaRay::MetaObjectBrowser")));
         QVERIFY(supportedToolIds.contains(QStringLiteral("gammaray_actioninspector")));
+    }
+
+    // the tool for a class is enabled by an object of a subclass, also when other base classes of
+    // that are known already
+    void testToolForBaseClass()
+    {
+        auto *toolManager = ObjectBroker::object<ToolManagerInterface *>();
+        QVERIFY(toolManager);
+        QSignalSpy toolEnabledSpy(toolManager, &ToolManagerInterface::toolEnabled);
+
+        QObject object; // QObject is known first
+        QTest::qWait(1);
+        TestAction action(QStringLiteral("Test Action"), this);
+        QTRY_VERIFY(std::any_of(toolEnabledSpy.cbegin(), toolEnabledSpy.cend(), [](const QList<QVariant> &args) {
+            return args.first().toString() == QLatin1String("gammaray_actioninspector");
+        }));
     }
 
     void testClientSide()
