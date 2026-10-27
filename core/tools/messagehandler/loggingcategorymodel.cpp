@@ -14,6 +14,8 @@
 #include "loggingcategorymodel.h"
 #include <QFile>
 
+#include <algorithm>
+
 using namespace GammaRay;
 
 namespace GammaRay {
@@ -175,5 +177,10 @@ QVariant LoggingCategoryModel::headerData(int section, Qt::Orientation orientati
 
 void LoggingCategoryModel::addCategorySlot(QLoggingCategory *category)
 {
-    addCategory(category);
+    // Qt calls the filter for all categories again whenever the logging rules change
+    const auto known = std::any_of(m_categories.cbegin(), m_categories.cend(), [category](const CategoryWithDefaultValues &c) {
+        return c.category == category;
+    });
+    if (!known)
+        addCategory(category);
 }
