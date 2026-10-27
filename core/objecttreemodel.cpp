@@ -67,6 +67,8 @@ void ObjectTreeModel::objectAdded(QObject *obj)
 
     if (indexForObject(obj).isValid()) {
         IF_DEBUG(cout << "tree double obj added: " << hex << obj << endl;)
+        // added already as the parent of an object announced before it, it can have moved since
+        objectReparented(obj);
         return;
     }
 
