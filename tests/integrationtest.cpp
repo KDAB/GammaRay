@@ -19,15 +19,37 @@
 
 #include <QCoreApplication>
 #include <QMetaObject>
+#include <QMutexLocker>
 #include <QObject>
 #include <QSignalSpy>
 #include <QTest>
 
 #include <algorithm>
+#include <atomic>
+#include <memory>
 
 using namespace GammaRay;
 
 namespace {
+// a signal and a slot, the slot callbacks are only called for connections by method index
+class SlotObject : public QObject
+{
+    Q_OBJECT
+public:
+    void emitSignal()
+    {
+        emit fired();
+    }
+
+signals:
+    void fired();
+
+public slots:
+    void slot()
+    {
+    }
+};
+
 int argc = 1;
 char argv0[] = "integrationtest";
 char *argv[] = { argv0 };
@@ -136,6 +158,41 @@ private slots:
     }
 
     // handlers of a delayed reparent can queue further reparents, which must not get lost
+    // the slot end callback of another thread waits for the lock while the probe is destroyed
+    void slotEndCallbackDuringProbeDestruction()
+    {
+        {
+            QCoreApplication app(argc, argv);
+            createProbe();
+            SignalSpyCallbackSet callbacks;
+            callbacks.slotEndCallback = [](QObject *, int) {};
+            Probe::instance()->registerSignalSpyCallbackSet(callbacks);
+
+            // creating objects needs the lock too, so that happens before the main thread has it
+            std::atomic<bool> ready = false;
+            std::atomic<bool> go = false;
+            std::unique_ptr<QThread> thread(QThread::create([&ready, &go] {
+                SlotObject obj;
+                QObject::connect(&obj, SIGNAL(fired()), &obj, SLOT(slot())); // not a functor connection
+                ready = true;
+                while (!go)
+                    QThread::yieldCurrentThread();
+                obj.emitSignal(); // the callback after the slot waits for the lock
+            }));
+            thread->start();
+            while (!ready)
+                QThread::yieldCurrentThread();
+            {
+                QMutexLocker lock(Probe::objectLock());
+                go = true;
+                QThread::msleep(100); // let it reach the lock
+                delete Probe::instance();
+            }
+            QVERIFY(thread->wait(10000));
+        }
+        QVERIFY(!Probe::instance());
+    }
+
     void reparentFromDelayedReparent()
     {
         {
