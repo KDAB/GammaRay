@@ -159,7 +159,22 @@ void ObjectTreeModel::objectReparented(QObject *obj)
         return;
     }
 
-    QObject *oldParent = parentIt.value();
+    // The probe reports moves in the order it noticed them, so the new parent or one of its
+    // ancestors can still be below obj here, when its own move isn't reported yet. Moving obj
+    // there would put it below itself, so move those to where they actually are first.
+    QVector<QObject *> movedAncestors;
+    for (QObject *ancestor = parentObject(obj); ancestor; ancestor = parentObject(ancestor)) {
+        const auto it = m_childParentMap.constFind(ancestor);
+        if (it != m_childParentMap.cend() && it.value() != parentObject(ancestor))
+            movedAncestors.push_front(ancestor);
+    }
+    for (QObject *ancestor : std::as_const(movedAncestors))
+        objectReparented(ancestor);
+    // like objectAdded(), add a new parent that the probe didn't announce yet
+    if (parentObject(obj) && !indexForObject(parentObject(obj)).isValid())
+        objectAdded(parentObject(obj));
+
+    QObject *oldParent = m_childParentMap.value(obj);
     const auto sourceParent = indexForObject(oldParent);
     if ((oldParent && !sourceParent.isValid()) || (oldParent == parentObject(obj)))
         return;
