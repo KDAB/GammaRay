@@ -58,6 +58,13 @@ public:
     PropertyAdaptor *parentAdaptor() const;
 
 signals:
+    /** Emit these before the properties are added or removed, while the adaptor still reports the
+     * old properties. Optional, but without them a model on top of this has to announce the change
+     * when the adaptor already reports the new state.
+     */
+    void propertyAboutToBeAdded(int first, int last);
+    void propertyAboutToBeRemoved(int first, int last);
+
     void propertyAdded(int first, int last);
     void propertyRemoved(int first, int last);
     void propertyChanged(int first, int last);

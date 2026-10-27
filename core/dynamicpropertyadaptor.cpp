@@ -41,7 +41,6 @@ int DynamicPropertyAdaptor::count() const
 {
     if (!object().isValid())
         return 0;
-    Q_ASSERT(m_propNames.size() == object().qtObject()->dynamicPropertyNames().size());
     return m_propNames.size();
 }
 
@@ -50,8 +49,6 @@ PropertyData DynamicPropertyAdaptor::propertyData(int index) const
     PropertyData data;
     if (!object().isValid())
         return data;
-
-    Q_ASSERT(m_propNames.size() == object().qtObject()->dynamicPropertyNames().size());
 
     data.setName(m_propNames.at(index));
     data.setValue(object().qtObject()->property(m_propNames.at(index)));
@@ -95,10 +92,14 @@ bool DynamicPropertyAdaptor::eventFilter(QObject *receiver, QEvent *event)
             Q_ASSERT(oldIdx == newIdx);
             emit propertyChanged(oldIdx, oldIdx);
         } else if (newIdx >= 0) {
+            // QObject tells us after the fact, so keep reporting the old properties until the
+            // change is announced
+            emit propertyAboutToBeAdded(newIdx, newIdx);
             m_propNames = obj->dynamicPropertyNames();
             emit propertyAdded(newIdx, newIdx);
         } else {
             Q_ASSERT(oldIdx >= 0);
+            emit propertyAboutToBeRemoved(oldIdx, oldIdx);
             m_propNames = obj->dynamicPropertyNames();
             emit propertyRemoved(oldIdx, oldIdx);
         }

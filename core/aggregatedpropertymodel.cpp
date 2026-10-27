@@ -363,7 +363,9 @@ void AggregatedPropertyModel::addPropertyAdaptor(PropertyAdaptor *adaptor) const
 
     m_parentChildrenMap.emplace(adaptor, QVector<PropertyAdaptor *>(adaptor->count()));
     connect(adaptor, &PropertyAdaptor::propertyChanged, this, &AggregatedPropertyModel::propertyChanged);
+    connect(adaptor, &PropertyAdaptor::propertyAboutToBeAdded, this, &AggregatedPropertyModel::propertyAboutToBeAdded);
     connect(adaptor, &PropertyAdaptor::propertyAdded, this, &AggregatedPropertyModel::propertyAdded);
+    connect(adaptor, &PropertyAdaptor::propertyAboutToBeRemoved, this, &AggregatedPropertyModel::propertyAboutToBeRemoved);
     connect(adaptor, &PropertyAdaptor::propertyRemoved, this, &AggregatedPropertyModel::propertyRemoved);
 }
 
@@ -381,6 +383,21 @@ void AggregatedPropertyModel::propertyChanged(int first, int last)
         reloadSubTree(adaptor, i);
 }
 
+void AggregatedPropertyModel::propertyAboutToBeAdded(int first, int last)
+{
+    auto adaptor = qobject_cast<PropertyAdaptor *>(sender());
+    Q_ASSERT(adaptor);
+    Q_ASSERT(m_parentChildrenMap.find(adaptor) != m_parentChildrenMap.cend());
+    Q_ASSERT(first <= last);
+    Q_ASSERT(first >= 0);
+    Q_ASSERT(first <= adaptor->count());
+    Q_ASSERT(!m_pendingChangeAdaptor);
+
+    beginInsertRows(createIndex(first, 0, adaptor).parent(), first, last);
+    m_pendingChangeAdaptor = adaptor;
+}
+
+// adaptors that don't emit propertyAboutToBeAdded already report the new properties here
 void AggregatedPropertyModel::propertyAdded(int first, int last)
 {
     auto adaptor = qobject_cast<PropertyAdaptor *>(sender());
@@ -389,9 +406,12 @@ void AggregatedPropertyModel::propertyAdded(int first, int last)
     Q_ASSERT(first <= last);
     Q_ASSERT(first >= 0);
     Q_ASSERT(last < adaptor->count());
+    Q_ASSERT(!m_pendingChangeAdaptor || m_pendingChangeAdaptor == adaptor);
 
-    auto idx = createIndex(first, 0, adaptor);
-    beginInsertRows(idx.parent(), first, last);
+    const bool announced = m_pendingChangeAdaptor == adaptor;
+    m_pendingChangeAdaptor = nullptr;
+    if (!announced)
+        beginInsertRows(createIndex(first, 0, adaptor).parent(), first, last);
     auto &children = m_parentChildrenMap[adaptor];
     if (first >= children.size())
         children.resize(last + 1);
@@ -400,18 +420,35 @@ void AggregatedPropertyModel::propertyAdded(int first, int last)
     endInsertRows();
 }
 
-void AggregatedPropertyModel::propertyRemoved(int first, int last)
+void AggregatedPropertyModel::propertyAboutToBeRemoved(int first, int last)
 {
     auto adaptor = qobject_cast<PropertyAdaptor *>(sender());
-
     Q_ASSERT(adaptor);
     Q_ASSERT(m_parentChildrenMap.find(adaptor) != m_parentChildrenMap.cend());
     Q_ASSERT(first <= last);
     Q_ASSERT(first >= 0);
     Q_ASSERT(last < adaptor->count());
+    Q_ASSERT(!m_pendingChangeAdaptor);
 
-    auto idx = createIndex(first, 0, adaptor);
-    beginRemoveRows(idx.parent(), first, last);
+    beginRemoveRows(createIndex(first, 0, adaptor).parent(), first, last);
+    m_pendingChangeAdaptor = adaptor;
+}
+
+// adaptors that don't emit propertyAboutToBeRemoved already report the remaining properties here
+void AggregatedPropertyModel::propertyRemoved(int first, int last)
+{
+    auto adaptor = qobject_cast<PropertyAdaptor *>(sender());
+    Q_ASSERT(adaptor);
+    Q_ASSERT(m_parentChildrenMap.find(adaptor) != m_parentChildrenMap.cend());
+    Q_ASSERT(first <= last);
+    Q_ASSERT(first >= 0);
+    Q_ASSERT(last < m_parentChildrenMap.at(adaptor).size());
+    Q_ASSERT(!m_pendingChangeAdaptor || m_pendingChangeAdaptor == adaptor);
+
+    const bool announced = m_pendingChangeAdaptor == adaptor;
+    m_pendingChangeAdaptor = nullptr;
+    if (!announced)
+        beginRemoveRows(createIndex(first, 0, adaptor).parent(), first, last);
     auto &children = m_parentChildrenMap[adaptor];
     const auto removed = children.mid(first, last - first + 1);
     children.remove(first, last - first + 1);

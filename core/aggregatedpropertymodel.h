@@ -62,7 +62,9 @@ private:
 
 private slots:
     void propertyChanged(int first, int last);
+    void propertyAboutToBeAdded(int first, int last);
     void propertyAdded(int first, int last);
+    void propertyAboutToBeRemoved(int first, int last);
     void propertyRemoved(int first, int last);
     void objectInvalidated();
     void objectInvalidated(GammaRay::PropertyAdaptor *adaptor);
@@ -70,6 +72,8 @@ private slots:
 private:
     PropertyAdaptor *m_rootAdaptor = nullptr;
     mutable std::unordered_map<PropertyAdaptor *, QVector<PropertyAdaptor *>> m_parentChildrenMap;
+    // the change an adaptor announced with propertyAboutToBeAdded/Removed
+    PropertyAdaptor *m_pendingChangeAdaptor = nullptr;
     bool m_inhibitAdaptorCreation = false;
     bool m_readOnly = false;
 };

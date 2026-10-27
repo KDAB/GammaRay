@@ -130,52 +130,58 @@ void PropertyAggregator::addPropertyAdaptor(PropertyAdaptor *adaptor)
 {
     m_propertyAdaptors.push_back(adaptor);
     connect(adaptor, &PropertyAdaptor::propertyChanged, this, &PropertyAggregator::slotPropertyChanged);
+    connect(adaptor, &PropertyAdaptor::propertyAboutToBeAdded, this, &PropertyAggregator::slotPropertyAboutToBeAdded);
     connect(adaptor, &PropertyAdaptor::propertyAdded, this, &PropertyAggregator::slotPropertyAdded);
+    connect(adaptor, &PropertyAdaptor::propertyAboutToBeRemoved, this, &PropertyAggregator::slotPropertyAboutToBeRemoved);
     connect(adaptor, &PropertyAdaptor::propertyRemoved, this, &PropertyAggregator::slotPropertyRemoved);
     connect(adaptor, &PropertyAdaptor::objectInvalidated, this, &PropertyAdaptor::objectInvalidated);
 }
 
-void PropertyAggregator::slotPropertyChanged(int first, int last)
+// the rows of an adaptor start after those of all adaptors before it
+int PropertyAggregator::offsetOf(const QObject *adaptor) const
 {
-    auto source = sender();
-    Q_ASSERT(source);
-
+    Q_ASSERT(adaptor);
     int offset = 0;
-    for (auto pa : std::as_const(m_propertyAdaptors)) {
-        if (pa == source) {
-            emit propertyChanged(first + offset, last + offset);
-            return;
-        }
+    for (auto pa : m_propertyAdaptors) {
+        if (pa == adaptor)
+            return offset;
         offset += pa->count();
     }
+    Q_ASSERT(false);
+    return -1;
+}
+
+void PropertyAggregator::slotPropertyChanged(int first, int last)
+{
+    const int offset = offsetOf(sender());
+    if (offset >= 0)
+        emit propertyChanged(first + offset, last + offset);
+}
+
+void PropertyAggregator::slotPropertyAboutToBeAdded(int first, int last)
+{
+    const int offset = offsetOf(sender());
+    if (offset >= 0)
+        emit propertyAboutToBeAdded(first + offset, last + offset);
 }
 
 void PropertyAggregator::slotPropertyAdded(int first, int last)
 {
-    auto source = sender();
-    Q_ASSERT(source);
+    const int offset = offsetOf(sender());
+    if (offset >= 0)
+        emit propertyAdded(first + offset, last + offset);
+}
 
-    int offset = 0;
-    for (auto pa : std::as_const(m_propertyAdaptors)) {
-        if (pa == source) {
-            emit propertyAdded(first + offset, last + offset);
-            return;
-        }
-        offset += pa->count();
-    }
+void PropertyAggregator::slotPropertyAboutToBeRemoved(int first, int last)
+{
+    const int offset = offsetOf(sender());
+    if (offset >= 0)
+        emit propertyAboutToBeRemoved(first + offset, last + offset);
 }
 
 void PropertyAggregator::slotPropertyRemoved(int first, int last)
 {
-    auto source = sender();
-    Q_ASSERT(source);
-
-    int offset = 0;
-    for (auto pa : std::as_const(m_propertyAdaptors)) {
-        if (pa == source) {
-            emit propertyRemoved(first + offset, last + offset);
-            return;
-        }
-        offset += pa->count();
-    }
+    const int offset = offsetOf(sender());
+    if (offset >= 0)
+        emit propertyRemoved(first + offset, last + offset);
 }
