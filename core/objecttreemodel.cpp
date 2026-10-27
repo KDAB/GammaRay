@@ -117,6 +117,17 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
         return;
     }
 
+    // Children are destroyed before their parent, so the ones still here moved away already, only
+    // their move isn't reported yet. They would disappear together with this row, so move them now.
+    const auto children = m_parentChildMap.value(obj);
+    for (QObject *child : children) {
+        if (Probe::instance()->isValidObject(child))
+            objectReparented(child);
+        else
+            objectRemoved(child);
+    }
+    parentIt = m_childParentMap.constFind(obj);
+
     QObject *parentObj = parentIt.value();
     const QModelIndex parentIndex = indexForObject(parentObj);
     if (parentObj && !parentIndex.isValid())
