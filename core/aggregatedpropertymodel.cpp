@@ -413,7 +413,14 @@ void AggregatedPropertyModel::propertyRemoved(int first, int last)
     auto idx = createIndex(first, 0, adaptor);
     beginRemoveRows(idx.parent(), first, last);
     auto &children = m_parentChildrenMap[adaptor];
+    const auto removed = children.mid(first, last - first + 1);
     children.remove(first, last - first + 1);
+    for (auto child : removed) {
+        if (child) {
+            forgetSubTree(child);
+            delete child;
+        }
+    }
     endRemoveRows();
 }
 
@@ -476,7 +483,7 @@ void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor *parentAdaptor, int 
             beginRemoveRows(createIndex(index, 0, parentAdaptor), 0, oldRowCount - 1);
         m_parentChildrenMap[parentAdaptor][index] = nullptr;
 
-        m_parentChildrenMap.erase(oldAdaptor);
+        forgetSubTree(oldAdaptor);
         delete oldAdaptor;
         if (oldRowCount)
             endRemoveRows();
@@ -504,6 +511,21 @@ void AggregatedPropertyModel::reloadSubTree(PropertyAdaptor *parentAdaptor, int 
         endInsertRows();
 
     m_inhibitAdaptorCreation = false;
+}
+
+// Deleting an adaptor also deletes all adaptors below it, so forget about all of them. Otherwise a
+// new adaptor that gets the address of one of them would get its rows.
+void AggregatedPropertyModel::forgetSubTree(PropertyAdaptor *adaptor)
+{
+    auto it = m_parentChildrenMap.find(adaptor);
+    if (it == m_parentChildrenMap.end())
+        return;
+    const auto children = std::move(it->second);
+    m_parentChildrenMap.erase(it);
+    for (auto child : children) {
+        if (child)
+            forgetSubTree(child);
+    }
 }
 
 bool AggregatedPropertyModel::isParentEditable(PropertyAdaptor *adaptor) const
