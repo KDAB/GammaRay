@@ -164,6 +164,9 @@ void ObjectTreeModel::objectReparented(QObject *obj)
     if ((oldParent && !sourceParent.isValid()) || (oldParent == parentObject(obj)))
         return;
 
+    // creating the entry of a new parent without children can rehash the map, so do that before
+    // taking a reference to the old parent's entry
+    QVector<QObject *> &newSiblings = m_parentChildMap[parentObject(obj)];
     QVector<QObject *> &oldSiblings = m_parentChildMap[oldParent];
     auto oldIt = std::lower_bound(oldSiblings.begin(),
                                   oldSiblings.end(), obj);
@@ -175,7 +178,6 @@ void ObjectTreeModel::objectReparented(QObject *obj)
     const auto destParent = indexForObject(parentObject(obj));
     Q_ASSERT(destParent.isValid() || !parentObject(obj));
 
-    QVector<QObject *> &newSiblings = m_parentChildMap[parentObject(obj)];
     auto newIt = std::lower_bound(newSiblings.begin(),
                                   newSiblings.end(), obj);
     const int destRow = std::distance(newSiblings.begin(), newIt);
