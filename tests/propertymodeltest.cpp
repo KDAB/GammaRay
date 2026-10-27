@@ -59,6 +59,36 @@ private:
     QObject *m_child = nullptr;
 };
 
+// writing the flag also changes the child property of the owner, like when a sub-object is replaced
+class FlagObject : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(bool flag READ flag WRITE setFlag NOTIFY flagChanged)
+public:
+    explicit FlagObject(ChainObject *owner)
+        : m_owner(owner)
+    {
+    }
+
+    bool flag() const
+    {
+        return m_flag;
+    }
+    void setFlag(bool flag)
+    {
+        m_flag = flag;
+        emit flagChanged();
+        m_owner->setChild(this);
+    }
+
+signals:
+    void flagChanged();
+
+private:
+    ChainObject *m_owner;
+    bool m_flag = false;
+};
+
 class PropertyModelTest : public BaseProbeTest
 {
     Q_OBJECT
@@ -212,6 +242,34 @@ private slots:
         QSignalSpy addSpy(&model, &QAbstractItemModel::rowsInserted);
         child.setProperty("dynamicProperty", 1);
         QCOMPARE(addSpy.size(), 0);
+    }
+
+    // the write can reload the sub-tree the written row is in
+    void testCheckStateWriteReloadsParent()
+    {
+        ChainObject root;
+        FlagObject flagObject(&root);
+        root.setChild(&flagObject);
+
+        AggregatedPropertyModel model;
+        QAbstractItemModelTester modelTest(&model);
+        model.setObject(&root);
+        const auto childRow = searchFixedIndex(&model, QStringLiteral("child"));
+        QVERIFY(childRow.isValid());
+        QVERIFY(model.rowCount(childRow) > 0);
+
+        QModelIndex flagValue;
+        for (int row = 0; row < model.rowCount(childRow); ++row) {
+            if (model.index(row, 0, childRow).data().toString() == QLatin1String("flag"))
+                flagValue = model.index(row, 1, childRow);
+        }
+        QVERIFY(flagValue.isValid());
+        QVERIFY(flagValue.flags() & Qt::ItemIsUserCheckable);
+        QCOMPARE(flagValue.data(Qt::CheckStateRole).toInt(), int(Qt::Unchecked));
+
+        QVERIFY(model.setData(flagValue, Qt::Checked, Qt::CheckStateRole));
+        QVERIFY(flagObject.flag());
+        QVERIFY(model.rowCount(childRow) > 0);
     }
 
     static void testGadgetRO()

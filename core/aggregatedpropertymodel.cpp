@@ -267,10 +267,13 @@ bool AggregatedPropertyModel::setData(const QModelIndex &index, const QVariant &
         }
         return true;
     }
-    case Qt::CheckStateRole:
+    case Qt::CheckStateRole: {
+        QPointer<GammaRay::PropertyAdaptor> guard(adaptor);
         adaptor->writeProperty(index.row(), value.toInt() == Qt::Checked);
-        propagateWrite(adaptor);
+        if (guard)
+            propagateWrite(adaptor);
         return true;
+    }
     case PropertyModel::ResetActionRole:
         adaptor->resetProperty(index.row());
         return true;
