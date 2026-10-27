@@ -441,6 +441,9 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
             Qt::Network
         )
 
+        gammaray_add_test(serverproxymodeltest serverproxymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
+        target_link_libraries(serverproxymodeltest gammaray_core Qt::Gui)
+
         gammaray_add_test(
             networkselectionmodeltest networkselectionmodeltest.cpp
             ${CMAKE_SOURCE_DIR}/common/networkselectionmodel.cpp
