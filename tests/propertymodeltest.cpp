@@ -17,6 +17,8 @@
 #include <core/objectinstance.h>
 #include <core/aggregatedpropertymodel.h>
 
+#include <common/propertymodel.h>
+
 #include "shared/propertytestobject.h"
 
 #include <QAbstractItemModelTester>
@@ -301,6 +303,27 @@ private slots:
         QVERIFY(childRow.isValid());
         QCOMPARE(childRow.sibling(childRow.row(), 1).data().toString(), QStringLiteral("[invalid]"));
         QCOMPARE(model.rowCount(childRow), 0);
+    }
+
+    static void testResetProperty()
+    {
+        PropertyTestObject obj;
+        obj.setIntProp(12);
+        AggregatedPropertyModel model;
+        QAbstractItemModelTester modelTest(&model);
+        model.setObject(&obj);
+
+        const auto row = searchFixedIndex(&model, QStringLiteral("readOnlyProp"));
+        QVERIFY(row.isValid());
+        const auto value = row.sibling(row.row(), 1);
+        QVERIFY(value.data(PropertyModel::ActionRole).toInt() & PropertyModel::Reset);
+        QVERIFY((value.flags() & Qt::ItemIsEditable) == 0);
+
+        QSignalSpy changeSpy(&model, &QAbstractItemModel::dataChanged);
+        QVERIFY(model.setData(value, QVariant(), PropertyModel::ResetActionRole));
+        QCOMPARE(obj.intProp(), 5);
+        QVERIFY(!changeSpy.isEmpty()); // through the notify signal of intProp
+        QCOMPARE(value.data().toString(), QStringLiteral("5"));
     }
 
     static void testGadgetRO()
