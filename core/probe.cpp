@@ -807,6 +807,11 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
                 objectAdded(obj->parent());
                 m_pendingReparents.push_back(obj);
                 notifyQueuedObjectChanges();
+            } else if (!isObjectCreationQueued(obj)) {
+                // the new parent isn't announced yet, report the move after it is. Without an old
+                // parent, there is no ChildRemoved event that would do that
+                m_pendingReparents.push_back(obj);
+                notifyQueuedObjectChanges();
             }
         } else if (tracked) {
             // defer processing this until we know its final location
