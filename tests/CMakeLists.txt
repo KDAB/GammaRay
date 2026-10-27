@@ -447,6 +447,12 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
         target_link_libraries(serverproxymodeltest gammaray_core Qt::Gui)
 
         gammaray_add_test(
+            loggingcategorymodeltest loggingcategorymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>
+            ../core/tools/messagehandler/loggingcategorymodel.cpp
+        )
+        target_link_libraries(loggingcategorymodeltest gammaray_core)
+
+        gammaray_add_test(
             networkselectionmodeltest networkselectionmodeltest.cpp
             ${CMAKE_SOURCE_DIR}/common/networkselectionmodel.cpp
         )
