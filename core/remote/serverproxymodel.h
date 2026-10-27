@@ -78,9 +78,13 @@ public:
 
     void setSourceModel(QAbstractItemModel *sourceModel) override
     {
+        // nobody uses the old source through us anymore
+        if (m_active && m_sourceModel && m_sourceModel != sourceModel)
+            Model::unused(m_sourceModel);
         m_sourceModel = sourceModel;
-        if (m_active && sourceModel) {
-            Model::used(sourceModel);
+        if (m_active) {
+            if (sourceModel)
+                Model::used(sourceModel);
             BaseProxy::setSourceModel(sourceModel);
         }
     }
