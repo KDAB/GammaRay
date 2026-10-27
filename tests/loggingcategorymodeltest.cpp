@@ -95,6 +95,7 @@ private slots:
         QTest::addColumn<int>("column");
         QTest::addColumn<int>("type");
         QTest::newRow("debug") << 1 << int(QtDebugMsg);
+        QTest::newRow("info") << 2 << int(QtInfoMsg);
         QTest::newRow("warning") << 3 << int(QtWarningMsg);
         QTest::newRow("critical") << 4 << int(QtCriticalMsg);
     }
