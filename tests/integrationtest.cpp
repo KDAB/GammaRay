@@ -20,13 +20,17 @@
 #include <QCoreApplication>
 #include <QMetaObject>
 #include <QMutexLocker>
+#include <QScopeGuard>
 #include <QObject>
 #include <QSignalSpy>
 #include <QTest>
 
+#include <private/qhooks_p.h>
+
 #include <algorithm>
 #include <atomic>
 #include <memory>
+#include <tuple>
 
 using namespace GammaRay;
 
@@ -49,6 +53,13 @@ public slots:
     {
     }
 };
+
+// a hook that was installed before GammaRay's
+static int s_previousHookCalls = 0;
+static void previousAddObjectHook(QObject *)
+{
+    ++s_previousHookCalls;
+}
 
 int argc = 1;
 char argv0[] = "integrationtest";
@@ -189,6 +200,43 @@ private slots:
                 delete Probe::instance();
             }
             QVERIFY(thread->wait(10000));
+        }
+        QVERIFY(!Probe::instance());
+    }
+
+    // detaching deletes the probe, attaching again has to track objects again, and in between the
+    // hooks GammaRay replaced are back
+    void reattach()
+    {
+        {
+            QCoreApplication app(argc, argv);
+            // as if this was installed before GammaRay's hooks, which are installed already
+            const auto originalHooks = std::make_tuple(qtHookData[QHooks::AddQObject], qtHookData[QHooks::RemoveQObject],
+                                                       qtHookData[QHooks::Startup]);
+            const auto restoreHooks = qScopeGuard([originalHooks] {
+                std::tie(qtHookData[QHooks::AddQObject], qtHookData[QHooks::RemoveQObject], qtHookData[QHooks::Startup]) = originalHooks;
+            });
+            qtHookData[QHooks::AddQObject] = reinterpret_cast<quintptr>(&previousAddObjectHook);
+            qtHookData[QHooks::RemoveQObject] = 0;
+            qtHookData[QHooks::Startup] = 0;
+            QVERIFY(!Hooks::hooksInstalled());
+
+            createProbe();
+            QVERIFY(Hooks::hooksInstalled());
+            s_previousHookCalls = 0;
+            delete new QObject;
+            QCOMPARE(s_previousHookCalls, 1); // GammaRay calls the hook it replaced
+
+            delete Probe::instance();
+            QCOMPARE(qtHookData[QHooks::AddQObject], reinterpret_cast<quintptr>(&previousAddObjectHook));
+
+            gammaray_probe_attach();
+            QTRY_VERIFY(Probe::instance());
+            QVERIFY(Hooks::hooksInstalled());
+            auto obj = new QObject;
+            QTRY_VERIFY(Probe::instance()->isValidObject(obj));
+            delete obj;
+            QVERIFY(!Probe::instance()->isValidObject(obj));
         }
         QVERIFY(!Probe::instance());
     }
