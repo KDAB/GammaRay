@@ -300,6 +300,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     target_link_libraries(signalspycallbacktest gammaray_core)
     gammaray_add_probe_test(integrationtest integrationtest.cpp)
     target_link_libraries(integrationtest gammaray_core)
+    gammaray_add_probe_test(probetest probetest.cpp)
+    target_link_libraries(probetest gammaray_core)
 endif()
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
