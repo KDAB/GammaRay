@@ -185,6 +185,23 @@ private slots:
         delete Probe::instance();
     }
 
+    // a known object without a parent gets one that the probe doesn't know about yet, so there is
+    // no ChildRemoved event for it, and its move can only be reported after the parent's creation
+    static void testReparentToObjectNotAnnouncedYet()
+    {
+        ObjectPool pool;
+        auto obj = pool.create();
+        processQueue();
+        QVERIFY(Probe::instance()->isValidObject(obj));
+
+        auto parent = pool.create();
+        obj->setParent(parent);
+        processQueue();
+        const auto errors = checkModels(pool, { obj, parent });
+        QVERIFY2(errors.isEmpty(), qPrintable(errors.join(QLatin1Char('\n'))));
+        delete parent;
+    }
+
     // every move to a parent without children adds an entry to the tree model's map, at some point
     // that makes it grow while the model still refers to the entry of the old parent
     static void testReparentToParentsWithoutChildren()
