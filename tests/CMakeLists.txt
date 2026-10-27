@@ -410,6 +410,21 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
         Qt::Gui
     )
 
+    gammaray_add_test(serverproxymodeltest serverproxymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
+    target_link_libraries(serverproxymodeltest gammaray_core Qt::Gui)
+
+    gammaray_add_test(
+        loggingcategorymodeltest loggingcategorymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>
+        ../core/tools/messagehandler/loggingcategorymodel.cpp
+    )
+    target_link_libraries(loggingcategorymodeltest gammaray_core)
+
+    gammaray_add_test(
+        paintbuffermodeltest paintbuffermodeltest.cpp $<TARGET_OBJECTS:modeltestobj> ../core/paintbuffermodel.cpp
+    )
+    target_link_libraries(paintbuffermodeltest gammaray_core Qt::Gui Qt::GuiPrivate)
+    target_include_directories(paintbuffermodeltest PRIVATE ${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/)
+
     if(GAMMARAY_BUILD_UI)
         gammaray_add_test(launcheruiiptest launcheruiiptest.cpp)
         target_link_libraries(
@@ -442,21 +457,6 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD AND NOT GAMMARAY_PROBE_ONLY_BUILD)
             Qt::Widgets
             Qt::Network
         )
-
-        gammaray_add_test(serverproxymodeltest serverproxymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
-        target_link_libraries(serverproxymodeltest gammaray_core Qt::Gui)
-
-        gammaray_add_test(
-            loggingcategorymodeltest loggingcategorymodeltest.cpp $<TARGET_OBJECTS:modeltestobj>
-            ../core/tools/messagehandler/loggingcategorymodel.cpp
-        )
-        target_link_libraries(loggingcategorymodeltest gammaray_core)
-
-        gammaray_add_test(
-            paintbuffermodeltest paintbuffermodeltest.cpp $<TARGET_OBJECTS:modeltestobj> ../core/paintbuffermodel.cpp
-        )
-        target_link_libraries(paintbuffermodeltest gammaray_core Qt::Gui Qt::GuiPrivate)
-        target_include_directories(paintbuffermodeltest PRIVATE ${CMAKE_SOURCE_DIR}/3rdparty/qt/5.5/)
 
         gammaray_add_test(
             networkselectionmodeltest networkselectionmodeltest.cpp
