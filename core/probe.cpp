@@ -53,6 +53,7 @@
 #include <private/qobject_p.h>
 #include <algorithm>
 #include <iostream>
+#include <optional>
 #include <utility>
 #include <cstdio>
 
@@ -793,6 +794,14 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     if (ProbeGuard::insideProbe() && receiver->thread() == QThread::currentThread())
         return QObject::eventFilter(receiver, event);
 
+    // this sees every event, and filterObject() walks all ancestors, so do that at most once
+    std::optional<bool> receiverFiltered;
+    const auto isReceiverFiltered = [&] {
+        if (!receiverFiltered)
+            receiverFiltered = filterObject(receiver);
+        return *receiverFiltered;
+    };
+
     if (event->type() == QEvent::ChildAdded || event->type() == QEvent::ChildRemoved) {
         QChildEvent *childEvent = static_cast<QChildEvent *>(event);
         QObject *obj = childEvent->child();
@@ -839,7 +848,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     if (event->type() == QEvent::ParentChange) {
         QMutexLocker lock(s_lock());
         const bool tracked = m_validObjects.contains(receiver);
-        const bool filtered = filterObject(receiver);
+        const bool filtered = isReceiverFiltered();
         const bool parentTracked = m_validObjects.contains(receiver->parent());
 
         if (!filtered && tracked && !isObjectCreationQueued(receiver)
@@ -859,7 +868,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
         && event->type() != QEvent::ParentChange // already handled above
         && event->type() != QEvent::Destroy
         && event->type() != QEvent::WinIdChange // unsafe since emitted from dtors
-        && !filterObject(receiver)) {
+        && !isReceiverFiltered()) {
         QMutexLocker lock(s_lock());
         const bool tracked = m_validObjects.contains(receiver);
         if (!tracked)
@@ -867,7 +876,7 @@ bool Probe::eventFilter(QObject *receiver, QEvent *event)
     }
 
     // filters provided by plugins
-    if (!filterObject(receiver)) {
+    if (!m_globalEventFilters.isEmpty() && !isReceiverFiltered()) {
         for (QObject *filter : std::as_const(m_globalEventFilters)) {
             filter->eventFilter(receiver, event);
         }

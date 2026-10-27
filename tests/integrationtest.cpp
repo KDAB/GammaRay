@@ -105,6 +105,21 @@ static void deliverToServer(const Message &msg)
     (Server::instance()->*messageReceived)(received);
 }
 
+// remembers the receivers of user events it sees as a plugin's global event filter
+class EventRecorder : public QObject
+{
+    Q_OBJECT
+public:
+    bool eventFilter(QObject *receiver, QEvent *event) override
+    {
+        if (event->type() == QEvent::User)
+            receivers.push_back(receiver);
+        return false;
+    }
+
+    QVector<QObject *> receivers;
+};
+
 int argc = 1;
 char argv0[] = "integrationtest";
 char *argv[] = { argv0 };
@@ -212,7 +227,6 @@ private slots:
         QVERIFY(!Probe::instance());
     }
 
-    // handlers of a delayed reparent can queue further reparents, which must not get lost
     // the slot end callback of another thread waits for the lock while the probe is destroyed
     void slotEndCallbackDuringProbeDestruction()
     {
@@ -340,6 +354,36 @@ private slots:
         QVERIFY(!Probe::instance());
     }
 
+    // plugins see the events of the application's objects, but not those of GammaRay's own ones
+    void pluginEventFilter()
+    {
+        EventRecorder recorder; // outlives the probe, which doesn't forget it
+        {
+            QCoreApplication app(argc, argv);
+            createProbe();
+            Probe::instance()->installGlobalEventFilter(&recorder);
+
+            QObject parent;
+            auto child = new QObject(&parent);
+            auto probeChild = new QObject(Probe::instance());
+
+            // the probe installs its event filter once the event loop runs
+            QEvent event(QEvent::User);
+            QTRY_VERIFY((QCoreApplication::sendEvent(child, &event), !recorder.receivers.isEmpty()));
+            recorder.receivers.clear();
+
+            QCoreApplication::sendEvent(child, &event);
+            QCoreApplication::sendEvent(probeChild, &event);
+            QCoreApplication::sendEvent(Probe::instance(), &event);
+            QCoreApplication::sendEvent(&parent, &event);
+            QCOMPARE(recorder.receivers, QVector<QObject *>({ child, &parent }));
+
+            delete probeChild;
+        }
+        QVERIFY(!Probe::instance());
+    }
+
+    // handlers of a delayed reparent can queue further reparents, which must not get lost
     void reparentFromDelayedReparent()
     {
         {
