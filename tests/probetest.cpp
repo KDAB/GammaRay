@@ -320,6 +320,26 @@ private slots:
         QCOMPARE(created, 0);
     }
 
+    // slots connected to objectCreated() can create further objects, those are announced too
+    static void testCreateFromObjectCreated()
+    {
+        auto trigger = std::make_unique<QObject>();
+        trigger->setObjectName(QStringLiteral("trigger"));
+        std::unique_ptr<QObject> created;
+        auto connection = connect(Probe::instance(), &Probe::objectCreated, Probe::instance(), [&](QObject *o) {
+            if (o == trigger.get())
+                created = std::make_unique<QObject>();
+        });
+        QTRY_VERIFY(created);
+        disconnect(connection);
+        processQueue();
+        QVERIFY(Probe::instance()->isValidObject(created.get()));
+        ObjectPool pool;
+        pool.alive.insert(created.get());
+        const auto errors = checkModels(pool, {});
+        QVERIFY2(errors.isEmpty(), qPrintable(errors.join(QLatin1Char('\n'))));
+    }
+
     // slots connected to objectCreated() can delete the object right away
     static void testDeleteFromObjectCreated()
     {

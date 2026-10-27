@@ -340,6 +340,8 @@ private:
         } type;
     };
     QVector<ObjectChange> m_queuedObjectChanges;
+    // processQueuedObjectChanges() is running, which needs the entries to stay where they are
+    bool m_processingQueuedObjectChanges = false;
 
     QList<QObject *> m_pendingReparents;
     QTimer *m_queueTimer;
