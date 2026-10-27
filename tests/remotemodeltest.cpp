@@ -18,7 +18,9 @@
 
 #include <QAbstractItemModelTester>
 #include <QBuffer>
+#include <QDeadlineTimer>
 #include <QDebug>
+#include <QElapsedTimer>
 #include <QObject>
 #include <QSignalSpy>
 #include <QSortFilterProxyModel>
@@ -35,7 +37,9 @@
 #include <common/objectmodel.h>
 #include <common/sourcelocation.h>
 
+#include <algorithm>
 #include <memory>
+#include <vector>
 
 using namespace GammaRay;
 
@@ -357,6 +361,71 @@ private:
             spy.clear();
         }
         return false;
+    }
+
+    // Sizes for the benchmarks, small enough to run quickly as a test on CI. For meaningful
+    // numbers, increase these, e.g. to BenchRows = 10000 and BenchTreeRows = 30 (the tree then has
+    // 27930 rows), and run only the benchmarks: remotemodeltest benchLoadFlat benchLoadTree
+    // benchChanges
+    static constexpr int BenchRows = 200;
+    static constexpr int BenchColumns = 4;
+    static constexpr int BenchTreeRows = 8; // rows on each of the three levels below each parent
+
+    static QList<QStandardItem *> createRow(int row, int columns)
+    {
+        QList<QStandardItem *> items;
+        for (int column = 0; column < columns; ++column)
+            items.push_back(new QStandardItem(QStringLiteral("item %1-%2").arg(row).arg(column)));
+        return items;
+    }
+
+    static bool isLoading(const QModelIndex &index)
+    {
+        return index.data(RemoteModelRole::LoadingState).value<RemoteModelNodeState::NodeStates>() != RemoteModelNodeState::NoState;
+    }
+
+    // requests the rows below parent like a view showing all of them would, waits for the
+    // expected number of rows and all of their data, and does the same for the given number of
+    // levels below, returns the number of cells or -1 if that took too long
+    static int load(QAbstractItemModel *model, int rows, int levels = 0, const QModelIndex &parent = {})
+    {
+        QDeadlineTimer deadline(30000);
+        while (model->rowCount(parent) != rows) { // also triggers fetching the row count
+            if (deadline.hasExpired())
+                return -1;
+            QCoreApplication::processEvents();
+        }
+
+        // not QPersistentModelIndex, models never shrink their storage for those, which would make
+        // later changes slower, the structure doesn't change while waiting for the data
+        std::vector<QModelIndex> pending;
+        for (int row = 0; row < rows; ++row) {
+            for (int column = 0; column < model->columnCount(parent); ++column) {
+                const auto index = model->index(row, column, parent);
+                index.data(); // triggers fetching the data
+                if (isLoading(index))
+                    pending.emplace_back(index);
+            }
+        }
+        while (!pending.empty()) {
+            if (deadline.hasExpired())
+                return -1;
+            QCoreApplication::processEvents();
+            pending.erase(std::remove_if(pending.begin(), pending.end(), [](const QModelIndex &index) {
+                              index.data(); // fetches again what got outdated meanwhile
+                              return !isLoading(index);
+                          }),
+                          pending.end());
+        }
+
+        int cells = rows * model->columnCount(parent);
+        for (int row = 0; levels > 0 && row < rows; ++row) {
+            const int childCells = load(model, rows, levels - 1, model->index(row, 0, parent));
+            if (childCells < 0)
+                return -1;
+            cells += childCells;
+        }
+        return cells;
     }
 
 private slots:
@@ -1129,6 +1198,101 @@ private slots:
         // the client starts over, and then shows what the source model has
         QTRY_COMPARE(client.rowCount(), expected.size());
         QCOMPARE(rowData(&client), expected);
+    }
+
+    static void benchLoadFlat()
+    {
+        QStandardItemModel source;
+        for (int row = 0; row < BenchRows; ++row)
+            source.appendRow(createRow(row, BenchColumns));
+
+        QBENCHMARK
+        {
+            Connection c(&source, false);
+            QCOMPARE(load(&c.client, BenchRows), BenchRows * BenchColumns);
+        }
+    }
+
+    static void benchLoadTree()
+    {
+        QStandardItemModel source;
+        for (int row = 0; row < BenchTreeRows; ++row) {
+            auto items = createRow(row, BenchColumns);
+            for (int child = 0; child < BenchTreeRows; ++child) {
+                auto childItems = createRow(child, BenchColumns);
+                for (int grandChild = 0; grandChild < BenchTreeRows; ++grandChild)
+                    childItems.first()->appendRow(createRow(grandChild, BenchColumns));
+                items.first()->appendRow(childItems);
+            }
+            source.appendRow(items);
+        }
+
+        QBENCHMARK
+        {
+            Connection c(&source, false);
+            QCOMPARE(load(&c.client, BenchTreeRows, 2),
+                     (BenchTreeRows + BenchTreeRows * BenchTreeRows + BenchTreeRows * BenchTreeRows * BenchTreeRows) * BenchColumns);
+        }
+    }
+
+    static void benchChanges_data()
+    {
+        QTest::addColumn<QString>("change");
+        QTest::addColumn<bool>("withProxy");
+
+        for (const auto &change : { QStringLiteral("insert"), QStringLiteral("remove"), QStringLiteral("dataChanged") }) {
+            QTest::addRow("%s", qPrintable(change)) << change << false;
+            QTest::addRow("%s with proxy", qPrintable(change)) << change << true;
+        }
+    }
+
+    // the changes arrive one by one, and are followed on a fully loaded client
+    static void benchChanges()
+    {
+        QFETCH(QString, change);
+        QFETCH(bool, withProxy);
+
+        QStandardItemModel source;
+        for (int row = 0; row < BenchRows; ++row)
+            source.appendRow(createRow(row, BenchColumns));
+        Connection c(&source, false);
+        std::unique_ptr<QSortFilterProxyModel> proxy;
+        QAbstractItemModel *view = &c.client;
+        if (withProxy) {
+            proxy = std::make_unique<QSortFilterProxyModel>();
+            proxy->setSourceModel(&c.client);
+            proxy->setFilterFixedString(QStringLiteral("item"));
+            proxy->sort(0);
+            view = proxy.get();
+        }
+        QCOMPARE(load(view, BenchRows), BenchRows * BenchColumns);
+
+        const int count = BenchRows / 2;
+        QElapsedTimer timer;
+        timer.start();
+        if (change == QLatin1String("insert")) {
+            for (int i = 0; i < count; ++i)
+                source.insertRow(i * 2, createRow(BenchRows + i, BenchColumns));
+            QCoreApplication::processEvents(); // receive the changes before waiting for them
+            QCOMPARE(load(view, BenchRows + count), (BenchRows + count) * BenchColumns);
+            if (!withProxy)
+                QCOMPARE(view->index(0, 0).data().toString(), QStringLiteral("item %1-0").arg(BenchRows));
+        } else if (change == QLatin1String("remove")) {
+            for (int i = 0; i < count; ++i)
+                source.removeRow(i);
+            QCoreApplication::processEvents();
+            QCOMPARE(load(view, BenchRows - count), (BenchRows - count) * BenchColumns);
+        } else {
+            for (int row = 0; row < count; ++row) {
+                for (int column = 0; column < BenchColumns; ++column)
+                    source.item(row * 2, column)->setText(QStringLiteral("changed item %1-%2").arg(row).arg(column));
+            }
+            QCoreApplication::processEvents();
+            QCOMPARE(load(view, BenchRows), BenchRows * BenchColumns);
+            if (!withProxy)
+                QCOMPARE(view->index(0, 0).data().toString(), QStringLiteral("changed item 0-0"));
+        }
+        QTest::setBenchmarkResult(timer.nsecsElapsed() / 1000000.0, QTest::WalltimeMilliseconds);
     }
 };
 
