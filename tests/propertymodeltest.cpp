@@ -286,6 +286,23 @@ private slots:
         QCOMPARE(model.rowCount(childRow), 0);
     }
 
+    // the property still returns an object that was deleted meanwhile, it must not be touched
+    void testDeletedObjectProperty()
+    {
+        ChainObject root;
+        auto child = new QObject;
+        root.setChild(child);
+        delete child;
+
+        AggregatedPropertyModel model;
+        QAbstractItemModelTester modelTest(&model);
+        model.setObject(&root);
+        const auto childRow = searchFixedIndex(&model, QStringLiteral("child"));
+        QVERIFY(childRow.isValid());
+        QCOMPARE(childRow.sibling(childRow.row(), 1).data().toString(), QStringLiteral("[invalid]"));
+        QCOMPARE(model.rowCount(childRow), 0);
+    }
+
     static void testGadgetRO()
     {
         PropertyTestObject obj;
