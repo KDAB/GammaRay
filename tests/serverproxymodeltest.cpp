@@ -121,6 +121,47 @@ private slots:
         QCOMPARE(source.events, QVector<bool>({ true }));
     }
 
+    // the new source is used now, the old one isn't anymore
+    static void testSourceReplacedWhileUsed()
+    {
+        RecordingModel source;
+        RecordingModel other(5);
+        Proxy proxy;
+        QAbstractItemModelTester tester(&proxy);
+        proxy.setSourceModel(&source);
+        setUsed(&proxy, true);
+
+        proxy.setSourceModel(&other);
+        QCOMPARE(proxy.sourceModel(), &other);
+        QCOMPARE(proxy.rowCount(), 5);
+        QCOMPARE(other.events, QVector<bool>({ true }));
+        QCOMPARE(source.events, QVector<bool>({ true, false }));
+
+        setUsed(&proxy, false);
+        QCOMPARE(other.events, QVector<bool>({ true, false }));
+        QCOMPARE(source.events, QVector<bool>({ true, false }));
+    }
+
+    static void testSourceClearedWhileUsed()
+    {
+        RecordingModel source;
+        Proxy proxy;
+        QAbstractItemModelTester tester(&proxy);
+        proxy.setSourceModel(&source);
+        setUsed(&proxy, true);
+
+        proxy.setSourceModel(nullptr);
+        QCOMPARE(proxy.sourceModel(), nullptr);
+        QCOMPARE(proxy.rowCount(), 0);
+        QCOMPARE(source.events, QVector<bool>({ true, false }));
+
+        // and nothing to activate later
+        setUsed(&proxy, false);
+        setUsed(&proxy, true);
+        QCOMPARE(proxy.sourceModel(), nullptr);
+        QCOMPARE(source.events, QVector<bool>({ true, false }));
+    }
+
     static void testSourceDeletedWhileUsed()
     {
         auto source = std::make_unique<RecordingModel>();
