@@ -36,6 +36,7 @@
 #include <atomic>
 #include <memory>
 #include <tuple>
+#include <vector>
 
 using namespace GammaRay;
 
@@ -379,6 +380,36 @@ private slots:
             QCOMPARE(recorder.receivers, QVector<QObject *>({ child, &parent }));
 
             delete probeChild;
+        }
+        QVERIFY(!Probe::instance());
+    }
+
+    // the probe learns about the objects created before it exists from a list, which has to
+    // forget the ones destroyed meanwhile, wherever they are in it
+    void objectsDestroyedBeforeProbe()
+    {
+        {
+            QCoreApplication app(argc, argv);
+            Hooks::installHooks();
+            QVERIFY(!Probe::isInitialized());
+
+            std::vector<std::unique_ptr<QObject>> objects;
+            for (int i = 0; i < 6; ++i)
+                objects.push_back(std::make_unique<QObject>());
+            delete new QObject; // a temporary right after the others
+            std::vector<QObject *> destroyed;
+            for (int i : { 0, 3, 5 }) { // the oldest, one in the middle, and the newest
+                destroyed.push_back(objects[i].get());
+                objects[i].reset();
+            }
+
+            createProbe();
+            for (const auto &obj : objects) {
+                if (obj)
+                    QVERIFY(Probe::instance()->isValidObject(obj.get()));
+            }
+            for (auto obj : destroyed)
+                QVERIFY(!Probe::instance()->isValidObject(obj));
         }
         QVERIFY(!Probe::instance());
     }

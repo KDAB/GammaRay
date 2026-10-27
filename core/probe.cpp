@@ -695,13 +695,12 @@ void Probe::objectRemoved(QObject *obj)
         if (!s_listener())
             return;
 
+        // only the hooks add objects before the probe exists, so each is in there once, and most
+        // objects that die this early were created shortly before, so search from the end
         QVector<QObject *> &addedBefore = s_listener()->addedBeforeProbeInstance;
-        for (auto it = addedBefore.begin(); it != addedBefore.end();) {
-            if (*it == obj)
-                it = addedBefore.erase(it);
-            else
-                ++it;
-        }
+        const auto it = std::find(addedBefore.rbegin(), addedBefore.rend(), obj);
+        if (it != addedBefore.rend())
+            addedBefore.erase(std::next(it).base());
         return;
     }
 
