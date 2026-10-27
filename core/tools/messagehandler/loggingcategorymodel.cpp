@@ -135,8 +135,6 @@ QVariant LoggingCategoryModel::data(const QModelIndex &index, int role) const
 Qt::ItemFlags LoggingCategoryModel::flags(const QModelIndex &index) const
 {
     const auto baseFlags = QAbstractTableModel::flags(index);
-    if (index.column() == 2) // info not available in Qt < 5.5
-        return baseFlags;
     if (index.column() > 0)
         return baseFlags | Qt::ItemIsUserCheckable;
     return baseFlags;
