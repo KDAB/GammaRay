@@ -376,6 +376,35 @@ private slots:
         QTRY_VERIFY(verify());
     }
 
+    // selecting another window looks up the node still selected in the previous one, this used to
+    // loop forever (issue #700)
+    void testNodeOfOtherWindow()
+    {
+        auto rect = item(QStringLiteral("rect1"));
+        QVERIFY(rect);
+        QSGNode *rectNode = itemNode(rect);
+        QSGNode *childNode = rectNode->firstChild();
+        QVERIFY(childNode);
+        QCOMPARE(m_model->itemForSgNode(childNode), rect);
+
+        QQuickView otherView;
+        otherView.setSource(QUrl(QStringLiteral("qrc:/manual/sgnodemovetest.qml")));
+        QVERIFY(otherView.rootObject());
+        otherView.show();
+        QVERIFY(QTest::qWaitForWindowExposed(&otherView));
+        QTRY_VERIFY(itemNode(otherView.contentItem()));
+
+        m_model->setWindow(&otherView);
+        QCOMPARE(m_model->itemForSgNode(rectNode), nullptr);
+        QCOMPARE(m_model->itemForSgNode(childNode), nullptr);
+        QCOMPARE(m_model->sgNodeForItem(rect), nullptr);
+        QVERIFY(!m_model->indexForNode(childNode).isValid());
+
+        m_model->setWindow(m_view.get());
+        QVERIFY(verify());
+        QCOMPARE(m_model->itemForSgNode(childNode), rect);
+    }
+
 private:
     std::unique_ptr<QQuickView> m_view;
     std::unique_ptr<QuickSceneGraphModel> m_model;
