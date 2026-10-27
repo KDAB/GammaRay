@@ -236,6 +236,27 @@ private slots:
         delete child;
     }
 
+    // a child announced before its parent makes the tree model add the parent early, which can
+    // still move before it is announced itself
+    static void testParentMovedBeforeItsAnnouncement()
+    {
+        ObjectPool pool;
+        auto newParent = pool.create();
+        processQueue();
+        auto child = pool.create();
+        auto parent = pool.create();
+        child->setParent(parent); // announced first
+        auto connection = connect(Probe::instance(), &Probe::objectCreated, &pool, [&](QObject *o) {
+            if (o == child)
+                parent->setParent(newParent);
+        });
+        processQueue();
+        disconnect(connection);
+        const auto errors = checkModels(pool, { newParent, child, parent });
+        QVERIFY2(errors.isEmpty(), qPrintable(errors.join(QLatin1Char('\n'))));
+        delete newParent;
+    }
+
     // every move to a parent without children adds an entry to the tree model's map, at some point
     // that makes it grow while the model still refers to the entry of the old parent
     static void testReparentToParentsWithoutChildren()
