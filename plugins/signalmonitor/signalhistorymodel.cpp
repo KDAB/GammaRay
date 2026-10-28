@@ -241,6 +241,14 @@ void SignalHistoryModel::onObjectRemoved(QObject *object)
     emit dataChanged(index(itemIndex, EventColumn), index(itemIndex, EventColumn));
 }
 
+QModelIndex SignalHistoryModel::indexForObject(QObject *object) const
+{
+    const auto it = m_itemIndex.constFind(object);
+    if (it == m_itemIndex.constEnd())
+        return {};
+    return index(*it, ObjectColumn);
+}
+
 void SignalHistoryModel::onObjectFavorited(QObject *object)
 {
     auto it = m_itemIndex.find(object);

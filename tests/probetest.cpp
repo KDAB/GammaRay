@@ -13,6 +13,7 @@
 #include "baseprobetest.h"
 
 #include <common/objectbroker.h>
+#include <common/objectid.h>
 #include <common/objectmodel.h>
 #include <core/probe.h>
 #include <core/probeguard.h>
@@ -20,9 +21,11 @@
 #include <QAbstractItemModel>
 #include <QHash>
 #include <QSet>
+#include <QElapsedTimer>
 #include <QItemSelectionModel>
 #include <QSignalSpy>
 
+#include <algorithm>
 #include <memory>
 #include <vector>
 
@@ -290,7 +293,7 @@ private slots:
         processQueue();
     }
 
-    // selecting an object selects it in the object inspector's tree
+    // selecting an object selects it in the object inspector's tree, without searching all objects
     static void testSelectObject()
     {
         auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"));
@@ -312,6 +315,46 @@ private slots:
         Probe::instance()->selectObject(untracked);
         QCOMPARE(selectionModel->selectedRows().value(0).data(ObjectModel::ObjectRole).value<QObject *>(), child);
         delete untracked;
+
+        // the signal monitor selects it as well, once it lists the object
+        if (auto signalModel = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"))) {
+            auto signalSelection = ObjectBroker::selectionModel(signalModel);
+            QObject other;
+            processQueue();
+            QTRY_VERIFY((Probe::instance()->selectObject(&other),
+                         signalSelection->selectedRows().value(0).data(ObjectModel::ObjectIdRole).value<ObjectId>() == ObjectId(&other)));
+        }
+
+        const auto timeSelections = [](int objectCount) {
+            std::vector<std::unique_ptr<QObject>> objects;
+            for (int i = 0; i < objectCount; ++i)
+                objects.push_back(std::make_unique<QObject>());
+            processQueue();
+            // the first selection makes the proxy map all of the new rows, a view would do that
+            Probe::instance()->selectObject(objects.front().get());
+            QElapsedTimer timer;
+            timer.start();
+            for (int i = 0; i < 200; ++i)
+                Probe::instance()->selectObject(objects[objectCount - 1 - i % 100].get());
+            return std::max<qint64>(timer.elapsed(), 1);
+        };
+        const auto few = timeSelections(2000);
+        const auto many = timeSelections(16000);
+        // searching all objects would take about 8 times as long
+        QVERIFY2(many < 3 * few + 10, qPrintable(QStringLiteral("%1 ms vs %2 ms").arg(many).arg(few)));
+    }
+
+    static void profileSelection()
+    {
+        std::vector<std::unique_ptr<QObject>> objects;
+        for (int i = 0; i < 40000; ++i)
+            objects.push_back(std::make_unique<QObject>());
+        processQueue();
+        Probe::instance()->selectObject(objects.front().get());
+        qWarning("SELECTING");
+        for (int k = 0; k < 50; ++k)
+            for (int i = 0; i < 200; ++i)
+                Probe::instance()->selectObject(objects[39999 - i % 100].get());
     }
 
     // objectCreated() is only emitted once the object is fully constructed
