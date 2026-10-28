@@ -105,6 +105,9 @@ jobs:
               run: >
                   ctest --test-dir ./build-${{ matrix.preset.name }} --output-on-failure
                   --exclude-regex "${{ matrix.toolchain.test_exclude_regex }}"
+              env:
+                  # without a console Qt Test only logs to OutputDebugString on Windows
+                  QT_FORCE_STDERR_LOGGING: 1
 
             - name: Read tests log when it fails
               uses: andstor/file-reader-action@v1
