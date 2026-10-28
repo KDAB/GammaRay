@@ -49,10 +49,10 @@ bool GammaRay::PropertyFilter::matches(const GammaRay::PropertyData &prop) const
     if (!m_typeName.isEmpty() && prop.typeName() != m_typeName) {
         return false;
     }
-    if (m_accessFlags && (prop.accessFlags() & m_accessFlags) == m_accessFlags) {
+    if (m_accessFlags && (prop.accessFlags() & m_accessFlags) != m_accessFlags) {
         return false;
     }
-    if (m_propertyFlags && (prop.propertyFlags() & m_propertyFlags) == m_propertyFlags) {
+    if (m_propertyFlags && (prop.propertyFlags() & m_propertyFlags) != m_propertyFlags) {
         return false;
     }
     return true;
