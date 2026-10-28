@@ -29,6 +29,7 @@
 #include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <core/bindingaggregator.h>
+#include <core/objecttreemodel.h>
 #include <core/problemcollector.h>
 #include <core/util.h>
 #include <remote/serverproxymodel.h>
@@ -51,11 +52,11 @@ ObjectInspector::ObjectInspector(Probe *probe, QObject *parent)
                                                       "com.kdab.GammaRay.ObjectInspector"),
                                                   this);
 
-    auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-    proxy->setSourceModel(probe->objectTreeModel());
-    probe->registerModel(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"), proxy);
+    m_proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
+    m_proxy->setSourceModel(probe->objectTreeModel());
+    probe->registerModel(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"), m_proxy);
 
-    m_selectionModel = ObjectBroker::selectionModel(proxy);
+    m_selectionModel = ObjectBroker::selectionModel(m_proxy);
 
     connect(m_selectionModel,
             &QItemSelectionModel::selectionChanged,
@@ -98,15 +99,17 @@ void ObjectInspector::modelIndexSelected(const QModelIndex &index)
 
 void ObjectInspector::objectSelected(QObject *object)
 {
-    const QAbstractItemModel *model = m_selectionModel->model();
-    const QModelIndexList indexList = model->match(model->index(0, 0),
-                                                   ObjectModel::ObjectRole,
-                                                   QVariant::fromValue<QObject *>(object), 1,
-                                                   Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
-    if (indexList.isEmpty())
+    // the object tree knows where the object is, searching the whole tree for it takes long
+    const auto treeModel = static_cast<ObjectTreeModel *>(Probe::instance()->objectTreeModel());
+    const auto treeIndex = treeModel->indexForObject(object);
+    if (!treeIndex.isValid())
+        return;
+    // the proxy only uses the object tree while it is used itself
+    Model::used(m_proxy);
+    const QModelIndex index = m_proxy->mapFromSource(treeIndex);
+    if (!index.isValid())
         return;
 
-    const QModelIndex index = indexList.first();
     m_selectionModel->select(
         index,
         QItemSelectionModel::Select | QItemSelectionModel::Clear

@@ -19,6 +19,7 @@
 #include <QObject>
 
 QT_BEGIN_NAMESPACE
+class QAbstractProxyModel;
 class QItemSelection;
 class QItemSelectionModel;
 class QModelIndex;
@@ -45,6 +46,7 @@ private:
     static void scanForThreadAffinityIssues();
 
     PropertyController *m_propertyController;
+    QAbstractProxyModel *m_proxy;
     QItemSelectionModel *m_selectionModel;
 };
 
