@@ -159,6 +159,37 @@ private slots:
     }
 #endif
 
+    // reported right away, the target would never report back without a probe
+    static void testNoProbe_data()
+    {
+        QTest::addColumn<ProbeABI>("abi");
+        QTest::newRow("no ABI") << ProbeABI();
+        auto abi = ProbeABI::fromString(QStringLiteral(GAMMARAY_PROBE_ABI));
+        abi.setQtVersion(5, 1);
+        QTest::newRow("no probe for the ABI") << abi;
+    }
+
+    static void testNoProbe()
+    {
+        QFETCH(ProbeABI, abi);
+
+        LaunchOptions options;
+        options.setUiMode(LaunchOptions::NoUi);
+        options.setProbeABI(abi);
+        QString exePath = QLatin1String(TESTBIN_DIR "/minimalcoreapplication");
+#ifdef Q_OS_WIN
+        exePath += QLatin1String(".exe");
+#endif
+        options.setLaunchArguments(QStringList() << exePath);
+        Launcher launcher(options);
+
+        QSignalSpy finishSpy(&launcher, &Launcher::finished);
+        QVERIFY(!launcher.start());
+        QCOMPARE(finishSpy.size(), 1);
+        QCOMPARE(launcher.exitCode(), 1);
+        QVERIFY2(launcher.errorMessage().contains(QLatin1String("No probe")), qPrintable(launcher.errorMessage()));
+    }
+
     // reported right away, instead of waiting for the target to time out
     static void testServerLaunchError()
     {
