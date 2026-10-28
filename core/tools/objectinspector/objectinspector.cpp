@@ -243,7 +243,7 @@ void ObjectInspector::scanForThreadAffinityIssues()
             problem.description = QStringLiteral("The object %1 has thread %2 as parent, but doesn't have affinity with it.").arg(objectName, parentName);
             problem.object = ObjectId(object);
             problem.locations.append(probe->objectCreationSourceLocation(object));
-            problem.problemId = QStringLiteral("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck.Parent.%1")
+            problem.problemId = QStringLiteral("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck.Parent.%1:%2")
                                     .arg(QString::number(reinterpret_cast<quintptr>(object)),
                                          QString::number(reinterpret_cast<quintptr>(parent)));
             problem.findingCategory = Problem::Scan;
