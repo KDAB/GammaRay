@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2026 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
+#
+# SPDX-License-Identifier: MIT
+
+name: Checkout KDStateMachineEditor
+description: >
+  Checks out the KDStateMachineEditor submodule with its graphviz submodule, from a cache when the
+  same revision was checked out before. Run it after actions/checkout.
+
+runs:
+  using: composite
+  steps:
+    - name: Get the revision of KDStateMachineEditor
+      id: revision
+      shell: bash
+      run: echo "sha=$(git rev-parse HEAD:3rdparty/KDStateMachineEditor)" >> "$GITHUB_OUTPUT"
+
+    # the submodule's git directory is needed as well, CMake checks that the submodule exists
+    - name: Restore KDStateMachineEditor from the cache
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          3rdparty/KDStateMachineEditor
+          .git/modules/3rdparty/KDStateMachineEditor
+        key: kdsme-${{ runner.os }}-${{ steps.revision.outputs.sha }}
+
+    # graphviz's own submodules are only needed to build it on Windows
+    - name: Checkout KDStateMachineEditor
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        git submodule update --init --depth 1 3rdparty/KDStateMachineEditor
+        git -C 3rdparty/KDStateMachineEditor submodule update --init --depth 1 \
+          ${{ runner.os == 'Windows' && '--recursive' || '' }} 3rdparty/graphviz
