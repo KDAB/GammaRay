@@ -220,7 +220,7 @@ private slots:
             QCoreApplication app(argc, argv);
             createProbe();
             SignalSpyCallbackSet callbacks;
-            callbacks.slotEndCallback = [](QObject *, int) {};
+            callbacks.slotEndCallback = [](QObject *, int) { };
             Probe::instance()->registerSignalSpyCallbackSet(callbacks);
 
             // creating objects needs the lock too, so that happens before the main thread has it

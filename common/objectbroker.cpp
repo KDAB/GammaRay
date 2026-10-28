@@ -220,7 +220,7 @@ void ObjectBroker::clear()
 {
     auto *ob = s_objectBroker();
     // deleted selection models remove themselves from the list
-    const auto owned = std::exchange(ob->ownedObjects, { });
+    const auto owned = std::exchange(ob->ownedObjects, {});
     qDeleteAll(owned);
     ob->objects.clear();
     ob->models.clear();
