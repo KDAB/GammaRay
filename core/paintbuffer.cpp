@@ -282,7 +282,6 @@ void PaintBufferEngine::createStackTrace()
 void PaintBufferEngine::pushOrigin()
 {
     const auto size = m_buffer->data()->commands.size();
-    m_buffer->m_origins.reserve(size);
     while (m_buffer->m_origins.size() < size) {
         m_buffer->m_origins.push_back(m_buffer->m_currentOrigin);
     }
