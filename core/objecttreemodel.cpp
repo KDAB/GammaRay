@@ -133,6 +133,19 @@ void ObjectTreeModel::objectRemoved(QObject *obj)
         else
             objectRemoved(child);
     }
+
+    // Another thread already created a new object at the same address, whose announcement follows.
+    // The children still here are that object's, they would be left without a parent with this row,
+    // so keep the row for the new object, at its place.
+    if (Probe::instance()->isValidObject(obj)) {
+        m_favorites.remove(obj);
+        // the row shows the data of the new object now
+        const auto index = indexForObject(obj);
+        emit dataChanged(index, index.sibling(index.row(), columnCount() - 1));
+        objectReparented(obj);
+        return;
+    }
+
     parentIt = m_childParentMap.constFind(obj);
 
     QObject *parentObj = parentIt.value();

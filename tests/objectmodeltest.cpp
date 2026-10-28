@@ -347,6 +347,53 @@ private slots:
         processQueue();
     }
 
+    // another thread destroys an object and creates a new one at the same address, which a child of
+    // the old one moves to, before the probe processes any of that
+    void testDestroyedParentAddressReused()
+    {
+        QThread thread;
+        thread.start();
+        const auto stopThread = qScopeGuard([&thread] {
+            thread.quit();
+            thread.wait();
+        });
+        auto context = new QObject;
+        context->moveToThread(&thread);
+        connect(&thread, &QThread::finished, context, &QObject::deleteLater);
+        const auto inThread = [context](const std::function<void()> &f) {
+            QMetaObject::invokeMethod(context, f, Qt::BlockingQueuedConnection);
+        };
+
+        QObject *oldParent = nullptr;
+        QObject *child = nullptr;
+        inThread([&] {
+            oldParent = new QObject;
+            child = new QObject(oldParent);
+        });
+        processQueue();
+        QCOMPARE(find(treeModel(), child).parent(), find(treeModel(), oldParent));
+
+        QObject *newParent = nullptr;
+        inThread([&] {
+            child->setParent(nullptr);
+            delete oldParent;
+            newParent = new QObject;
+            child->setParent(newParent);
+        });
+        const auto cleanup = qScopeGuard([&] {
+            inThread([&] { delete newParent; });
+            processQueue();
+        });
+        if (newParent != oldParent)
+            QSKIP("the new object didn't get the address of the old one");
+
+        processQueue();
+        const auto index = find(treeModel(), child);
+        QVERIFY(index.isValid());
+        QCOMPARE(index.parent(), find(treeModel(), newParent));
+        QCOMPARE(treeModel()->index(index.row(), 0, index.parent()), index);
+    }
+
     // a recursively filtering proxy follows all of these changes
     void testFilteredProxy()
     {
