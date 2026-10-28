@@ -14,6 +14,7 @@
 #include <config-gammaray.h>
 #include "probefinder.h"
 #include "probeabi.h"
+#include "launcherlog.h"
 
 #include <common/paths.h>
 
@@ -25,6 +26,8 @@
 #include <QString>
 
 #include <algorithm>
+#include <functional>
+#include <iterator>
 
 namespace GammaRay {
 namespace ProbeFinder {
@@ -115,6 +118,103 @@ ProbeABI findBestMatchingABI(const ProbeABI &targetABI, const QVector<ProbeABI> 
     return compatABIs.last();
 }
 
+QString mismatchReason(const ProbeABI &targetABI)
+{
+    return mismatchReason(targetABI, listProbeABIs());
+}
+
+static QString tr(const char *text)
+{
+    return QCoreApplication::translate("GammaRay::ProbeFinder", text);
+}
+
+static QString qtVersion(const ProbeABI &abi)
+{
+    return QStringLiteral("%1.%2").arg(abi.majorQtVersion()).arg(abi.minorQtVersion());
+}
+
+// the distinct values of the given probes, for the messages below
+template<typename Func>
+static QString valuesOf(const QVector<ProbeABI> &abis, Func value)
+{
+    QStringList values;
+    for (const auto &abi : abis) {
+        const QString v = value(abi);
+        if (!values.contains(v))
+            values.push_back(v);
+    }
+    return values.join(QStringLiteral(", "));
+}
+
+template<typename Func>
+static QVector<ProbeABI> filtered(const QVector<ProbeABI> &abis, Func accept)
+{
+    QVector<ProbeABI> result;
+    std::copy_if(abis.cbegin(), abis.cend(), std::back_inserter(result), accept);
+    return result;
+}
+
+QString mismatchReason(const ProbeABI &targetABI, const QVector<ProbeABI> &availableABIs)
+{
+    if (!targetABI.isValid())
+        return tr("The Qt ABI of the target is unknown.");
+    if (availableABIs.isEmpty())
+        return tr("No probes found in %1.").arg(Paths::probePath(QString()));
+    if (findBestMatchingABI(targetABI, availableABIs).isValid())
+        return QString();
+
+    // narrow the probes down in the order of ProbeABI::isCompatible(), and report the first
+    // property none of the remaining ones matches
+    auto candidates = filtered(availableABIs, [&](const ProbeABI &abi) {
+        return abi.majorQtVersion() == targetABI.majorQtVersion();
+    });
+    if (candidates.isEmpty()) {
+        return tr("The target uses Qt %1, the probes are for Qt %2.")
+            .arg(qtVersion(targetABI), valuesOf(availableABIs, qtVersion));
+    }
+
+    auto remaining = filtered(candidates, [&](const ProbeABI &abi) {
+        return abi.architecture() == targetABI.architecture();
+    });
+    if (remaining.isEmpty()) {
+        return tr("The target is built for %1, the probes for %2.")
+            .arg(targetABI.architecture(), valuesOf(candidates, std::mem_fn(&ProbeABI::architecture)));
+    }
+    candidates = remaining;
+
+#ifdef Q_OS_WIN
+    const auto compiler = [](const ProbeABI &abi) {
+        return abi.isVersionRelevant() ? abi.compiler() + QLatin1Char(' ') + abi.compilerVersion() : abi.compiler();
+    };
+    remaining = filtered(candidates, [&](const ProbeABI &abi) {
+        return compiler(abi) == compiler(targetABI);
+    });
+    if (remaining.isEmpty()) {
+        return tr("The Qt of the target is built with %1, the probes with %2.")
+            .arg(compiler(targetABI), valuesOf(candidates, compiler));
+    }
+    candidates = remaining;
+#endif
+
+    if (ProbeABI::isDebugRelevant()) {
+        remaining = filtered(candidates, [&](const ProbeABI &abi) {
+            return abi.isDebug() == targetABI.isDebug();
+        });
+        if (remaining.isEmpty()) {
+            return targetABI.isDebug()
+                ? tr("The target uses a debug build of Qt, the probes are release builds.")
+                : tr("The target uses a release build of Qt, the probes are debug builds. "
+                     "GammaRay needs to be built in release mode for it.");
+        }
+        candidates = remaining;
+    }
+
+    // probes for a newer Qt than the target's are left
+    const auto oldest = *std::min_element(candidates.cbegin(), candidates.cend());
+    return tr("The target uses Qt %1, the probes need Qt %2 or later.")
+        .arg(qtVersion(targetABI), qtVersion(oldest));
+}
+
 QVector<ProbeABI> listProbeABIs()
 {
     QVector<ProbeABI> abis;
@@ -137,6 +237,7 @@ QVector<ProbeABI> listProbeABIs()
             abis.push_back(abi);
     }
 #endif
+    qCInfo(launcherLog) << "Probes in" << dir.path() << ":" << valuesOf(abis, std::mem_fn(&ProbeABI::id));
     return abis;
 }
 }

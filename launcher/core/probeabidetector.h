@@ -31,11 +31,15 @@ class GAMMARAY_LAUNCHER_EXPORT ProbeABIDetector
 public:
     ProbeABIDetector();
 
-    /*! Detect the ABI of the executable at @p path. */
-    ProbeABI abiForExecutable(const QString &path) const;
+    /*! Detect the ABI of the executable at @p path.
+     *  If that fails, the reason is stored in @p errorString if given.
+     */
+    ProbeABI abiForExecutable(const QString &path, QString *errorString = nullptr) const;
 
-    /*! Detect the ABI of the process running with PID @p pid. */
-    ProbeABI abiForProcess(qint64 pid) const;
+    /*! Detect the ABI of the process running with PID @p pid.
+     *  If that fails, the reason is stored in @p errorString if given.
+     */
+    ProbeABI abiForProcess(qint64 pid, QString *errorString = nullptr) const;
 
     /*! Returns the full path to QtCore used by the given executable. */
     static QString qtCoreForExecutable(const QString &path);
@@ -55,6 +59,9 @@ private:
      *  Implementation of abiForXXX() should call this as it implements caching.
      */
     QVector<ProbeABI> abiForQtCore(const QString &path) const;
+
+    /*! The ABI of the given QtCore for this machine, or why there is none. */
+    ProbeABI abiForQtCore(const QString &path, QString *errorString) const;
 
     /*! Detect the ABI of the given QtCore DLL.
      *  This needs to be implemented for every platform.

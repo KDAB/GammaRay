@@ -32,6 +32,7 @@ public:
     int rowCount(const QModelIndex &parent) const override;
 
     int indexOfBestMatchingABI(const ProbeABI &targetABI) const;
+    QVector<ProbeABI> abis() const;
 
 private:
     QVector<ProbeABI> m_abis;

@@ -24,6 +24,8 @@ set(gammaray_launcher_shared_srcs
     launcher.h
     launcherfinder.cpp
     launcherfinder.h
+    launcherlog.cpp
+    launcherlog.h
     launchoptions.cpp
     launchoptions.h
     libraryutil.cpp

@@ -14,46 +14,91 @@
 #include <config-gammaray.h>
 
 #include "probeabidetector.h"
+#include "launcherlog.h"
 
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QProcess>
 #include <QStandardPaths>
+#include <QSysInfo>
+
+#include <algorithm>
 
 using namespace GammaRay;
 
 ProbeABIDetector::ProbeABIDetector() = default;
 
-ProbeABI ProbeABIDetector::abiForExecutable(const QString &path) const
+static QString tr(const char *text)
 {
-    const QVector<ProbeABI> abis = abiForQtCore(qtCoreForExecutable(path));
-    if (abis.isEmpty()) {
-        return {};
-    }
-    // Assume you want to run the one your system cpu is about if it exists
-    // It could be improved asking the user which of the multiple abis
-    // they want to run
-    for (const ProbeABI &abi : abis) {
-        if (abi.architecture() == QSysInfo::currentCpuArchitecture()) {
-            return abi;
-        }
-    }
-    return abis[0];
+    return QCoreApplication::translate("GammaRay::ProbeABIDetector", text);
 }
 
-ProbeABI ProbeABIDetector::abiForProcess(qint64 pid) const
+ProbeABI ProbeABIDetector::abiForExecutable(const QString &path, QString *errorString) const
 {
-    const QVector<ProbeABI> abis = abiForQtCore(qtCoreForProcess(pid));
-    if (abis.isEmpty()) {
+    const QString qtCore = qtCoreForExecutable(path);
+    qCInfo(launcherLog) << "QtCore of" << path << "is" << qtCore;
+    if (qtCore.isEmpty()) {
+        const auto error = tr("No QtCore library found among the libraries %1 uses.").arg(path);
+        qCInfo(launcherLog) << error;
+        if (errorString)
+            *errorString = error;
         return {};
     }
-    // FIXME this is not necessarily true, since the user could have
-    // forced to run a particular abi if the OS supports so
-    for (const ProbeABI &abi : abis) {
-        if (abi.architecture() == QSysInfo::currentCpuArchitecture()) {
-            return abi;
-        }
+    return abiForQtCore(qtCore, errorString);
+}
+
+ProbeABI ProbeABIDetector::abiForProcess(qint64 pid, QString *errorString) const
+{
+    const QString qtCore = qtCoreForProcess(pid);
+    qCInfo(launcherLog) << "QtCore of process" << pid << "is" << qtCore;
+    if (qtCore.isEmpty()) {
+        const auto error = tr("No QtCore library found in process %1. Either it doesn't use Qt (yet), "
+                              "or its libraries can't be read, e.g. as it belongs to another user.")
+                               .arg(pid);
+        qCInfo(launcherLog) << error;
+        if (errorString)
+            *errorString = error;
+        return {};
     }
-    return abis[0];
+    return abiForQtCore(qtCore, errorString);
+}
+
+ProbeABI ProbeABIDetector::abiForQtCore(const QString &path, QString *errorString) const
+{
+    QString error;
+    ProbeABI abi;
+    const QVector<ProbeABI> abis = abiForQtCore(path);
+    if (!QFileInfo::exists(path)) {
+        error = tr("QtCore library %1 not found.").arg(path);
+    } else if (abis.isEmpty()) {
+        error = tr("Could not read QtCore library %1.").arg(path);
+    } else {
+        // Assume you want to run the one your system cpu is about if it exists
+        // It could be improved asking the user which of the multiple abis
+        // they want to run
+        // FIXME this is not necessarily true for processes, since the user could have
+        // forced to run a particular abi if the OS supports so
+        const auto it = std::find_if(abis.cbegin(), abis.cend(), [](const ProbeABI &abi) {
+            return abi.architecture() == QSysInfo::currentCpuArchitecture();
+        });
+        abi = it != abis.cend() ? *it : abis.first();
+
+        if (!abi.hasQtVersion())
+            error = tr("Could not determine the Qt version of %1.").arg(path);
+        else if (abi.architecture().isEmpty())
+            error = tr("Unknown or unsupported CPU architecture of %1.").arg(path);
+        else if (!abi.isValid())
+            error = tr("Could not determine the compiler %1 was built with.").arg(path);
+    }
+
+    if (!error.isEmpty()) {
+        qCInfo(launcherLog) << error;
+        if (errorString)
+            *errorString = error;
+        return {};
+    }
+    qCInfo(launcherLog) << "Detected ABI" << abi.id() << "of" << path;
+    return abi;
 }
 
 QVector<ProbeABI> ProbeABIDetector::abiForQtCore(const QString &path) const

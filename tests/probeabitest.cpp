@@ -12,6 +12,7 @@
 */
 
 #include <launcher/core/probeabi.h>
+#include <launcher/core/probefinder.h>
 
 #include <QObject>
 #include <QTest>
@@ -21,6 +22,20 @@ using namespace GammaRay;
 class ProbeABITest : public QObject
 {
     Q_OBJECT
+private:
+    // an ABI that is valid on every platform
+    static ProbeABI makeABI(int major, int minor, const QString &arch = QStringLiteral("x86_64"),
+                            bool debug = false)
+    {
+        ProbeABI abi;
+        abi.setQtVersion(major, minor);
+        abi.setArchitecture(arch);
+        abi.setCompiler(QStringLiteral("MSVC"));
+        abi.setCompilerVersion(QStringLiteral("140"));
+        abi.setIsDebug(debug);
+        return abi;
+    }
+
 private slots:
     static void testIsValid()
     {
@@ -236,6 +251,38 @@ private slots:
         incompatABI = targetABI;
         incompatABI.setCompiler(QStringLiteral("Clang"));
         QCOMPARE(targetABI.isCompatible(incompatABI), !compilerAbiMatters);
+    }
+
+    // what differs between the target and the closest probes
+    static void testMismatchReason()
+    {
+        const auto target = makeABI(6, 9);
+        QCOMPARE(ProbeFinder::mismatchReason(target, { makeABI(6, 9) }), QString());
+        QCOMPARE(ProbeFinder::mismatchReason(target, { makeABI(6, 5), makeABI(5, 15) }), QString());
+
+        QCOMPARE(ProbeFinder::mismatchReason(ProbeABI(), { makeABI(6, 9) }),
+                 QStringLiteral("The Qt ABI of the target is unknown."));
+        QVERIFY(ProbeFinder::mismatchReason(target, {}).startsWith(QLatin1String("No probes found in ")));
+
+        QCOMPARE(ProbeFinder::mismatchReason(target, { makeABI(5, 15), makeABI(7, 1) }),
+                 QStringLiteral("The target uses Qt 6.9, the probes are for Qt 5.15, 7.1."));
+        QCOMPARE(ProbeFinder::mismatchReason(target, { makeABI(6, 9, QStringLiteral("i686")) }),
+                 QStringLiteral("The target is built for x86_64, the probes for i686."));
+        // the probes for Qt 5 don't matter
+        QCOMPARE(ProbeFinder::mismatchReason(target, { makeABI(5, 15), makeABI(6, 12), makeABI(6, 11) }),
+                 QStringLiteral("The target uses Qt 6.9, the probes need Qt 6.11 or later."));
+
+        if (ProbeABI::isDebugRelevant()) {
+            QCOMPARE(ProbeFinder::mismatchReason(target, { makeABI(6, 9, QStringLiteral("x86_64"), true) }),
+                     QStringLiteral("The target uses a release build of Qt, the probes are debug builds. "
+                                    "GammaRay needs to be built in release mode for it."));
+        }
+#ifdef Q_OS_WIN
+        auto gcc = makeABI(6, 9);
+        gcc.setCompiler(QStringLiteral("GNU"));
+        QCOMPARE(ProbeFinder::mismatchReason(target, { gcc }),
+                 QStringLiteral("The Qt of the target is built with MSVC 140, the probes with GNU."));
+#endif
     }
 
     static void testProbeABISort()
