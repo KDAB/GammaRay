@@ -29,9 +29,10 @@ void MethodArgumentModel::setMethod(const QMetaMethod &method)
     for (int i = 0; i < m_arguments.size(); ++i) {
         const QByteArray typeName = method.parameterTypes().at(i);
 
-        int metaTypeId = QMetaType::fromName(typeName).id();
-        const auto variantType = metaTypeId <= int(QMetaType::User) ? metaTypeId : QMetaType::User;
-        m_arguments[i] = QVariant(variantType);
+        // default-construct built-in types so they get the right editor, leave the rest invalid
+        const QMetaType metaType = QMetaType::fromName(typeName);
+        if (metaType.id() < QMetaType::User)
+            m_arguments[i] = QVariant(metaType);
     }
     endResetModel();
 }

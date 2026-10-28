@@ -51,8 +51,14 @@ public slots:
         i++;
     }
 
+    void takeArgs(const QString &s, int n, double d)
+    {
+        takenArgs = QVariantList({ s, n, d });
+    }
+
 private:
     int i = 0;
+    QVariantList takenArgs;
 
 private slots:
     void modelTest()
@@ -140,6 +146,31 @@ private slots:
         iface->invokeMethod(Qt::AutoConnection);
 
         QCOMPARE(i, 1);
+    }
+
+    // the arguments start with a default value of their type, which is also what gets passed
+    void testArgumentDefaults()
+    {
+        auto iface = ObjectBroker::object<MethodsExtensionInterface *>("com.kdab.GammaRay.ObjectInspector.methodsExtension");
+        auto model = ObjectBroker::model("com.kdab.GammaRay.ObjectInspector.methods");
+        auto argModel = ObjectBroker::model("com.kdab.GammaRay.ObjectInspector.methodArguments");
+        QVERIFY(argModel);
+        auto selModel = ObjectBroker::selectionModel(model);
+
+        static_cast<MethodsExtension *>(iface)->setQObject(this);
+        auto idx = searchContainsIndex(model, "takeArgs(");
+        QVERIFY(idx.isValid());
+        selModel->select(idx, QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect);
+        iface->activateMethod();
+
+        QCOMPARE(argModel->rowCount(), 3);
+        QCOMPARE(argModel->index(0, 1).data(Qt::EditRole).metaType(), QMetaType::fromType<QString>());
+        QCOMPARE(argModel->index(1, 1).data(Qt::EditRole).metaType(), QMetaType::fromType<int>());
+        QCOMPARE(argModel->index(1, 1).data(Qt::EditRole).toInt(), 0);
+        QCOMPARE(argModel->index(2, 1).data(Qt::EditRole).metaType(), QMetaType::fromType<double>());
+
+        iface->invokeMethod(Qt::DirectConnection);
+        QCOMPARE(takenArgs, QVariantList({ QString(), 0, 0.0 }));
     }
 };
 
