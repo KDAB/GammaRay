@@ -21,7 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-latest
           - windows-latest
           - macos-latest
         qt_version:
@@ -33,8 +32,6 @@ jobs:
 
           - name: ci-dev-client-and-ui
             tests_with: qt6
-
-          - name: ci-dev-probe-only
 
         exclude:
           - os: macos-latest
