@@ -361,6 +361,17 @@ Widget3DWidget *Widget3DModel::widgetForIndex(const QModelIndex &idx, bool creat
     return widgetForObject(obj, idx, createWhenMissing);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 1)
+// see ObjectFilterProxyModelBase::mapFromSource(), QTBUG-76976
+QModelIndex Widget3DModel::mapFromSource(const QModelIndex &sourceIndex) const
+{
+    const QModelIndex sourceParent = sourceIndex.parent();
+    if (sourceParent.isValid() && !mapFromSource(sourceParent).isValid())
+        return {};
+    return QSortFilterProxyModel::mapFromSource(sourceIndex);
+}
+#endif
+
 bool Widget3DModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     const QModelIndex sourceIdx = sourceModel()->index(source_row, 0, source_parent);

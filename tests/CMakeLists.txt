@@ -339,6 +339,9 @@ if(GAMMARAY_BUILD_UI)
     gammaray_add_test(propertybindertest propertybindertest.cpp)
     target_link_libraries(propertybindertest gammaray_ui)
 
+    gammaray_add_test(favoritesmodeltest favoritesmodeltest.cpp $<TARGET_OBJECTS:modeltestobj>)
+    target_link_libraries(favoritesmodeltest gammaray_ui)
+
     if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         gammaray_add_probe_test(
             metaobjecttreemodeltest metaobjecttreemodeltest.cpp

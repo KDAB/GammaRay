@@ -203,6 +203,53 @@ private slots:
         QVERIFY(proxy.isRecursiveFilteringEnabled());
         QVERIFY(proxy.autoAcceptChildRows());
     }
+
+    // mapping a row below a filtered out parent doesn't break showing that parent later, QTBUG-76976
+    static void testMapFromSourceBelowFilteredParent()
+    {
+        QStandardItemModel source;
+        auto root = new QStandardItem(QStringLiteral("root"));
+        source.appendRow(root);
+        root->appendRow(new QStandardItem(QStringLiteral("match")));
+        auto shared = new QStandardItem(QStringLiteral("shared"));
+        root->appendRow(shared);
+        auto hidden = new QStandardItem(QStringLiteral("hidden"));
+        shared->appendRow(hidden);
+
+        Proxy proxy;
+        QAbstractItemModelTester tester(&proxy);
+        proxy.setFilterFixedString(QStringLiteral("match"));
+        proxy.setSourceModel(&source);
+        setUsed(&proxy, true);
+        QCOMPARE(treeString(&proxy), QStringLiteral("root[match]"));
+
+        QVERIFY(!proxy.mapFromSource(hidden->index()).isValid());
+
+        // a matching child makes the parent appear
+        const auto insertMatch = [shared] {
+            shared->insertRow(0, new QStandardItem(QStringLiteral("match2")));
+        };
+        insertMatch();
+        QCOMPARE(treeString(&proxy), QStringLiteral("root[match shared[match2]]"));
+        shared->removeRow(0);
+        QCOMPARE(treeString(&proxy), QStringLiteral("root[match]"));
+        insertMatch();
+        QCOMPARE(treeString(&proxy), QStringLiteral("root[match shared[match2]]"));
+    }
+
+private:
+    static QString treeString(const QAbstractItemModel *model, const QModelIndex &parent = {})
+    {
+        QStringList rows;
+        for (int row = 0; row < model->rowCount(parent); ++row) {
+            const auto index = model->index(row, 0, parent);
+            auto text = index.data().toString();
+            if (model->rowCount(index) > 0)
+                text += QLatin1Char('[') + treeString(model, index) + QLatin1Char(']');
+            rows.push_back(text);
+        }
+        return rows.join(QLatin1Char(' '));
+    }
 };
 
 QTEST_GUILESS_MAIN(ServerProxyModelTest)

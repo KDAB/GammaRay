@@ -14,9 +14,11 @@
 
 #include <common/objectid.h>
 #include <common/objectmodel.h>
+#include <core/objecttypefilterproxymodel.h>
 #include <core/probe.h>
 
 #include <QAbstractItemModelTester>
+#include <QRegularExpression>
 #include <QScopeGuard>
 #include <QSignalSpy>
 #include <QSortFilterProxyModel>
@@ -392,6 +394,34 @@ private slots:
         QVERIFY(index.isValid());
         QCOMPARE(index.parent(), find(treeModel(), newParent));
         QCOMPARE(treeModel()->index(index.row(), 0, index.parent()), index);
+    }
+
+    // a proxy that hides objects follows moves between hidden parents, QTBUG-76976
+    void testTypeFilterProxyMovesBelowHiddenParents()
+    {
+        ObjectTypeFilterProxyModel<DerivedObject> proxy;
+        proxy.setSourceModel(treeModel());
+        QAbstractItemModelTester tester(&proxy);
+        QTest::failOnWarning(QRegularExpression(QStringLiteral("QSortFilterProxyModel: invalid .* reported by source model")));
+
+        auto root = std::make_unique<QObject>(); // hidden, like all of these
+        auto a = new QObject(root.get());
+        auto b = new QObject(root.get());
+        auto child = new QObject(a);
+        auto other = new QObject(a);
+        processQueue();
+
+        // before Qt 6.9.1, the proxy created a mapping for root here, which it didn't update below
+        child->setParent(b);
+        processQueue();
+        other->setParent(root.get());
+        processQueue();
+        for (int i = 0; i < 10; ++i)
+            new QObject(root.get());
+        processQueue();
+        QVERIFY(find(treeModel(), other).isValid());
+        root.reset();
+        processQueue();
     }
 
     // a recursively filtering proxy follows all of these changes
