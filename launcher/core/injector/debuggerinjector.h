@@ -66,6 +66,8 @@ protected:
      *  This will terminate the debugger.
      */
     void setManualError(const QString &msg);
+    /** Like setManualError(), but lets the debugger finish its commands, e.g. to detach again. */
+    void setManualErrorAndContinue(const QString &msg);
 
     /** stderr lines for debugger-specific parsing */
     virtual void parseStandardError(const QByteArray &line) = 0;

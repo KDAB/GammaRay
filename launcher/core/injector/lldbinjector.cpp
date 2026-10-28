@@ -136,4 +136,6 @@ void LldbInjector::parseStandardError(const QByteArray &line)
 {
     if (m_scriptSupportIsRequired && line.startsWith("error: your copy of LLDB does not support scripting"))
         setManualError(tr("LLDB does not support scripting. Install lldb python support please."));
+    else if (line.startsWith("error: attach failed"))
+        setManualError(tr("LLDB could not attach to the process.\n\nLLDB error was: %1").arg(QString::fromLocal8Bit(line)));
 }

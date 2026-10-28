@@ -28,6 +28,7 @@
 #include <QSignalSpy>
 #include <QTest>
 
+#include <limits>
 #include <memory>
 
 #ifdef Q_OS_WIN
@@ -182,6 +183,29 @@ private slots:
         QVERIFY(finishSpy.wait(20000));
         QCOMPARE(launcher.exitCode(), 1);
         QVERIFY2(launcher.errorMessage().contains(QLatin1String("Failed to start server")),
+                 qPrintable(launcher.errorMessage()));
+    }
+
+    // the debugger keeps going and exits normally, the failure must still be reported
+    static void testAttachFailure()
+    {
+        if (!hasInjector("gdb"))
+            QSKIP("gdb injector not available");
+
+        LaunchOptions options;
+        options.setUiMode(LaunchOptions::NoUi);
+        options.setInjectorType(QStringLiteral("gdb"));
+        options.setPid(std::numeric_limits<int>::max()); // no such process
+        ProbeABIDetector detector;
+        options.setProbeABI(ProbeFinder::findBestMatchingABI(
+            detector.abiForExecutable(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"))));
+        Launcher launcher(options);
+
+        QSignalSpy finishSpy(&launcher, &Launcher::finished);
+        QVERIFY(launcher.start());
+        QVERIFY(finishSpy.wait(20000));
+        QVERIFY(launcher.exitCode() != 0);
+        QVERIFY2(launcher.errorMessage().contains(QLatin1String("could not attach")),
                  qPrintable(launcher.errorMessage()));
     }
 

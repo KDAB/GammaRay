@@ -68,8 +68,13 @@ void GdbInjector::setupGdb()
     }
 }
 
-void GdbInjector::parseStandardError(const QByteArray &line)
+void GdbInjector::parseStandardError(const QByteArray &output)
 {
+    // newer versions prefix errors with an emoji, "❌️ ptrace: ..."
+    QByteArray line = output;
+    while (!line.isEmpty() && (static_cast<uchar>(line.front()) >= 0x80 || line.front() == ' '))
+        line.remove(0, 1);
+
     if (line.startsWith("Function \"main\" not defined.")) {
         setManualError(tr("The debuggee application is missing debug symbols which are required\n"
                           "for GammaRay's GDB injector. Please recompile the debuggee.\n\n"
@@ -80,6 +85,19 @@ void GdbInjector::parseStandardError(const QByteArray &line)
                           "for GammaRay's GDB injector. Please install the required debug symbols.\n\n"
                           "GDB error was: %1")
                            .arg(QString::fromLocal8Bit(line)));
+    } else if (line.startsWith("Could not attach to process") || line.startsWith("ptrace: ")) {
+        // gdb carries on with the commands it gets, and then exits normally
+        setManualError(tr("GDB could not attach to the process. The Yama security extension\n"
+                          "(/proc/sys/kernel/yama/ptrace_scope), another debugger attached to it,\n"
+                          "or the process belonging to another user can prevent that.\n\n"
+                          "GDB error was: %1")
+                           .arg(QString::fromLocal8Bit(line)));
+    } else if (line.startsWith("No symbol \"gammaray_probe")) {
+        setManualErrorAndContinue(tr("The probe could not be loaded into the target. It might be built for\n"
+                                     "another Qt version than the target uses, or one of its dependencies\n"
+                                     "is missing.\n\n"
+                                     "GDB error was: %1")
+                                      .arg(QString::fromLocal8Bit(line)));
     } else if (line.startsWith("warning: Unable to restore previously selected frame")) {
         setManualError(tr("The debuggee application seems to have an invalid stack trace\n"
                           "This can be caused by the executable being updated on disk after launching it.\n\n"
