@@ -77,9 +77,17 @@ List all installed probes.
 
 =item B<--probe <abi>>
 
-Explicitly specify which probe to use. You should use this if you have
-more than one probe installed (e.g. one for Qt4 and one for Qt5), until
-probe ABI auto-detection is implemented.
+Explicitly specify which probe to use. This should only be needed when the
+automatic probe ABI detection fails, or on platforms that don't have probe ABI
+detection implemented yet.
+
+=item B<--detect-abi>
+
+Print the detected probe ABI of the target and the probe that would be used,
+then exit without injecting. If no matching probe is found, the reason and the
+available probes are printed.
+
+The exit code is 0 if a matching probe was found, and 1 otherwise.
 
 =item B<--connect <host>[:port]>
 

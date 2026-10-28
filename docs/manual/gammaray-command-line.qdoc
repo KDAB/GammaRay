@@ -78,6 +78,12 @@
         automatic probe ABI detection fails, or on platforms that don't have probe ABI
         detection implemented yet.
     \row
+        \li \c --detect-abi
+        \li Print the detected probe ABI of the target and the probe that would be used,
+        then exit without injecting. If no matching probe is found, the reason and the
+        available probes are printed. The exit code is 0 if a matching probe was found,
+        and 1 otherwise.
+    \row
         \li \c{--connect tcp://<host>[:port]}
         \li Connect to a target with an already injected GammaRay probe. Useful for
         example for remote debugging.
