@@ -14,7 +14,9 @@
 
 #include "basicwindllinjector.h"
 
+#include <cstdio>
 #include <sstream>
+#include <string>
 
 #define ERROR_ASSERT(condition, action)                 \
     if (condition) {                                    \
@@ -34,7 +36,7 @@ BOOL BasicWinDllInjector::addDllDirectory(HANDLE destProcess, wchar_t *dllDirPat
 {
     if (!remoteKernel32Call(destProcess, "SetDllDirectoryW", dllDirPath)) {
         std::wstringstream stream;
-        stream << L"Failed to call SetDllDirectoryW" << dllDirPath;
+        stream << L"Failed to call SetDllDirectoryW " << dllDirPath;
         log(stream.str().c_str());
         return FALSE;
     }
@@ -53,7 +55,7 @@ BOOL BasicWinDllInjector::injectProcess(wchar_t *pidString, wchar_t *path, wchar
     HANDLE destProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
     if (!destProcess) {
         std::wstringstream stream;
-        stream << L"Failed to open process" << pidString;
+        stream << L"Failed to open process " << pidString;
         log(stream.str().c_str());
         BasicWinDllInjector::logError();
         return FALSE;
@@ -118,5 +120,16 @@ void BasicWinDllInjector::logError(DWORD error)
 
 void BasicWinDllInjector::log(const wchar_t *msg)
 {
+    if (!msg)
+        return;
     OutputDebugStringW(msg);
+
+    // also on stderr, where the launcher picks up the errors of gammaray-wininjector
+    const int size = WideCharToMultiByte(CP_UTF8, 0, msg, -1, nullptr, 0, nullptr, nullptr);
+    if (size <= 0)
+        return;
+    std::string utf8(size, '\0');
+    WideCharToMultiByte(CP_UTF8, 0, msg, -1, utf8.data(), size, nullptr, nullptr);
+    std::fprintf(stderr, "%s\n", utf8.c_str());
+    std::fflush(stderr);
 }

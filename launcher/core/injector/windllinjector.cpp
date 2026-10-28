@@ -118,7 +118,10 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
                                    buffer.isEmpty() ? nullptr : buffer.data(),
                                    ( wchar_t * )workingDirectory().utf16(),
                                    &startupInfo, &pid),
-                     return false);
+                     {
+                         mErrorString = tr("Failed to start %1: %2").arg(applicationName, qt_error_string());
+                         return false;
+                     });
 
     m_destProcess = pid.hProcess;
     QString dllPath = fixProbeDllPath(probeDll);
@@ -139,17 +142,20 @@ bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*
          << QDir::toNativeSeparators(Paths::binPath())
          << fixProbeDllPath(probeDll);
     QProcess p;
-    p.setProcessChannelMode(QProcess::ForwardedChannels);
+    // the injector writes the reasons of a failure to stderr
+    p.setProcessChannelMode(QProcess::MergedChannels);
     p.start(application, args);
     p.waitForFinished(-1);
     qDebug() << "Calling:" << application << args.join(" ");
+    const QString output = QString::fromUtf8(p.readAll()).trimmed();
     if (p.error() != QProcess::UnknownError) {
-        qDebug() << "Injection failed:" << p.errorString();
+        mErrorString = tr("Failed to run %1: %2").arg(application, p.errorString());
         return false;
     }
     if (p.exitCode() != 0) {
-        qDebug() << "Injection failed:" << p.readAll();
-        qDebug() << "Exit code:" << p.exitCode();
+        mErrorString = tr("Failed to inject the probe into process %1 (exit code %2).").arg(pid).arg(p.exitCode());
+        if (!output.isEmpty())
+            mErrorString += QLatin1Char('\n') + output;
         return false;
     }
     emit started();
