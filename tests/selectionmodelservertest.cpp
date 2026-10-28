@@ -202,7 +202,7 @@ private slots:
         m_model->insertRow(0, new QStandardItem(QStringLiteral("first")));
         QTest::qWait(200); // the server sends the selection after model changes
         QVERIFY(selection->isSelected(m_model->index(1, 0)));
-        send(Protocol::SelectionModelStateRequest, [](Message &) {});
+        send(Protocol::SelectionModelStateRequest, [](Message &) { });
 
         QVERIFY(QMetaObject::invokeMethod(selection, "modelMonitored", Q_ARG(bool, false)));
         m_model->clear();
