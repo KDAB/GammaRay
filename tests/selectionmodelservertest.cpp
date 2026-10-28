@@ -19,6 +19,7 @@
 
 #include <QBuffer>
 #include <QItemSelectionModel>
+#include <QPointer>
 #include <QSignalSpy>
 #include <QStandardItemModel>
 
@@ -111,6 +112,35 @@ private slots:
         QCOMPARE(selection->model(), m_model.get());
         QCOMPARE(selectionModel(), selection);
         QVERIFY(Server::instance()->objectAddress(QString::fromLatin1(modelName) + QStringLiteral(".selection")) != Protocol::InvalidObjectAddress);
+    }
+
+    // a selection model belongs to its model, a new model at the same address must not get it
+    static void testModelDestroyed()
+    {
+        auto model = std::make_unique<QStandardItemModel>();
+        model->setObjectName(QStringLiteral("com.kdab.GammaRay.UnitTest.DestroyedModel"));
+        auto address = model.get();
+        QPointer<QItemSelectionModel> selection = ObjectBroker::selectionModel(model.get());
+        QVERIFY(selection);
+        QVERIFY(ObjectBroker::hasSelectionModel(address));
+
+        model.reset();
+        QVERIFY(!ObjectBroker::hasSelectionModel(address));
+        // it was created by ObjectBroker, and is of no use anymore
+        QVERIFY(!selection);
+    }
+
+    // e.g. deleted by its owner, the next one gets created again
+    void testSelectionModelDestroyed()
+    {
+        auto other = std::make_unique<QStandardItemModel>();
+        other->setObjectName(QStringLiteral("com.kdab.GammaRay.UnitTest.OtherModel"));
+        delete ObjectBroker::selectionModel(other.get());
+        QVERIFY(!ObjectBroker::hasSelectionModel(other.get()));
+        auto selection = ObjectBroker::selectionModel(other.get());
+        QVERIFY(selection);
+        QCOMPARE(selection->model(), other.get());
+        delete selection;
     }
 
     void testSelectFromClient()
