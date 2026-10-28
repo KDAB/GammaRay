@@ -1,6 +1,33 @@
 Release Highlights
 ==================
 
+Unreleased
+----------
+ * Fix crashes and wrong object trees when attaching to a running application (#1093)
+ * Fix object tree corruption with objects deleted in other threads (#1117)
+ * Fix objects ending up at the wrong place in the object tree after being reparented
+ * Fix crashes and corruption in the QtQuick scene graph view, and make it update faster (#877)
+ * Fix crashes in the property view when properties change or bool properties are toggled (#1133)
+ * Fix crashes, a hang and outdated rows and headers in views when connected to a remote application
+ * Make views faster when connected to a remote application
+ * Fix crashes and missing objects in the object tree when objects are reparented or created at runtime
+ * Fix objects no longer being tracked after detaching and attaching again
+ * Fix a crash when detaching while a slot is running in another thread
+ * Fix a crash when remote access is disabled or the server address isn't supported
+ * Fix a crash in the binding inspector when selecting the same QML object again
+ * Fix the default values of method arguments when invoking methods
+ * Fix logging categories being listed again whenever the logging rules change
+ * Allow switching info messages of logging categories on and off
+ * Fix the paint analyzer showing wrong arguments for some paint commands
+ * Make the paint analyzer much faster at recording many paint commands
+ * Make selecting objects faster in applications with many objects
+ * Reduce GammaRay's overhead on startup, event handling and signal emissions in the target application
+ * Explain why no matching probe was found for the target, and list the available probes
+ * Add --detect-abi to the command line launcher to show the probe ABI of an executable or process
+ * Report failed debugger attaches, server startup errors and Windows injection failures right away instead of timing out
+ * Don't time out in in-process mode when remote access is disabled
+ * Fix process names with spaces or parentheses in the attach dialog
+
 Version 3.4.1
 -------------
  * Fix build with Qt 6.12
