@@ -19,12 +19,14 @@
 #include <core/toolfactory.h>
 
 QT_BEGIN_NAMESPACE
-class QAbstractItemModel;
+class QAbstractProxyModel;
 class QItemSelectionModel;
 class QTimer;
 QT_END_NAMESPACE
 
 namespace GammaRay {
+class SignalHistoryModel;
+
 class SignalMonitor : public SignalMonitorInterface
 {
     Q_OBJECT
@@ -42,7 +44,8 @@ private slots:
 
 private:
     QTimer *m_clock;
-    QAbstractItemModel *m_objModel;
+    SignalHistoryModel *m_historyModel;
+    QAbstractProxyModel *m_objModel;
     QItemSelectionModel *m_objSelectionModel;
 };
 

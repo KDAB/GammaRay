@@ -31,9 +31,9 @@ SignalMonitor::SignalMonitor(Probe *probe, QObject *parent)
 {
     StreamOperators::registerSignalMonitorStreamOperators();
 
-    auto *model = new SignalHistoryModel(probe, this);
+    m_historyModel = new SignalHistoryModel(probe, this);
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
-    proxy->setSourceModel(model);
+    proxy->setSourceModel(m_historyModel);
     m_objModel = proxy;
     probe->registerModel(QStringLiteral("com.kdab.GammaRay.SignalHistoryModel"), proxy);
     m_objSelectionModel = ObjectBroker::selectionModel(proxy);
@@ -63,11 +63,15 @@ void SignalMonitor::sendClockUpdates(bool enabled)
 
 void SignalMonitor::objectSelected(QObject *obj)
 {
-    const auto indexList = m_objModel->match(m_objModel->index(0, 0), ObjectModel::ObjectIdRole,
-                                             QVariant::fromValue<ObjectId>(ObjectId(obj)), 1, Qt::MatchExactly | Qt::MatchRecursive | Qt::MatchWrap);
-    if (indexList.isEmpty())
+    // the model knows the row of the object, searching all of them takes long
+    const auto sourceIndex = m_historyModel->indexForObject(obj);
+    if (!sourceIndex.isValid())
+        return;
+    // the proxy only uses the model while it is used itself
+    Model::used(m_objModel);
+    const auto index = m_objModel->mapFromSource(sourceIndex);
+    if (!index.isValid())
         return;
 
-    const auto &index = indexList.first();
     m_objSelectionModel->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }

@@ -74,6 +74,8 @@ public:
     ~SignalHistoryModel() override;
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    /// the row of @p object, if it is in the model already
+    QModelIndex indexForObject(QObject *object) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation,
