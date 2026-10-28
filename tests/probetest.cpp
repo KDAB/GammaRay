@@ -511,8 +511,8 @@ private slots:
     static void testEventDispatcherSignalsWithLockHeld()
     {
         SignalSpyCallbackSet callbacks;
-        callbacks.signalBeginCallback = [](QObject *, int, void **) {};
-        callbacks.signalEndCallback = [](QObject *, int) {};
+        callbacks.signalBeginCallback = [](QObject *, int, void **) { };
+        callbacks.signalEndCallback = [](QObject *, int) { };
         Probe::instance()->registerSignalSpyCallbackSet(callbacks);
 
         QThread thread;
@@ -525,13 +525,13 @@ private slots:
         context->moveToThread(&thread);
         connect(&thread, &QThread::finished, context, &QObject::deleteLater);
         // past emitting started(), whose callbacks do need the lock
-        QMetaObject::invokeMethod(context, [] {}, Qt::BlockingQueuedConnection);
+        QMetaObject::invokeMethod(context, [] { }, Qt::BlockingQueuedConnection);
 
         QSemaphore done;
         QMutexLocker lock(Probe::objectLock());
         QMetaObject::invokeMethod(context, [&done] {
             // like the event dispatcher does on every iteration of the event loop
-            Q_EMIT QThread::currentThread()->eventDispatcher()->awake();
+            Q_EMIT QThread::currentThread() -> eventDispatcher()->awake();
             done.release();
         });
         QVERIFY(done.tryAcquire(1, 5000));
