@@ -222,6 +222,7 @@ private slots:
     static void testQtQuickProvider_data();
     static void testQtQuickProvider();
     void testModel();
+    void testSelectSameObjectAgain();
     void testModelDataChanged();
     void testModelAdditions();
     void testModelInsertions();
@@ -537,6 +538,32 @@ void BindingInspectorTest::testQtQuickProvider()
     }
 
     delete rect;
+}
+
+// selecting an object again, e.g. through "navigate to", must not free the nodes the model shows
+void BindingInspectorTest::testSelectSameObjectAgain()
+{
+    MockObject obj1 { 53, true, 'x', 5.3, "Hello World" };
+    MockObject obj2 { 35, false, 'y', 3.5, "Bye, World" };
+    provider->data = { {
+        { &obj1, "c", &obj1, "b" },
+        { &obj1, "c", &obj2, "d" },
+    } };
+
+    bindingExtension->setQObject(&obj1);
+    QCOMPARE(bindingModel->rowCount(), 1);
+    const QPersistentModelIndex index = bindingModel->index(0, 0);
+    QCOMPARE(index.data().toString(), QStringLiteral("c"));
+
+    bindingExtension->setQObject(&obj1);
+    // either the model was reset, or the index still refers to the node the model has there
+    if (index.isValid()) {
+        QCOMPARE(index.internalPointer(), bindingModel->index(index.row(), 0).internalPointer());
+        QCOMPARE(index.data().toString(), QStringLiteral("c"));
+    }
+    QCOMPARE(bindingModel->rowCount(), 1);
+    QCOMPARE(bindingModel->rowCount(bindingModel->index(0, 0)), 2);
+    bindingExtension->setQObject(nullptr);
 }
 
 void BindingInspectorTest::testModel()

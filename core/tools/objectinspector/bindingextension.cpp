@@ -54,6 +54,10 @@ void BindingExtension::clear()
 
 bool BindingExtension::setQObject(QObject *object)
 {
+    // re-creating the binding tree for the same object would free the nodes the model still uses
+    if (object && object == m_object)
+        return true;
+
     if (m_object)
         disconnect(m_object, nullptr, this, nullptr);
 
