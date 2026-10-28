@@ -344,19 +344,6 @@ private slots:
         QVERIFY2(many < 3 * few + 10, qPrintable(QStringLiteral("%1 ms vs %2 ms").arg(many).arg(few)));
     }
 
-    static void profileSelection()
-    {
-        std::vector<std::unique_ptr<QObject>> objects;
-        for (int i = 0; i < 40000; ++i)
-            objects.push_back(std::make_unique<QObject>());
-        processQueue();
-        Probe::instance()->selectObject(objects.front().get());
-        qWarning("SELECTING");
-        for (int k = 0; k < 50; ++k)
-            for (int i = 0; i < 200; ++i)
-                Probe::instance()->selectObject(objects[39999 - i % 100].get());
-    }
-
     // objectCreated() is only emitted once the object is fully constructed
     static void testAnnouncedFullyConstructed()
     {
