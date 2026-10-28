@@ -17,13 +17,19 @@
 #include <common/objectmodel.h>
 #include <core/probe.h>
 #include <core/probeguard.h>
+#include <core/signalspycallbackset.h>
 
 #include <QAbstractItemModel>
 #include <QHash>
 #include <QSet>
 #include <QElapsedTimer>
 #include <QItemSelectionModel>
+#include <QAbstractEventDispatcher>
+#include <QMutexLocker>
+#include <QScopeGuard>
+#include <QSemaphore>
 #include <QSignalSpy>
+#include <QThread>
 
 #include <algorithm>
 #include <memory>
@@ -498,6 +504,37 @@ private slots:
         int value = 42;
         Probe::instance()->selectObject(&value, QStringLiteral("int"));
         QCOMPARE(spy.size(), 1);
+    }
+
+    // the event loops of other threads don't wait for the probe's lock, which the main thread can
+    // hold for a while
+    static void testEventDispatcherSignalsWithLockHeld()
+    {
+        SignalSpyCallbackSet callbacks;
+        callbacks.signalBeginCallback = [](QObject *, int, void **) {};
+        callbacks.signalEndCallback = [](QObject *, int) {};
+        Probe::instance()->registerSignalSpyCallbackSet(callbacks);
+
+        QThread thread;
+        thread.start();
+        const auto stopThread = qScopeGuard([&thread] {
+            thread.quit();
+            thread.wait();
+        });
+        auto context = new QObject;
+        context->moveToThread(&thread);
+        connect(&thread, &QThread::finished, context, &QObject::deleteLater);
+        // past emitting started(), whose callbacks do need the lock
+        QMetaObject::invokeMethod(context, [] {}, Qt::BlockingQueuedConnection);
+
+        QSemaphore done;
+        QMutexLocker lock(Probe::objectLock());
+        QMetaObject::invokeMethod(context, [&done] {
+            // like the event dispatcher does on every iteration of the event loop
+            Q_EMIT QThread::currentThread()->eventDispatcher()->awake();
+            done.release();
+        });
+        QVERIFY(done.tryAcquire(1, 5000));
     }
 };
 
