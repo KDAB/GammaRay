@@ -90,6 +90,10 @@ private slots:
 
     void testShaderEffectSourceGrab()
     {
+#if defined(Q_OS_WIN) && QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+        // crashes at the same address as quickmaterialtest, which is QTBUG-144137
+        QSKIP("ShaderEffect crashes with Qt 6.10 on Windows, QTBUG-144137");
+#endif
         if (!showSource("qrc:/manual/shadereffect6.qml")) {
             qWarning() << "Skipping test due to unavailable QtQuick display.";
             return;
