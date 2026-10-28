@@ -372,10 +372,10 @@ void Launcher::readyRead()
     case Protocol::ServerLaunchError: {
         QString reason;
         msg >> reason;
-        std::cerr << "Failed to start server: " << qPrintable(reason)
-                  << std::endl;
-        // TODO emit error signal to also notify qtcreator, etc
-        break;
+        // the probe won't report back anymore, no need to wait for the timeout
+        d->safetyTimer.stop();
+        injectorError(1, tr("Failed to start server: %1").arg(reason));
+        return;
     }
     }
 
