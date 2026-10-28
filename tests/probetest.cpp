@@ -12,6 +12,7 @@
 
 #include "baseprobetest.h"
 
+#include <common/objectbroker.h>
 #include <common/objectmodel.h>
 #include <core/probe.h>
 #include <core/probeguard.h>
@@ -19,6 +20,7 @@
 #include <QAbstractItemModel>
 #include <QHash>
 #include <QSet>
+#include <QItemSelectionModel>
 #include <QSignalSpy>
 
 #include <memory>
@@ -286,6 +288,30 @@ private slots:
                 obj->deleteLater();
         }
         processQueue();
+    }
+
+    // selecting an object selects it in the object inspector's tree
+    static void testSelectObject()
+    {
+        auto model = ObjectBroker::model(QStringLiteral("com.kdab.GammaRay.ObjectInspectorTree"));
+        QVERIFY(model);
+        auto selectionModel = ObjectBroker::selectionModel(model);
+        QVERIFY(selectionModel);
+
+        QObject root;
+        auto child = new QObject(new QObject(&root));
+        processQueue();
+        Probe::instance()->selectObject(child);
+        QCOMPARE(selectionModel->selectedRows().value(0).data(ObjectModel::ObjectRole).value<QObject *>(), child);
+
+        QObject *untracked = nullptr;
+        {
+            ProbeGuard guard;
+            untracked = new QObject;
+        }
+        Probe::instance()->selectObject(untracked);
+        QCOMPARE(selectionModel->selectedRows().value(0).data(ObjectModel::ObjectRole).value<QObject *>(), child);
+        delete untracked;
     }
 
     // objectCreated() is only emitted once the object is fully constructed

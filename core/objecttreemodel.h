@@ -35,15 +35,14 @@ public:
 
     Q_INVOKABLE static QPair<int, QVariant> defaultSelectedItem();
 
+    QModelIndex indexForObject(QObject *object) const;
+
 private slots:
     void objectAdded(QObject *obj);
     void objectRemoved(QObject *obj);
     void objectReparented(QObject *obj);
     void objectFavorited(QObject *obj);
     void objectUnfavorited(QObject *obj);
-
-private:
-    QModelIndex indexForObject(QObject *object) const;
 
 private:
     QHash<QObject *, QObject *> m_childParentMap;
