@@ -70,10 +70,9 @@ jobs:
                   version: ${{ matrix.qt_version }}
                   cache: true
 
+            # without KDStateMachineEditor, there are no submodules to check out
             - name: Checkout sources
               uses: actions/checkout@v7
-              with:
-                  submodules: recursive
 
             - name: Add MinGW to PATH
               run: |
@@ -83,15 +82,9 @@ jobs:
             - name: Install ninja-build tool (must be after Qt due PATH changes)
               uses: turtlesec-no/get-ninja@main
 
-            # Don't make graphviz find wrong libgd
-            - name: Remove Strawberry from PATH
-              run: |
-                  Remove-Item "C:/Strawberry" -Recurse -Force
-
             - name: Configure project
               run: >
                   cmake -S . -G Ninja --preset ${{ matrix.preset.name }}
-                  -DGAMMARAY_WITH_KDSME=ON
                   -DWARNINGS_ARE_ERRORS=OFF
                   -DCMAKE_BUILD_TYPE=Release
                   -DGAMMARAY_WITH_KDSME=OFF
