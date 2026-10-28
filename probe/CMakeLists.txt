@@ -60,7 +60,11 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
         set_target_properties(gammaray_probe PROPERTIES OUTPUT_NAME gammaray_probe-${GAMMARAY_PROBE_ABI})
         gammaray_set_rpath(gammaray_probe ${LIB_INSTALL_DIR})
         if(WIN32)
-            set_target_properties(gammaray_winloader PROPERTIES OUTPUT_NAME gammaray_winloader-${GAMMARAY_PROBE_ABI})
+            # the injector and the loader find each other by replacing the probe's base name with
+            # "gammaray_winloader" and back, so the loader must not get the "lib" prefix of MinGW
+            set_target_properties(
+                gammaray_winloader PROPERTIES OUTPUT_NAME gammaray_winloader-${GAMMARAY_PROBE_ABI} PREFIX ""
+            )
             install(TARGETS gammaray_winloader ${INSTALL_TARGETS_DEFAULT_ARGS})
         endif()
         if(NOT GAMMARAY_PROBE_ONLY_BUILD)
