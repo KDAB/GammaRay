@@ -34,7 +34,7 @@ jobs:
           - name: Windows
             runner: windows-latest
             # quickmaterialtest: enable once QTBUG-144137 is fixed (affects 6.10)
-            test_exclude: "quickmaterialtest|launchertest|probesettingstest"
+            test_exclude: "quickmaterialtest"
 
           - name: macOS
             runner: macos-latest
