@@ -17,6 +17,12 @@
 
 #include <QTest>
 
+#include <algorithm>
+
+#ifdef Q_OS_LINUX
+#include <sys/prctl.h>
+#endif
+
 using namespace GammaRay;
 
 class LauncherUiProcessListTest : public QObject
@@ -41,6 +47,25 @@ private slots:
 
         QVERIFY(!proc.name.isEmpty());
     }
+
+#ifdef Q_OS_LINUX
+    // the name in /proc/<pid>/stat can contain spaces
+    static void testNameWithSpaces()
+    {
+        char oldName[16] = {};
+        prctl(PR_GET_NAME, oldName);
+        prctl(PR_SET_NAME, "gamma ray (test)");
+        const auto procs = processList({});
+        prctl(PR_SET_NAME, oldName);
+
+        const auto it = std::find_if(procs.cbegin(), procs.cend(), [](const ProcData &proc) {
+            return proc.ppid == QCoreApplication::applicationPid();
+        });
+        QVERIFY(it != procs.cend());
+        // a single letter, e.g. "S" while waiting for the list
+        QCOMPARE(it->state.size(), 1);
+    }
+#endif
 };
 
 QTEST_MAIN(LauncherUiProcessListTest)
