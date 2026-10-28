@@ -18,17 +18,27 @@
 #include <common/remoteviewframe.h>
 
 #include <QQuickItem>
+#include <QSGRendererInterface>
 
 using namespace GammaRay;
 
 class QuickTextureTest : public BaseQuickTest
 {
     Q_OBJECT
+private:
+    // grabbing textures is only implemented for OpenGL
+    bool usesOpenGL()
+    {
+        return view()->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL;
+    }
+
 private slots:
     void testTextureGrab()
     {
         if (!showSource("qrc:/manual/textures.qml"))
             return;
+        if (!usesOpenGL())
+            QSKIP("Grabbing textures needs OpenGL");
 
         auto remoteView = ObjectBroker::object<RemoteViewInterface *>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
         QVERIFY(remoteView);
@@ -54,6 +64,8 @@ private slots:
     {
         if (!showSource("qrc:/manual/textures.qml"))
             return;
+        if (!usesOpenGL())
+            QSKIP("Grabbing textures needs OpenGL");
 
         auto remoteView = ObjectBroker::object<RemoteViewInterface *>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
         QVERIFY(remoteView);
@@ -82,6 +94,8 @@ private slots:
             qWarning() << "Skipping test due to unavailable QtQuick display.";
             return;
         }
+        if (!usesOpenGL())
+            QSKIP("Grabbing textures needs OpenGL");
 
         auto remoteView = ObjectBroker::object<RemoteViewInterface *>("com.kdab.GammaRay.ObjectInspector.texture.remoteView");
         QVERIFY(remoteView);

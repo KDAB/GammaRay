@@ -28,22 +28,21 @@ jobs:
           - name: Linux
             runner: ubuntu-latest
             full_build: true
-            # quickmaterialtest|quicktexturetest fail because of QT_QUICK_BACKEND=software and
-            # QT_QPA_PLATFORM=offscreen
+            # quickmaterialtest fails because of QT_QUICK_BACKEND=software and QT_QPA_PLATFORM=offscreen
             # quickinspectortest|quickinspectortest2 fail on CI, pass locally
-            test_exclude: "quickmaterialtest|quicktexturetest|quickinspectortest|quickinspectortest2"
+            test_exclude: "quickmaterialtest|quickinspectortest|quickinspectortest2"
 
           - name: Windows
             runner: windows-latest
             full_build: true
             # quickmaterialtest: enable once QTBUG-144137 is fixed (affects 6.10)
-            test_exclude: "quickmaterialtest|quicktexturetest|launchertest|probesettingstest"
+            test_exclude: "quickmaterialtest|launchertest|probesettingstest"
 
           # GitHub actions is now powered by Apple Silicon Macs, where the full build fails
           - name: macOS
             runner: macos-latest
             full_build: false
-            test_exclude: "probeabidetectortest|launchertest|clientconnectiontest|quickinspectortest2|quicktexturetest"
+            test_exclude: "probeabidetectortest|launchertest|clientconnectiontest|quickinspectortest2"
         qt:
           - name: "6.5"
             version: "6.5.*"

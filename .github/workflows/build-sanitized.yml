@@ -62,7 +62,7 @@ jobs:
       - name: Run tests on Linux Qt6
         run: >
           ctest --test-dir ./build-${{ matrix.qt-flavor.preset }} --output-on-failure
-          --exclude-regex "quickmaterialtest|quicktexturetest|quickinspectortest|quickinspectortest2"
+          --exclude-regex "quickmaterialtest|quickinspectortest|quickinspectortest2"
         env:
           QT_QPA_PLATFORM: offscreen
           QT_QUICK_BACKEND: software
