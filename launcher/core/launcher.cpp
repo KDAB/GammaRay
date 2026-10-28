@@ -133,6 +133,14 @@ bool Launcher::start()
     auto probeDll = d->options.probePath();
     if (probeDll.isEmpty()) {
         probeDll = ProbeFinder::findProbe(d->options.probeABI());
+        if (probeDll.isEmpty()) {
+            // without a probe the target would start, but never report back
+            if (d->options.probeABI().isValid())
+                injectorError(1, tr("No probe found for ABI %1.").arg(d->options.probeABI().id()));
+            else
+                injectorError(1, tr("No probe matches the target."));
+            return false;
+        }
         d->options.setProbePath(QFileInfo(probeDll).absolutePath());
     }
 
