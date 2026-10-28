@@ -158,6 +158,33 @@ private slots:
     }
 #endif
 
+    // reported right away, instead of waiting for the target to time out
+    static void testServerLaunchError()
+    {
+        if (!hasInjector("preload") && !hasInjector("windll"))
+            QSKIP("no launch injector");
+
+        LaunchOptions options;
+        options.setUiMode(LaunchOptions::NoUi);
+        // an address of no interface of this machine (TEST-NET-1), so listening fails
+        options.setProbeSetting(QStringLiteral("ServerAddress"), QStringLiteral("tcp://192.0.2.1"));
+        QString exePath = QLatin1String(TESTBIN_DIR "/minimalcoreapplication");
+#ifdef Q_OS_WIN
+        exePath += QLatin1String(".exe");
+#endif
+        ProbeABIDetector detector;
+        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(exePath)));
+        options.setLaunchArguments(QStringList() << exePath);
+        Launcher launcher(options);
+
+        QSignalSpy finishSpy(&launcher, &Launcher::finished);
+        QVERIFY(launcher.start());
+        QVERIFY(finishSpy.wait(20000));
+        QCOMPARE(launcher.exitCode(), 1);
+        QVERIFY2(launcher.errorMessage().contains(QLatin1String("Failed to start server")),
+                 qPrintable(launcher.errorMessage()));
+    }
+
     static void testAttach()
     {
         QProcess target;
