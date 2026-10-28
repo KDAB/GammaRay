@@ -584,9 +584,10 @@ if(NOT WIN32)
     add_definitions(-DQT_STRICT_ITERATORS)
 endif()
 
-if(UPPERCASE_CMAKE_BUILD_TYPE MATCHES "^RELEASE$")
-    add_definitions(-DQT_NO_DEBUG_OUTPUT)
-endif()
+# DO NOT MERGE: keep qDebug() for the CI diagnostics
+# if(UPPERCASE_CMAKE_BUILD_TYPE MATCHES "^RELEASE$")
+#     add_definitions(-DQT_NO_DEBUG_OUTPUT)
+# endif()
 
 if(HAVE_QT_WIDGETS)
     gammaray_option(

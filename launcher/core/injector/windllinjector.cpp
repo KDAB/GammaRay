@@ -148,6 +148,8 @@ bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*
     p.waitForFinished(-1);
     qDebug() << "Calling:" << application << args.join(" ");
     const QString output = QString::fromUtf8(p.readAll()).trimmed();
+    // DO NOT MERGE: CI diagnostics
+    qWarning() << "windll attach:" << application << args << "exit code" << p.exitCode() << "output:" << output;
     if (p.error() != QProcess::UnknownError) {
         mErrorString = tr("Failed to run %1: %2").arg(application, p.errorString());
         return false;

@@ -43,6 +43,9 @@ static void log_injection(const char *msg)
 {
 #ifdef Q_OS_WIN
     OutputDebugStringA(msg);
+    // DO NOT MERGE: CI diagnostics
+    fprintf(stderr, "GammaRay probe: %s", msg);
+    fflush(stderr);
 #else
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-security"
@@ -54,6 +57,7 @@ static void log_injection(const char *msg)
 static void gammaray_pre_routine()
 {
 #ifdef Q_OS_WIN
+    log_injection(qApp ? "pre routine, qApp exists already\n" : "pre routine, creating the probe\n");
     if (qApp) // DllMain will do a better job at this, we are too early here and might not even have our staticMetaObject properly resolved
         return;
 #endif
@@ -139,6 +143,7 @@ void Hooks::uninstallHooks()
 extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 {
     if (!qApp) {
+        log_injection("gammaray_probe_inject() without qApp, waiting for the pre routine\n");
         return;
     }
     Hooks::installHooks();
@@ -149,6 +154,7 @@ extern "C" Q_DECL_EXPORT void gammaray_probe_inject()
 extern "C" Q_DECL_EXPORT void gammaray_probe_attach()
 {
     if (!qApp) {
+        log_injection("gammaray_probe_attach() without qApp\n");
         return;
     }
     // detaching put back the hooks we replaced
