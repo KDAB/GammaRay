@@ -56,3 +56,8 @@ int ProbeABIModel::indexOfBestMatchingABI(const ProbeABI &targetABI) const
     const ProbeABI bestMatchingABI = ProbeFinder::findBestMatchingABI(targetABI, m_abis);
     return m_abis.indexOf(bestMatchingABI);
 }
+
+QVector<ProbeABI> ProbeABIModel::abis() const
+{
+    return m_abis;
+}

@@ -89,6 +89,15 @@ QTextStream &err()
 
 using namespace GammaRay;
 
+static QString abiIds(const QVector<ProbeABI> &abis)
+{
+    QStringList ids;
+    ids.reserve(abis.size());
+    for (const auto &abi : abis)
+        ids.push_back(abi.id());
+    return ids.join(QStringLiteral(", "));
+}
+
 static void usage(const char *argv0)
 {
     out() << "Usage: " << argv0
@@ -118,6 +127,9 @@ static void usage(const char *argv0)
         << Qt::endl;
     out() << "     --list-probes                   \tlist all installed probes" << Qt::endl;
     out() << "     --probe <abi>                   \tspecify which probe to use" << Qt::endl;
+    out()
+        << "     --detect-abi                    \tprint the detected ABI of the target and the probe to use, and exit"
+        << Qt::endl;
     out() << "     --connect <host>[:port]         \tconnect to an already injected target" << Qt::endl;
     out()
         << "     --self-test [injector]          \trun self tests, of everything or the specified injector"
@@ -190,6 +202,7 @@ int main(int argc, char **argv)
                                             << QStringLiteral("-graphicssystem");
 
     LaunchOptions options;
+    bool detectAbiOnly = false;
     while (!args.isEmpty() && args.first().startsWith('-')) {
         const QString arg = args.takeFirst();
         if ((arg == QLatin1String("-i") || arg == QLatin1String("--injector")) && !args.isEmpty()) {
@@ -245,6 +258,8 @@ int main(int argc, char **argv)
             }
             options.setProbeABI(abi);
         }
+        if (arg == QLatin1String("--detect-abi"))
+            detectAbiOnly = true;
         if (arg == QLatin1String("--connect") && !args.isEmpty()) {
             const QUrl url = urlFromUserInput(args.takeFirst());
             ClientLauncher client;
@@ -289,36 +304,48 @@ int main(int argc, char **argv)
     Q_ASSERT(options.isValid());
 
     // attempt to autodetect probe ABI, if not set explicitly
+    QString detectionError;
     if (!options.probeABI().isValid()) {
         ProbeABIDetector detector;
         if (options.isLaunch())
-            options.setProbeABI(detector.abiForExecutable(options.absoluteExecutablePath()));
+            options.setProbeABI(detector.abiForExecutable(options.absoluteExecutablePath(), &detectionError));
         else
-            options.setProbeABI(detector.abiForProcess(options.pid()));
+            options.setProbeABI(detector.abiForProcess(options.pid(), &detectionError));
     }
 
     // find a compatible probe
+    const QVector<ProbeABI> availableProbes = ProbeFinder::listProbeABIs();
     if (options.probeABI().isValid()) {
-        const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(options.probeABI());
+        const ProbeABI bestABI = ProbeFinder::findBestMatchingABI(options.probeABI(), availableProbes);
         if (!bestABI.isValid()) {
-            out() << "No probe found for ABI " << options.probeABI().id() << Qt::endl;
+            out() << "No probe found for ABI " << options.probeABI().id() << ": "
+                  << ProbeFinder::mismatchReason(options.probeABI(), availableProbes) << Qt::endl;
+            out() << "Available probes: " << abiIds(availableProbes) << Qt::endl;
             return 1;
         }
         out() << "Detected ABI " << options.probeABI().id() << ", using ABI " << bestABI.id()
               << "." << Qt::endl;
+        if (detectAbiOnly)
+            return 0;
         options.setProbeABI(bestABI);
     } else {
-        const QVector<ProbeABI> availableProbes = ProbeFinder::listProbeABIs();
+        out() << "Could not detect the ABI of the target: " << detectionError << Qt::endl;
         if (availableProbes.isEmpty()) {
-            out() << "No probes found, this is likely an installation problem." << Qt::endl;
+            out() << "No probes found in " << Paths::probePath(QString())
+                  << ", this is likely an installation problem." << Qt::endl;
+            return 1;
+        }
+        if (detectAbiOnly) {
+            out() << "Available probes: " << abiIds(availableProbes) << Qt::endl;
             return 1;
         }
         if (availableProbes.size() > 1) {
-            out() << "No probe ABI specified and ABI auto-detection failed, picking "
-                  << availableProbes.first().id() << " at random." << Qt::endl;
+            out() << "Picking " << availableProbes.first().id() << " at random." << Qt::endl;
             out()
                 << "To specify the probe ABI explicitly use --probe <abi>, available probes are listed using the --list-probes option."
                 << Qt::endl;
+        } else {
+            out() << "Using the only probe, " << availableProbes.first().id() << "." << Qt::endl;
         }
         options.setProbeABI(availableProbes.first());
     }

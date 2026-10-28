@@ -41,6 +41,19 @@ private slots:
         QCOMPARE(abi.id(), QStringLiteral(GAMMARAY_PROBE_ABI));
     }
 
+    // the reason is given when detection fails, and only then
+    static void testDetectionError()
+    {
+        ProbeABIDetector detector;
+        QString error;
+        QVERIFY(detector.abiForExecutable(QCoreApplication::applicationFilePath(), &error).isValid());
+        QVERIFY(error.isEmpty());
+
+        const QString missing = QStringLiteral("/does/not/exist");
+        QVERIFY(!detector.abiForExecutable(missing, &error).isValid());
+        QCOMPARE(error, QStringLiteral("No QtCore library found among the libraries /does/not/exist uses."));
+    }
+
     static void testContainsQtCore_data()
     {
         QTest::addColumn<QString>("line", nullptr);

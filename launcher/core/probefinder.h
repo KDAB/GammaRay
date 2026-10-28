@@ -48,6 +48,18 @@ GAMMARAY_LAUNCHER_EXPORT ProbeABI findBestMatchingABI(const ProbeABI &targetABI,
                                                       const QVector<ProbeABI> &availableABIs);
 
 /*!
+ * Explains why none of the installed probes is compatible with @p targetABI.
+ * Returns an empty string if there is a compatible one.
+ */
+GAMMARAY_LAUNCHER_EXPORT QString mismatchReason(const ProbeABI &targetABI);
+/*!
+ * Explains why none of @p availableABIs is compatible with @p targetABI.
+ * Returns an empty string if there is a compatible one.
+ */
+GAMMARAY_LAUNCHER_EXPORT QString mismatchReason(const ProbeABI &targetABI,
+                                                const QVector<ProbeABI> &availableABIs);
+
+/*!
  * List all available probe ABIs.
  */
 GAMMARAY_LAUNCHER_EXPORT QVector<ProbeABI> listProbeABIs();
