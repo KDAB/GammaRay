@@ -109,6 +109,12 @@ void DebuggerInjector::setManualError(const QString &msg)
     mProcessError = QProcess::FailedToStart;
 }
 
+void DebuggerInjector::setManualErrorAndContinue(const QString &msg)
+{
+    mManualError = true;
+    mErrorString = msg;
+}
+
 void DebuggerInjector::processFinished()
 {
     mExitCode = m_process->exitCode();
