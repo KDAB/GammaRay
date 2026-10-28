@@ -607,6 +607,8 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
 
         gammaray_add_quick_test(quicktexturetest quicktexturetest.cpp quickinspectortest.qrc)
         target_link_libraries(quicktexturetest gammaray_core Qt::Quick)
+        # grabbing textures is only implemented for OpenGL, use that instead of e.g. D3D11 or Metal
+        set_tests_properties(quicktexturetest PROPERTIES ENVIRONMENT "QSG_RHI_BACKEND=opengl")
 
         gammaray_add_quick_test(
             quickmaterialtest quickmaterialtest.cpp quickinspectortest.qrc $<TARGET_OBJECTS:modeltestobj>
