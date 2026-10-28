@@ -34,9 +34,6 @@ jobs:
                     - "6.9.0" # Minimum supported/tested on MinGW
                     - "6.10.1" # Bump to latest freely
                 preset:
-                    - name: ci-dev-client-only
-                      runs_tests: true
-
                     - name: ci-dev-client-and-ui
                       runs_tests: true
                 toolchain:
