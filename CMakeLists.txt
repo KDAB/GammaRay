@@ -560,19 +560,32 @@ set_package_properties(
     PURPOSE "Required for widget SVG export."
 )
 
-# debug suffixes for qmake compatibility
+# debug suffixes for qmake compatibility, the probe ABI of a debug Qt ends in them as well
 if(WIN32)
-    set(CMAKE_DEBUG_POSTFIX "d")
+    set(GAMMARAY_ABI_DEBUG_POSTFIX "d")
 elseif(APPLE)
-    set(CMAKE_DEBUG_POSTFIX "_debug")
+    set(GAMMARAY_ABI_DEBUG_POSTFIX "_debug")
 else()
-    set(CMAKE_DEBUG_POSTFIX "")
+    set(GAMMARAY_ABI_DEBUG_POSTFIX "")
 endif()
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" UPPERCASE_CMAKE_BUILD_TYPE)
 
+# The launcher tells a target using a debug Qt apart by the name of its QtCore, so like Qt, only add
+# the debug suffix when building against a debug Qt. Our own build type doesn't matter: e.g. Qt on
+# macOS and MinGW only comes as a release build, which a debug build of GammaRay links as well.
+set(CMAKE_DEBUG_POSTFIX "")
+if(GAMMARAY_ABI_DEBUG_POSTFIX)
+    get_target_property(_qtcore_location Qt${QT_VERSION_MAJOR}::Core LOCATION_DEBUG)
+    get_filename_component(_qtcore_name "${_qtcore_location}" NAME_WE)
+    if(_qtcore_name MATCHES "${GAMMARAY_ABI_DEBUG_POSTFIX}$")
+        set(CMAKE_DEBUG_POSTFIX "${GAMMARAY_ABI_DEBUG_POSTFIX}")
+    endif()
+endif()
+
+# CMake only adds CMAKE_DEBUG_POSTFIX to the file names of Debug builds
 set(GAMMARAY_PROBE_ABI_POSTFIX "")
-if(NOT UPPERCASE_CMAKE_BUILD_TYPE MATCHES "^REL")
+if(UPPERCASE_CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     set(GAMMARAY_PROBE_ABI_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
 endif()
 
