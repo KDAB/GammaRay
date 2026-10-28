@@ -139,16 +139,21 @@ struct ProcIdToProcData
         if (!file.open(QIODevice::ReadOnly))
             return proc; // process may have exited
 
-        const QStringList data = QString::fromLocal8Bit(file.readAll()).split(' ');
+        // "<pid> (<name>) <state> <ppid> ...", where the name can contain spaces and parentheses,
+        // and the content is empty if the process exited meanwhile
+        const QString stat = QString::fromLocal8Bit(file.readAll());
+        const auto nameStart = stat.indexOf(QLatin1Char('('));
+        const auto nameEnd = stat.lastIndexOf(QLatin1Char(')'));
+        if (nameStart < 0 || nameEnd < nameStart)
+            return proc;
+        const QStringList fields = stat.mid(nameEnd + 1).split(QLatin1Char(' '), Qt::SkipEmptyParts);
+        if (fields.isEmpty())
+            return proc;
 
         proc.ppid = procId.toULongLong();
-        proc.name = data.at(1);
-        if (proc.name.startsWith(QLatin1Char('(')) && proc.name.endsWith(QLatin1Char(')'))) {
-            proc.name.truncate(proc.name.size() - 1);
-            proc.name.remove(0, 1);
-        }
-        proc.state = data.at(2);
-        // PPID is element 3
+        proc.name = stat.mid(nameStart + 1, nameEnd - nameStart - 1);
+        proc.state = fields.at(0);
+        // PPID is fields.at(1)
 
         proc.user = QFileInfo(file).owner();
         file.close();
