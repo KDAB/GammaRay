@@ -17,7 +17,10 @@
 #include <core/probe.h>
 #include <core/probeguard.h>
 #include <core/remote/server.h>
+#include <common/message.h>
+#include <common/protocol.h>
 
+#include <QBuffer>
 #include <QCoreApplication>
 #include <QMetaObject>
 #include <QMutexLocker>
@@ -61,6 +64,45 @@ static int s_previousHookCalls = 0;
 static void previousAddObjectHook(QObject *)
 {
     ++s_previousHookCalls;
+}
+
+// gets told when the client starts or stops monitoring it
+class MonitoredObject : public QObject
+{
+    Q_OBJECT
+public:
+    int notifications = 0;
+
+public slots:
+    void monitored(bool)
+    {
+        ++notifications;
+    }
+};
+
+// delivers a message to the server, as if the client had sent it
+struct ServerAccess : public Server
+{
+    using Server::endpointAddress;
+    using Server::messageReceived;
+};
+
+static Protocol::ObjectAddress serverAddress()
+{
+    Protocol::ObjectAddress (Endpoint::*endpointAddress)() const = &ServerAccess::endpointAddress;
+    return (Server::instance()->*endpointAddress)();
+}
+
+static void deliverToServer(const Message &msg)
+{
+    QByteArray data;
+    QBuffer buffer(&data);
+    buffer.open(QIODevice::ReadWrite);
+    msg.write(&buffer);
+    buffer.seek(0);
+    const auto received = Message::readMessage(&buffer);
+    void (Server::*messageReceived)(const Message &) = &ServerAccess::messageReceived;
+    (Server::instance()->*messageReceived)(received);
 }
 
 int argc = 1;
@@ -272,6 +314,30 @@ private slots:
         QVERIFY(!server.isListening());
         QVERIFY(!server.listen());
         QVERIFY(!server.externalAddress().isValid());
+    }
+
+    // e.g. a remote view, registered as an object without being a message handler
+    void monitorNotifierOfDestroyedObject()
+    {
+        {
+            QCoreApplication app(argc, argv);
+            createProbe();
+            auto obj = new MonitoredObject;
+            const auto address = Server::instance()->registerObject(QStringLiteral("com.kdab.GammaRay.UnitTest.Monitored"), obj,
+                                                                    Server::ExportNothing);
+            Server::instance()->registerMonitorNotifier(address, obj, "monitored");
+            const auto monitor = [address] {
+                Message msg(serverAddress(), Protocol::ObjectMonitored);
+                msg << address;
+                deliverToServer(msg);
+            };
+            monitor();
+            QCOMPARE(obj->notifications, 1);
+
+            delete obj;
+            monitor(); // must not notify the deleted object
+        }
+        QVERIFY(!Probe::instance());
     }
 
     void reparentFromDelayedReparent()
