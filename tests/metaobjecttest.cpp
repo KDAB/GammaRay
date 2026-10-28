@@ -33,6 +33,22 @@ private slots:
         EnumRepositoryServer::create(this);
     }
 
+    // clearing the repository has to forget everything, it is set up again with new meta objects
+    static void testClear()
+    {
+        QThread thread;
+        // the old entries only cause trouble when new meta objects get their addresses
+        for (int i = 0; i < 100; ++i) {
+            MetaObjectRepository::instance()->clear();
+            auto repository = MetaObjectRepository::instance();
+            void *obj = static_cast<QObject *>(&thread);
+            auto mo = repository->metaObject(repository->metaObject(QStringLiteral("QObject")), obj);
+            QVERIFY(mo);
+            QCOMPARE(mo, repository->metaObject(QStringLiteral("QThread")));
+            QCOMPARE(obj, static_cast<void *>(&thread));
+        }
+    }
+
     static void testMetaObject()
     {
         QVERIFY(MetaObjectRepository::instance()->hasMetaObject(QStringLiteral("QThread")));

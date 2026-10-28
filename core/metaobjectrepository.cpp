@@ -290,5 +290,6 @@ void MetaObjectRepository::clear()
 {
     qDeleteAll(m_metaObjects);
     m_metaObjects.clear();
+    m_derivedTypes.clear();
     m_initialized = false;
 }
