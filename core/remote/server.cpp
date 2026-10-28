@@ -310,11 +310,12 @@ void Server::handlerDestroyed(Protocol::ObjectAddress objectAddress, const QStri
     }
 }
 
-void Server::objectDestroyed(Protocol::ObjectAddress /*objectAddress*/, const QString &objectName,
+void Server::objectDestroyed(Protocol::ObjectAddress objectAddress, const QString &objectName,
                              QObject *object)
 {
     Q_UNUSED(object);
     removeObjectNameAddressMapping(objectName);
+    m_monitorNotifiers.remove(objectAddress);
 
     if (isConnected()) {
         Message msg(endpointAddress(), Protocol::ObjectRemoved);
