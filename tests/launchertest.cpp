@@ -127,6 +127,37 @@ private slots:
     }
 #endif
 
+#ifdef HAVE_QT_WIDGETS
+    // the probe reports no server address then, which must not count as the target not responding
+    static void testInProcessWithoutRemoteAccess()
+    {
+        if (!hasInjector("preload") && !hasInjector("windll"))
+            QSKIP("no launch injector");
+
+        LaunchOptions options;
+        options.setUiMode(LaunchOptions::InProcessUi);
+        options.setProbeSetting(QStringLiteral("RemoteAccessEnabled"), false);
+        QString exePath = QLatin1String(TESTBIN_DIR "/minimalwidgetapplication");
+#ifdef Q_OS_WIN
+        exePath += QLatin1String(".exe");
+#endif
+        ProbeABIDetector detector;
+        options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(exePath)));
+        options.setLaunchArguments(QStringList() << exePath);
+        qputenv("GAMMARAY_LAUNCHER_TIMEOUT", "1");
+        Launcher launcher(options);
+        qunsetenv("GAMMARAY_LAUNCHER_TIMEOUT");
+
+        QSignalSpy finishSpy(&launcher, &Launcher::finished);
+        QVERIFY(launcher.start());
+        QVERIFY(!finishSpy.wait(3000));
+        QCOMPARE(launcher.exitCode(), 0);
+
+        launcher.stop();
+        QVERIFY(finishSpy.wait(10000));
+    }
+#endif
+
     static void testAttach()
     {
         QProcess target;

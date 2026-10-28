@@ -91,7 +91,7 @@ Launcher::Launcher(const LaunchOptions &options, QObject *parent)
     Q_ASSERT(options.isValid());
 
     const auto timeout = qEnvironmentVariableIntValue("GAMMARAY_LAUNCHER_TIMEOUT");
-    d->safetyTimer.setInterval(std::max(60, timeout) * 1000);
+    d->safetyTimer.setInterval((timeout > 0 ? timeout : 60) * 1000);
     d->safetyTimer.setSingleShot(true);
     connect(&d->safetyTimer, &QTimer::timeout, this, &Launcher::timeout);
 }
@@ -315,6 +315,9 @@ void Launcher::timeout()
 
 void Launcher::restartTimer()
 {
+    // the in-process UI doesn't need the server, which might not even be enabled
+    if (d->options.uiMode() == LaunchOptions::InProcessUi)
+        return;
     d->safetyTimer.stop();
     d->safetyTimer.start();
 }
