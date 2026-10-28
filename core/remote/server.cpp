@@ -77,8 +77,11 @@ Server::Server(QObject *parent)
 
 Server::~Server() = default;
 
+// there is no device when remote access is disabled, or the address isn't supported
 bool Server::listen()
 {
+    if (!m_serverDevice)
+        return false;
     Q_ASSERT(!m_serverDevice->isListening());
     if (!m_serverDevice->listen()) {
         return false;
@@ -89,7 +92,7 @@ bool Server::listen()
 
 bool Server::isListening() const
 {
-    return m_serverDevice->isListening();
+    return m_serverDevice && m_serverDevice->isListening();
 }
 
 Server *Server::instance()

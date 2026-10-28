@@ -16,10 +16,12 @@
 #include <common/objectmodel.h>
 #include <core/probe.h>
 #include <core/probeguard.h>
+#include <core/remote/server.h>
 
 #include <QCoreApplication>
 #include <QMetaObject>
 #include <QMutexLocker>
+#include <QRegularExpression>
 #include <QScopeGuard>
 #include <QObject>
 #include <QSignalSpy>
@@ -239,6 +241,37 @@ private slots:
             QVERIFY(!Probe::instance()->isValidObject(obj));
         }
         QVERIFY(!Probe::instance());
+    }
+
+    static void serverWithoutDevice_data()
+    {
+        QTest::addColumn<QByteArray>("variable");
+        QTest::addColumn<QByteArray>("value");
+        QTest::newRow("remote access disabled") << QByteArray("GAMMARAY_RemoteAccessEnabled") << QByteArray("false");
+        QTest::newRow("unsupported address") << QByteArray("GAMMARAY_ServerAddress") << QByteArray("foo://localhost");
+    }
+
+    // the server has no device to listen with then
+    static void serverWithoutDevice()
+    {
+        QFETCH(QByteArray, variable);
+        QFETCH(QByteArray, value);
+        QCoreApplication app(argc, argv);
+        const auto previous = qgetenv(variable.constData());
+        const auto restore = qScopeGuard([&] {
+            if (previous.isNull())
+                qunsetenv(variable.constData());
+            else
+                qputenv(variable.constData(), previous);
+        });
+        qputenv(variable.constData(), value);
+        if (variable == "GAMMARAY_ServerAddress")
+            QTest::ignoreMessage(QtWarningMsg, QRegularExpression(QStringLiteral("Unsupported transport protocol")));
+
+        Server server;
+        QVERIFY(!server.isListening());
+        QVERIFY(!server.listen());
+        QVERIFY(!server.externalAddress().isValid());
     }
 
     void reparentFromDelayedReparent()
