@@ -21,6 +21,7 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QFileInfo>
 #include <QThread>
 
 #include <cstdlib>
@@ -83,6 +84,13 @@ QString WinDllInjector::name() const
 bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &probeDll,
                             const QString & /*probeFunc*/, const QProcessEnvironment &_env)
 {
+    // loading it is not checked in the target, the probe would just never show up
+    const QString dllPath = fixProbeDllPath(probeDll);
+    if (!QFileInfo::exists(dllPath)) {
+        mErrorString = tr("The probe loader %1 does not exist.").arg(dllPath);
+        return false;
+    }
+
     // add location of GammaRay DLLs to PATH, so the probe can find them
     auto env = _env;
     env.insert(QStringLiteral("PATH"), env.value(QStringLiteral("PATH")) + QLatin1Char(';') + Paths::binPath());
@@ -124,7 +132,6 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
                      });
 
     m_destProcess = pid.hProcess;
-    QString dllPath = fixProbeDllPath(probeDll);
     BasicWinDllInjector::inject(m_destProcess, ( wchar_t * )dllPath.utf16());
     m_injectThread->stop();
     emit started();
@@ -135,12 +142,18 @@ bool WinDllInjector::launch(const QStringList &programAndArgs, const QString &pr
 
 bool WinDllInjector::attach(int pid, const QString &probeDll, const QString & /*probeFunc*/)
 {
+    const QString dllPath = fixProbeDllPath(probeDll);
+    if (!QFileInfo::exists(dllPath)) {
+        mErrorString = tr("The probe loader %1 does not exist.").arg(dllPath);
+        return false;
+    }
+
     const bool isX64 = probeDll.contains(QLatin1String("x86_64"), Qt::CaseInsensitive);
     QString application = QString(QLatin1String("gammaray-wininjector-%1")).arg(isX64 ? QLatin1String("x86_64") : QLatin1String("i686"));
     QStringList args;
     args << QString::number(pid)
          << QDir::toNativeSeparators(Paths::binPath())
-         << fixProbeDllPath(probeDll);
+         << dllPath;
     QProcess p;
     // the injector writes the reasons of a failure to stderr
     p.setProcessChannelMode(QProcess::MergedChannels);
@@ -198,7 +211,6 @@ QString WinDllInjector::fixProbeDllPath(const QString &probeDll)
 {
     QString dllPath = QDir::toNativeSeparators(probeDll);
     dllPath.replace(QLatin1String(GAMMARAY_PROBE_BASENAME), QLatin1String("gammaray_winloader"));
-    Q_ASSERT_X(QFileInfo::exists(dllPath), Q_FUNC_INFO, qPrintable(QString(QLatin1String("%1 does not exists!")).arg(dllPath)));
     return dllPath;
 }
 
