@@ -137,6 +137,9 @@ jobs:
         run: >
           ctest --test-dir ./build-${{ matrix.preset.name }} -C 'Debug' --output-on-failure
           --exclude-regex "quickmaterialtest|quicktexturetest|launchertest|probesettingstest"
+        env:
+          # without a console Qt Test only logs to OutputDebugString on Windows
+          QT_FORCE_STDERR_LOGGING: 1
 
       - name: Read tests log when it fails
         uses: andstor/file-reader-action@v1
