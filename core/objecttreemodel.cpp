@@ -72,31 +72,36 @@ void ObjectTreeModel::objectAdded(QObject *obj)
         return;
     }
 
+    // An object of another thread can be reparented there while we handle it here, so read its
+    // parent only once. Otherwise the row could end up below one parent while the model reports
+    // another one for it.
+    QObject *parentObj = parentObject(obj);
+
     // this is ugly, but apparently it can happen
     // that an object gets created without parent
     // then later the delayed signal comes in
     // so catch this gracefully by first adding the
     // parent if required
-    QModelIndex index = indexForObject(parentObject(obj));
-    if (parentObject(obj)) {
+    QModelIndex index = indexForObject(parentObj);
+    if (parentObj) {
         if (!index.isValid()) {
             IF_DEBUG(cout << "tree: handle parent first" << endl;)
-            objectAdded(parentObject(obj));
-            index = indexForObject(parentObject(obj));
+            objectAdded(parentObj);
+            index = indexForObject(parentObj);
         }
     }
 
     // either we get a proper parent and hence valid index or there is no parent
-    Q_ASSERT(index.isValid() || !parentObject(obj));
+    Q_ASSERT(index.isValid() || !parentObj);
 
-    QVector<QObject *> &children = m_parentChildMap[parentObject(obj)];
+    QVector<QObject *> &children = m_parentChildMap[parentObj];
     auto it = std::lower_bound(children.begin(), children.end(), obj);
     const int row = std::distance(children.begin(), it);
 
     beginInsertRows(index, row, row);
 
     children.insert(it, obj);
-    m_childParentMap.insert(obj, parentObject(obj));
+    m_childParentMap.insert(obj, parentObj);
 
     endInsertRows();
 }
@@ -172,29 +177,34 @@ void ObjectTreeModel::objectReparented(QObject *obj)
         return;
     }
 
+    // see objectAdded(), read the parents only once
+    QObject *newParent = parentObject(obj);
+
     // The probe reports moves in the order it noticed them, so the new parent or one of its
     // ancestors can still be below obj here, when its own move isn't reported yet. Moving obj
     // there would put it below itself, so move those to where they actually are first.
     QVector<QObject *> movedAncestors;
-    for (QObject *ancestor = parentObject(obj); ancestor; ancestor = parentObject(ancestor)) {
+    for (QObject *ancestor = newParent; ancestor;) {
+        QObject *ancestorParent = parentObject(ancestor);
         const auto it = m_childParentMap.constFind(ancestor);
-        if (it != m_childParentMap.cend() && it.value() != parentObject(ancestor))
+        if (it != m_childParentMap.cend() && it.value() != ancestorParent)
             movedAncestors.push_front(ancestor);
+        ancestor = ancestorParent;
     }
     for (QObject *ancestor : std::as_const(movedAncestors))
         objectReparented(ancestor);
     // like objectAdded(), add a new parent that the probe didn't announce yet
-    if (parentObject(obj) && !indexForObject(parentObject(obj)).isValid())
-        objectAdded(parentObject(obj));
+    if (newParent && !indexForObject(newParent).isValid())
+        objectAdded(newParent);
 
     QObject *oldParent = m_childParentMap.value(obj);
     const auto sourceParent = indexForObject(oldParent);
-    if ((oldParent && !sourceParent.isValid()) || (oldParent == parentObject(obj)))
+    if ((oldParent && !sourceParent.isValid()) || (oldParent == newParent))
         return;
 
     // creating the entry of a new parent without children can rehash the map, so do that before
     // taking a reference to the old parent's entry
-    QVector<QObject *> &newSiblings = m_parentChildMap[parentObject(obj)];
+    QVector<QObject *> &newSiblings = m_parentChildMap[newParent];
     QVector<QObject *> &oldSiblings = m_parentChildMap[oldParent];
     auto oldIt = std::lower_bound(oldSiblings.begin(),
                                   oldSiblings.end(), obj);
@@ -202,9 +212,9 @@ void ObjectTreeModel::objectReparented(QObject *obj)
         return;
     const int sourceRow = std::distance(oldSiblings.begin(), oldIt);
 
-    IF_DEBUG(cout << "actually reparenting! " << hex << obj << " old parent: " << oldParent << " new parent: " << parentObject(obj) << dec << endl;)
-    const auto destParent = indexForObject(parentObject(obj));
-    Q_ASSERT(destParent.isValid() || !parentObject(obj));
+    IF_DEBUG(cout << "actually reparenting! " << hex << obj << " old parent: " << oldParent << " new parent: " << newParent << dec << endl;)
+    const auto destParent = indexForObject(newParent);
+    Q_ASSERT(destParent.isValid() || !newParent);
 
     auto newIt = std::lower_bound(newSiblings.begin(),
                                   newSiblings.end(), obj);
@@ -213,7 +223,7 @@ void ObjectTreeModel::objectReparented(QObject *obj)
     beginMoveRows(sourceParent, sourceRow, sourceRow, destParent, destRow);
     oldSiblings.erase(oldIt);
     newSiblings.insert(newIt, obj);
-    m_childParentMap.insert(obj, parentObject(obj));
+    m_childParentMap.insert(obj, newParent);
     endMoveRows();
 }
 

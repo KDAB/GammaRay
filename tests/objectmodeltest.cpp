@@ -17,12 +17,14 @@
 #include <core/probe.h>
 
 #include <QAbstractItemModelTester>
+#include <QScopeGuard>
 #include <QSignalSpy>
 #include <QSortFilterProxyModel>
 #include <QThread>
 
 #include <functional>
 #include <memory>
+#include <utility>
 
 using namespace GammaRay;
 
@@ -266,6 +268,83 @@ private slots:
         thread.wait();
         processQueue();
         QVERIFY(!find(treeModel(), root).isValid());
+    }
+
+    // another thread can reparent its objects any time, also while the tree adds or moves them
+    void testReparentedInOtherThreadMeanwhile()
+    {
+        QThread thread;
+        thread.start();
+        // also when a check fails
+        const auto stopThread = qScopeGuard([&thread] {
+            thread.quit();
+            thread.wait();
+        });
+        auto context = new QObject;
+        context->moveToThread(&thread);
+        const auto inThread = [context](const std::function<void()> &f) {
+            QMetaObject::invokeMethod(context, f, Qt::BlockingQueuedConnection);
+        };
+
+        QObject *a = nullptr;
+        QObject *b = nullptr;
+        QObject *c = nullptr;
+        inThread([&] {
+            a = new QObject;
+            b = new QObject;
+            c = new QObject;
+        });
+        processQueue();
+
+        // moves obj to the next parent in the thread, as soon as the tree adds or moves it. This waits
+        // for the thread while the probe holds its lock, which the thread mustn't need meanwhile
+        QObject *obj = nullptr;
+        QObject *nextParent = nullptr;
+        const auto objectOf = [](const QModelIndex &index) {
+            return index.data(ObjectModel::ObjectRole).value<QObject *>();
+        };
+        const auto moveObj = [&] {
+            auto parent = std::exchange(nextParent, nullptr);
+            inThread([&] { obj->setParent(parent); });
+        };
+        QObject hookContext;
+        connect(treeModel(), &QAbstractItemModel::rowsAboutToBeInserted, &hookContext,
+                [&](const QModelIndex &parent) {
+                    if (nextParent && objectOf(parent) == a)
+                        moveObj();
+                });
+        connect(treeModel(), &QAbstractItemModel::rowsAboutToBeMoved, &hookContext,
+                [&](const QModelIndex &sourceParent, int sourceRow) {
+                    if (nextParent && objectOf(treeModel()->index(sourceRow, 0, sourceParent)) == obj)
+                        moveObj();
+                });
+        // the row of obj is where the model says it is
+        const auto treeIsConsistent = [&] {
+            const auto index = find(treeModel(), obj);
+            return index.isValid() && treeModel()->index(index.row(), 0, index.parent()) == index;
+        };
+
+        // moved to b while the tree adds it below a
+        nextParent = b;
+        inThread([&] { obj = new QObject(a); });
+        processQueue();
+        QVERIFY(!nextParent);
+        QVERIFY(treeIsConsistent());
+
+        // the tree only notices the move to b when a goes away, then obj moves to c meanwhile
+        nextParent = c;
+        inThread([&] { delete a; });
+        processQueue();
+        QVERIFY(!nextParent);
+        QVERIFY(treeIsConsistent());
+        QVERIFY(filteredProxyIsCorrect());
+
+        inThread([&] {
+            delete b;
+            delete c;
+            delete context;
+        });
+        processQueue();
     }
 
     // a recursively filtering proxy follows all of these changes
