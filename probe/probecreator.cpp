@@ -20,6 +20,7 @@
 #include <core/probe.h>
 
 #include <QCoreApplication>
+#include <QDebug>
 #include <QMetaObject>
 #include <QVector>
 #include <QThread>
@@ -56,6 +57,7 @@ ProbeCreator::ProbeCreator(CreateFlags flags)
 
 void ProbeCreator::createProbe()
 {
+    qWarning() << "DO NOT MERGE: ProbeCreator::createProbe(), qApp:" << qApp << "initialized:" << Probe::isInitialized();
     if (!qApp) {
         deleteLater();
         return;
@@ -75,6 +77,7 @@ void ProbeCreator::createProbe()
     }
 
     Probe::createProbe(m_flags & FindExistingObjects);
+    qWarning() << "DO NOT MERGE: probe created:" << Probe::isInitialized();
     Q_ASSERT(Probe::isInitialized());
     // when detaching, put back the hooks we replaced, attaching again installs them again
     connect(Probe::instance(), &Probe::aboutToDetach, Probe::instance(), &Hooks::uninstallHooks);

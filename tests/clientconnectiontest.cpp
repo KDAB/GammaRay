@@ -66,13 +66,17 @@ private slots:
             ProbeABIDetector detector;
             options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForProcess(options.pid())));
             Launcher launcher(options);
+            // DO NOT MERGE: CI diagnostics
+            qWarning() << "probe ABI" << options.probeABI().id() << "probe" << ProbeFinder::findProbe(options.probeABI());
+            connect(&launcher, &Launcher::stdoutMessage, [](const QString &m) { qWarning() << "target stdout:" << m; });
+            connect(&launcher, &Launcher::stderrMessage, [](const QString &m) { qWarning() << "target stderr:" << m; });
 
             QSignalSpy spy(&launcher, &Launcher::attached);
             QVERIFY(spy.isValid());
             QVERIFY(launcher.start());
 
             spy.wait(30000);
-            QCOMPARE(spy.size(), 1);
+            QVERIFY2(spy.size() == 1, qPrintable(launcher.errorMessage()));
 
             m_serverUrl = launcher.serverAddress();
             QVERIFY(m_serverUrl.isValid());

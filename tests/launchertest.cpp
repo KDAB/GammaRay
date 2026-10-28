@@ -80,6 +80,10 @@ private slots:
         options.setInjectorType(injectorType);
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
+        // DO NOT MERGE: CI diagnostics
+        qWarning() << "probe ABI" << options.probeABI().id() << "probe" << ProbeFinder::findProbe(options.probeABI());
+        connect(&launcher, &Launcher::stdoutMessage, [](const QString &m) { qWarning() << "target stdout:" << m; });
+        connect(&launcher, &Launcher::stderrMessage, [](const QString &m) { qWarning() << "target stderr:" << m; });
 
         QSignalSpy startSpy(&launcher, &Launcher::started);
         QVERIFY(startSpy.isValid());
@@ -88,7 +92,7 @@ private slots:
 
         QVERIFY(launcher.start());
         startSpy.wait(60000);
-        QCOMPARE(startSpy.size(), 1);
+        QVERIFY2(startSpy.size() == 1, qPrintable(launcher.errorMessage()));
         QCOMPARE(finishSpy.size(), 0);
 
         launcher.stop();
@@ -111,6 +115,10 @@ private slots:
         options.setInjectorType(QStringLiteral("style"));
         options.setProbeSetting(QStringLiteral("ServerAddress"), GAMMARAY_DEFAULT_LOCAL_TCP_URL);
         Launcher launcher(options);
+        // DO NOT MERGE: CI diagnostics
+        qWarning() << "probe ABI" << options.probeABI().id() << "probe" << ProbeFinder::findProbe(options.probeABI());
+        connect(&launcher, &Launcher::stdoutMessage, [](const QString &m) { qWarning() << "target stdout:" << m; });
+        connect(&launcher, &Launcher::stderrMessage, [](const QString &m) { qWarning() << "target stderr:" << m; });
 
         QSignalSpy startSpy(&launcher, &Launcher::started);
         QVERIFY(startSpy.isValid());
@@ -119,7 +127,7 @@ private slots:
 
         QVERIFY(launcher.start());
         startSpy.wait(60000);
-        QCOMPARE(startSpy.size(), 1);
+        QVERIFY2(startSpy.size() == 1, qPrintable(launcher.errorMessage()));
         QCOMPARE(finishSpy.size(), 0);
 
         launcher.stop();
@@ -147,6 +155,10 @@ private slots:
         options.setLaunchArguments(QStringList() << exePath);
         qputenv("GAMMARAY_LAUNCHER_TIMEOUT", "1");
         Launcher launcher(options);
+        // DO NOT MERGE: CI diagnostics
+        qWarning() << "probe ABI" << options.probeABI().id() << "probe" << ProbeFinder::findProbe(options.probeABI());
+        connect(&launcher, &Launcher::stdoutMessage, [](const QString &m) { qWarning() << "target stdout:" << m; });
+        connect(&launcher, &Launcher::stderrMessage, [](const QString &m) { qWarning() << "target stderr:" << m; });
         qunsetenv("GAMMARAY_LAUNCHER_TIMEOUT");
 
         QSignalSpy finishSpy(&launcher, &Launcher::finished);
@@ -177,10 +189,14 @@ private slots:
         options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForExecutable(exePath)));
         options.setLaunchArguments(QStringList() << exePath);
         Launcher launcher(options);
+        // DO NOT MERGE: CI diagnostics
+        qWarning() << "probe ABI" << options.probeABI().id() << "probe" << ProbeFinder::findProbe(options.probeABI());
+        connect(&launcher, &Launcher::stdoutMessage, [](const QString &m) { qWarning() << "target stdout:" << m; });
+        connect(&launcher, &Launcher::stderrMessage, [](const QString &m) { qWarning() << "target stderr:" << m; });
 
         QSignalSpy finishSpy(&launcher, &Launcher::finished);
         QVERIFY(launcher.start());
-        QVERIFY(finishSpy.wait(20000));
+        QVERIFY2(finishSpy.wait(20000), qPrintable(launcher.errorMessage()));
         QCOMPARE(launcher.exitCode(), 1);
         QVERIFY2(launcher.errorMessage().contains(QLatin1String("Failed to start server")),
                  qPrintable(launcher.errorMessage()));
@@ -200,10 +216,14 @@ private slots:
         options.setProbeABI(ProbeFinder::findBestMatchingABI(
             detector.abiForExecutable(QLatin1String(TESTBIN_DIR "/minimalcoreapplication"))));
         Launcher launcher(options);
+        // DO NOT MERGE: CI diagnostics
+        qWarning() << "probe ABI" << options.probeABI().id() << "probe" << ProbeFinder::findProbe(options.probeABI());
+        connect(&launcher, &Launcher::stdoutMessage, [](const QString &m) { qWarning() << "target stdout:" << m; });
+        connect(&launcher, &Launcher::stderrMessage, [](const QString &m) { qWarning() << "target stderr:" << m; });
 
         QSignalSpy finishSpy(&launcher, &Launcher::finished);
         QVERIFY(launcher.start());
-        QVERIFY(finishSpy.wait(20000));
+        QVERIFY2(finishSpy.wait(20000), qPrintable(launcher.errorMessage()));
         QVERIFY(launcher.exitCode() != 0);
         QVERIFY2(launcher.errorMessage().contains(QLatin1String("could not attach")),
                  qPrintable(launcher.errorMessage()));
@@ -229,13 +249,17 @@ private slots:
         ProbeABIDetector detector;
         options.setProbeABI(ProbeFinder::findBestMatchingABI(detector.abiForProcess(options.pid())));
         Launcher launcher(options);
+        // DO NOT MERGE: CI diagnostics
+        qWarning() << "probe ABI" << options.probeABI().id() << "probe" << ProbeFinder::findProbe(options.probeABI());
+        connect(&launcher, &Launcher::stdoutMessage, [](const QString &m) { qWarning() << "target stdout:" << m; });
+        connect(&launcher, &Launcher::stderrMessage, [](const QString &m) { qWarning() << "target stderr:" << m; });
 
         QSignalSpy spy(&launcher, &Launcher::attached);
         QVERIFY(spy.isValid());
         QVERIFY(launcher.start());
 
         spy.wait(30000);
-        QCOMPARE(spy.size(), 1);
+        QVERIFY2(spy.size() == 1, qPrintable(launcher.errorMessage()));
     }
 };
 
