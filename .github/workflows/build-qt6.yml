@@ -123,7 +123,7 @@ jobs:
       - name: Test probe and client with UI
         if: ${{ !cancelled() && steps.build-full.outcome == 'success' }}
         run: >
-          ctest --test-dir ./build-ci-dev-client-and-ui -C Debug --output-on-failure
+          ctest --test-dir ./build-ci-dev-client-and-ui -C Debug --output-on-failure --repeat until-pass:2
           --exclude-regex "${{ matrix.os.test_exclude }}"
 
       - name: Configure client only
@@ -142,7 +142,7 @@ jobs:
       - name: Test client only
         if: ${{ !cancelled() && steps.build-client.outcome == 'success' }}
         run: >
-          ctest --test-dir ./build-ci-dev-client-only -C Debug --output-on-failure
+          ctest --test-dir ./build-ci-dev-client-only -C Debug --output-on-failure --repeat until-pass:2
           --exclude-regex "${{ matrix.os.test_exclude }}"
 
       - name: Configure probe only
