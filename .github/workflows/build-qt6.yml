@@ -15,42 +15,53 @@ on:
       - 3.2
 
 jobs:
+  # Each job builds all the build configurations one after the other, which saves installing Qt and
+  # checking out the sources for each of them. A configuration is still built and tested when an
+  # earlier one failed.
   build:
-    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os.name }}, Qt ${{ matrix.qt.name }}
+    runs-on: ${{ matrix.os.runner }}
     strategy:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
-        qt_version:
-          - "6.5.*"
-          - "6.10.1" # bump to latest Qt freely
-        preset:
-          - name: ci-dev-client-only
-            tests_with: qt6
+          - name: Linux
+            runner: ubuntu-latest
+            full_build: true
+            # quickmaterialtest|quicktexturetest fail because of QT_QUICK_BACKEND=software and
+            # QT_QPA_PLATFORM=offscreen
+            # quickinspectortest|quickinspectortest2 fail on CI, pass locally
+            test_exclude: "quickmaterialtest|quicktexturetest|quickinspectortest|quickinspectortest2"
 
-          - name: ci-dev-client-and-ui
-            tests_with: qt6
+          - name: Windows
+            runner: windows-latest
+            full_build: true
+            # quickmaterialtest: enable once QTBUG-144137 is fixed (affects 6.10)
+            test_exclude: "quickmaterialtest|quicktexturetest|launchertest|probesettingstest"
 
-          - name: ci-dev-probe-only
-
-        # GitHub actions is now powered by AppleSilicon macs
-        # and these presets are failing
+          # GitHub actions is now powered by Apple Silicon Macs, where the full build fails
+          - name: macOS
+            runner: macos-latest
+            full_build: false
+            test_exclude: "probeabidetectortest|launchertest|clientconnectiontest|quickinspectortest2|quicktexturetest"
+        qt:
+          - name: "6.5"
+            version: "6.5.*"
+          - name: "6.10"
+            version: "6.10.1" # bump to latest Qt freely
         exclude:
-          - os: macos-latest
-            preset:
-              name: ci-dev-client-and-ui
-          - os: macos-latest
-            qt_version: "6.5.*" # Qt 6.5 not supported on latest macos: ld: framework 'AGL' not found
+          - os:
+              name: macOS
+            qt:
+              name: "6.5" # Qt 6.5 not supported on latest macos: ld: framework 'AGL' not found
+
     steps:
       - name: Install Qt with options and default aqtversion
         uses: jurplel/install-qt-action@v4
         with:
           aqtversion: null # use whatever the default is
           modules: qtshadertools qtscxml
-          version: ${{ matrix.qt_version }}
+          version: ${{ matrix.qt.version }}
           cache: true
 
       - name: Checkout sources
@@ -80,7 +91,7 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          toolset: ${{ startsWith(matrix.qt_version, '6.5') && '14.4' || '' }} # newer MSVC doesn't build Qt5 (qvector.h(960): error C2653: 'stdext': is not a class or namespace name)
+          toolset: ${{ startsWith(matrix.qt.version, '6.5') && '14.4' || '' }} # newer MSVC doesn't build Qt5 (qvector.h(960): error C2653: 'stdext': is not a class or namespace name)
 
       # Don't make graphviz find wrong libgd
       - name: Remove Strawberry from PATH
@@ -88,57 +99,74 @@ jobs:
         run: |
           Remove-Item "C:/Strawberry" -Recurse -Force
 
-      - name: Configure project
+      - name: Set up the test environment on Linux
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          # allow gdb to attach
+          echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+          echo "QT_QPA_PLATFORM=offscreen" >> $GITHUB_ENV
+          echo "QT_QUICK_BACKEND=software" >> $GITHUB_ENV
+
+      - name: Set up the test environment on Windows
+        if: ${{ runner.os == 'Windows' }}
+        shell: bash
+        # without a console Qt Test only logs to OutputDebugString on Windows
+        run: echo "QT_FORCE_STDERR_LOGGING=1" >> $GITHUB_ENV
+
+      - name: Configure probe and client with UI
+        id: configure-full
+        if: ${{ !cancelled() && matrix.os.full_build }}
         run: >
-          cmake -S . -G Ninja --preset ${{ matrix.preset.name }}
+          cmake -S . -G Ninja --preset ci-dev-client-and-ui
           -DGAMMARAY_WITH_KDSME=ON
           -DGAMMARAY_BUILD_DOCS=${{ runner.os == 'Linux' }}
 
-      - name: Build Project
-        run: cmake --build ./build-${{ matrix.preset.name }}
+      - name: Build probe and client with UI
+        id: build-full
+        if: ${{ !cancelled() && steps.configure-full.outcome == 'success' }}
+        run: cmake --build ./build-ci-dev-client-and-ui
 
-      - name: Enable gdb attaching
-        if: ${{ runner.os == 'Linux' }}
-        run: echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
-
-        # Exclude
-        # quickmaterialtest|quicktexturetest fails because of QT_QUICK_BACKEND=software AND QT_QPA_PLATFORM=offscreen
-        # quickinspectortest|quickinspectortest2 fails at CI, local with 6.2.4 passes
-      - name: Run tests on Linux Qt6 (offscreen)
-        if: ${{ runner.os == 'Linux' && matrix.preset.tests_with == 'qt6' }}
+      - name: Test probe and client with UI
+        if: ${{ !cancelled() && steps.build-full.outcome == 'success' }}
         run: >
-          ctest --test-dir ./build-${{ matrix.preset.name }} --output-on-failure
-          --exclude-regex "quickmaterialtest|quicktexturetest|quickinspectortest|quickinspectortest2"
-        env:
-          QT_QPA_PLATFORM: offscreen
-          QT_QUICK_BACKEND: software
+          ctest --test-dir ./build-ci-dev-client-and-ui -C Debug --output-on-failure
+          --exclude-regex "${{ matrix.os.test_exclude }}"
 
-        # Exclude
-        #28 - probeabidetectortest (Failed)
-        #31 - launchertest (Failed)
-        #32 - clientconnectiontest (Failed)
-        # quickinspectortest2
-      - name: Run tests Qt6 on macOS
-        if: ${{ runner.os == 'macOS' && matrix.preset.tests_with == 'qt6' }}
+      - name: Configure client only
+        id: configure-client
+        if: ${{ !cancelled() }}
         run: >
-          ctest --test-dir ./build-${{ matrix.preset.name }} --output-on-failure
-          --exclude-regex
-          "probeabidetectortest|launchertest|clientconnectiontest|quickinspectortest2|quicktexturetest"
+          cmake -S . -G Ninja --preset ci-dev-client-only
+          -DGAMMARAY_WITH_KDSME=ON
+          -DGAMMARAY_BUILD_DOCS=OFF
 
-        # Exclude
-        # quicktexturetest
-        # quickmaterialtest - Enable on Windows once QTBUG-144137 (affects 6.10)
-      - name: Qt6 Run tests on Windows
-        if: ${{ runner.os == 'Windows' && matrix.preset.tests_with == 'qt6' }}
+      - name: Build client only
+        id: build-client
+        if: ${{ !cancelled() && steps.configure-client.outcome == 'success' }}
+        run: cmake --build ./build-ci-dev-client-only
+
+      - name: Test client only
+        if: ${{ !cancelled() && steps.build-client.outcome == 'success' }}
         run: >
-          ctest --test-dir ./build-${{ matrix.preset.name }} -C 'Debug' --output-on-failure
-          --exclude-regex "quickmaterialtest|quicktexturetest|launchertest|probesettingstest"
-        env:
-          # without a console Qt Test only logs to OutputDebugString on Windows
-          QT_FORCE_STDERR_LOGGING: 1
+          ctest --test-dir ./build-ci-dev-client-only -C Debug --output-on-failure
+          --exclude-regex "${{ matrix.os.test_exclude }}"
 
-      - name: Read tests log when it fails
-        uses: andstor/file-reader-action@v1
+      - name: Configure probe only
+        id: configure-probe
+        if: ${{ !cancelled() }}
+        run: cmake -S . -G Ninja --preset ci-dev-probe-only
+
+      - name: Build probe only
+        if: ${{ !cancelled() && steps.configure-probe.outcome == 'success' }}
+        run: cmake --build ./build-ci-dev-probe-only
+
+      - name: Print the test logs
         if: ${{ failure() }}
-        with:
-          path: "./build-${{ matrix.preset.name }}/Testing/Temporary/LastTest.log"
+        shell: bash
+        run: |
+          shopt -s nullglob
+          for log in build-*/Testing/Temporary/LastTest*.log; do
+            echo "::group::$log"
+            cat "$log"
+            echo "::endgroup::"
+          done
