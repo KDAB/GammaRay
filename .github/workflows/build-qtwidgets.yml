@@ -20,27 +20,25 @@ on:
       - 3.2
 
 jobs:
+  # builds all the build configurations one after the other, see build-qt6.yml
   build:
-    runs-on: ${{ matrix.os }}
+    name: Linux, Qt ${{ matrix.qt.name }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-        qt_version:
-          - "6.5.*"
-          - "6.10.1" # bump to latest Qt freely
-        preset:
-          - name: ci-dev-client-only
-          - name: ci-dev-client-and-ui
-          - name: ci-dev-probe-only
+        qt:
+          - name: "6.5"
+            version: "6.5.*"
+          - name: "6.10"
+            version: "6.10.1" # bump to latest Qt freely
 
     steps:
       - name: Install Qt with options and default aqtversion
         uses: jurplel/install-qt-action@v4
         with:
           aqtversion: null # use whatever the default is
-          version: ${{ matrix.qt_version }}
+          version: ${{ matrix.qt.version }}
           archives: qtbase icu
           cache: true
 
@@ -50,9 +48,28 @@ jobs:
       - name: Install ninja-build tool (must be after Qt due PATH changes)
         uses: turtlesec-no/get-ninja@main
 
-      - name: Configure project
-        run: >
-          cmake -S . -G Ninja --preset ${{ matrix.preset.name }}
+      - name: Configure probe and client with UI
+        id: configure-full
+        run: cmake -S . -G Ninja --preset ci-dev-client-and-ui
 
-      - name: Build Project
-        run: cmake --build ./build-${{ matrix.preset.name }}
+      - name: Build probe and client with UI
+        if: ${{ !cancelled() && steps.configure-full.outcome == 'success' }}
+        run: cmake --build ./build-ci-dev-client-and-ui
+
+      - name: Configure client only
+        id: configure-client
+        if: ${{ !cancelled() }}
+        run: cmake -S . -G Ninja --preset ci-dev-client-only
+
+      - name: Build client only
+        if: ${{ !cancelled() && steps.configure-client.outcome == 'success' }}
+        run: cmake --build ./build-ci-dev-client-only
+
+      - name: Configure probe only
+        id: configure-probe
+        if: ${{ !cancelled() }}
+        run: cmake -S . -G Ninja --preset ci-dev-probe-only
+
+      - name: Build probe only
+        if: ${{ !cancelled() && steps.configure-probe.outcome == 'success' }}
+        run: cmake --build ./build-ci-dev-probe-only
