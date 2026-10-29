@@ -88,6 +88,11 @@ static void signal_begin_callback(QObject *caller, int method_index, void **argv
 
 static void signal_end_callback(QObject *caller, int method_index)
 {
+    // like in signal_begin_callback(), which also keeps the event loops of all threads from taking
+    // the lock below on every iteration
+    if (caller->inherits("QAbstractEventDispatcher"))
+        return;
+
     if (method_index == 0 || !Probe::instance())
         return;
 

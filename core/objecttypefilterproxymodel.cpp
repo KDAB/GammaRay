@@ -25,6 +25,18 @@ QMap<int, QVariant> ObjectFilterProxyModelBase::itemData(const QModelIndex &inde
     return sourceModel()->itemData(mapToSource(index));
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 1)
+// see ServerProxyModel::mapFromSource(), QTBUG-76976. QSortFilterProxyModel does that for the parents
+// of moved rows, and when they are filtered out, it doesn't update that mapping for further moves.
+QModelIndex ObjectFilterProxyModelBase::mapFromSource(const QModelIndex &sourceIndex) const
+{
+    const QModelIndex sourceParent = sourceIndex.parent();
+    if (sourceParent.isValid() && !mapFromSource(sourceParent).isValid())
+        return {};
+    return QSortFilterProxyModel::mapFromSource(sourceIndex);
+}
+#endif
+
 bool ObjectFilterProxyModelBase::filterAcceptsRow(int source_row,
                                                   const QModelIndex &source_parent) const
 {
