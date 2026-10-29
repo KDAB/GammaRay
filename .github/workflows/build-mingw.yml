@@ -31,7 +31,7 @@ jobs:
             fail-fast: false
             matrix:
                 qt_version:
-                    - "6.9.0" # Minimum supported/tested on MinGW
+                    - "6.9.3" # Minimum supported/tested on MinGW
                     - "6.10.1" # Bump to latest freely
                 preset:
                     - name: ci-dev-client-only
