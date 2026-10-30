@@ -38,6 +38,9 @@ public:
     explicit MessageHandler(Probe *probe, QObject *parent = nullptr);
     ~MessageHandler() override;
 
+    /*! Starts recording messages before the probe and this tool exist. */
+    static void installEarly();
+
 public slots:
     void generateFullTrace() override;
 

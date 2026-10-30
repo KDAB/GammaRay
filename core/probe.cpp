@@ -35,6 +35,7 @@
 #include "remote/remotemodelserver.h"
 #include "remote/serverproxymodel.h"
 #include "remote/selectionmodelserver.h"
+#include "tools/messagehandler/messagehandler.h"
 #include "toolpluginerrormodel.h"
 #include "probeguard.h"
 
@@ -346,6 +347,8 @@ void Probe::startupHookReceived()
     Paths::setRootPath(root.absolutePath());
 #endif
     s_listener()->trackDestroyed = false;
+    // the probe is created once the event loop runs, record what is logged before
+    MessageHandler::installEarly();
 }
 
 void Probe::delayedInit()

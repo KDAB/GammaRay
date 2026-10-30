@@ -233,6 +233,9 @@ target_link_libraries(
 )
 
 if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
+    gammaray_add_probe_test(messagehandlertest messagehandlertest.cpp)
+    target_link_libraries(messagehandlertest gammaray_core)
+
     gammaray_add_probe_test(problemreportertest problemreportertest.cpp $<TARGET_OBJECTS:modeltestobj>)
     target_link_libraries(problemreportertest gammaray_core)
     if(TARGET Qt::Qml)
