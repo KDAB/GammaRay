@@ -40,6 +40,9 @@ static MessageHandlerCallback (*const installMessageHandler)(MessageHandlerCallb
 static MessageModel *s_model = nullptr;
 static MessageHandlerCallback s_handler = nullptr;
 static bool s_handlerDisabled = false;
+// messages from before the model exists, e.g. while QML gets loaded before the event loop runs
+Q_GLOBAL_STATIC(QVector<GammaRay::DebugMessage>, s_earlyMessages)
+static const int MaxEarlyMessages = 1000;
 Q_GLOBAL_STATIC(QRecursiveMutex, s_mutex)
 
 static void handleMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -75,7 +78,7 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
         std::cerr << "END BACKTRACE" << std::endl;
     }
 
-    if (type == QtFatalMsg && qEnvironmentVariableIntValue("GAMMARAY_GDB") != 1
+    if (type == QtFatalMsg && s_model && qEnvironmentVariableIntValue("GAMMARAY_GDB") != 1
         && qEnvironmentVariableIntValue("GAMMARAY_UNITTEST") != 1) {
         // Enforce handling on the GUI thread and block until we are done.
         QMetaObject::invokeMethod(static_cast<QObject *>(s_model)->parent(), "handleFatalMessage",
@@ -96,13 +99,22 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
         installMessageHandler(handleMessage);
     }
     s_handlerDisabled = false;
+
+    if (!s_model) {
+        if (s_earlyMessages()->size() < MaxEarlyMessages)
+            s_earlyMessages()->push_back(message);
+        return;
+    }
     lock.unlock();
 
-    if (s_model) {
-        // add directly from foreground thread, delay from background thread
-        QMetaObject::invokeMethod(s_model, "addMessage", Qt::AutoConnection,
-                                  Q_ARG(GammaRay::DebugMessage, message));
-    }
+    // add directly from foreground thread, delay from background thread
+    QMetaObject::invokeMethod(s_model, "addMessage", Qt::AutoConnection,
+                              Q_ARG(GammaRay::DebugMessage, message));
+}
+
+void MessageHandler::installEarly()
+{
+    ensureHandlerInstalled();
 }
 
 MessageHandler::MessageHandler(Probe *probe, QObject *parent)
@@ -111,7 +123,14 @@ MessageHandler::MessageHandler(Probe *probe, QObject *parent)
     , m_stackTraceModel(new StackTraceModel(this))
 {
     Q_ASSERT(s_model == nullptr);
-    s_model = m_messageModel;
+    {
+        QMutexLocker lock(s_mutex());
+        s_model = m_messageModel;
+        const auto earlyMessages = std::exchange(*s_earlyMessages(), {});
+        lock.unlock();
+        for (const auto &message : earlyMessages)
+            m_messageModel->addMessage(message);
+    }
 
     auto proxy = new ServerProxyModel<QSortFilterProxyModel>(this);
     proxy->addRole(MessageModelRole::Type);
