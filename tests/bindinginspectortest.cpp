@@ -31,6 +31,8 @@
 #include <plugins/quickinspector/quickimplicitbindingdependencyprovider.h>
 
 #include <QQmlComponent>
+
+#include <memory>
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <private/qquicktext_p.h>
@@ -219,6 +221,7 @@ private slots:
     void testMockProvider();
     static void testQmlBindingProvider_data();
     static void testQmlBindingProvider();
+    static void testQmlBindingProviderBindable();
     static void testQtQuickProvider_data();
     static void testQtQuickProvider();
     void testModel();
@@ -426,6 +429,41 @@ void BindingInspectorTest::testQmlBindingProvider()
     QCOMPARE(dependency->dependencies().size(), 0);
 
     delete rect;
+}
+
+void BindingInspectorTest::testQmlBindingProviderBindable()
+{
+    // most QtQuick properties are bindable in Qt 6, their bindings are held by the property
+    const QByteArray code("import QtQuick\n"
+                          "Item {\n"
+                          "    id: root\n"
+                          "    width: 100\n"
+                          "    Item {\n"
+                          "        objectName: 'child'\n"
+                          "        width: root.width / 2\n"
+                          "    }\n"
+                          "}\n");
+    QQmlEngine engine;
+    QQmlComponent c(&engine);
+    c.setData(code, QUrl(QStringLiteral("qrc:/bindable.qml")));
+    std::unique_ptr<QObject> root(c.create());
+    QVERIFY(root);
+    auto child = root->findChild<QQuickItem *>(QStringLiteral("child"));
+    QVERIFY(child);
+    QCOMPARE(child->width(), 50.0);
+
+    QmlBindingProvider provider;
+    const auto bindingNodes = provider.findBindingsFor(child);
+    const auto it = std::find_if(bindingNodes.begin(), bindingNodes.end(), [](const std::unique_ptr<BindingNode> &node) {
+        return qstrcmp(node->property().name(), "width") == 0;
+    });
+    QVERIFY(it != bindingNodes.end());
+    QCOMPARE((*it)->object(), child);
+    QCOMPARE((*it)->cachedValue().toDouble(), 50.0);
+
+    provider.findDependenciesFor(it->get());
+    QCOMPARE((*it)->sourceLocation().url(), QUrl(QStringLiteral("qrc:/bindable.qml")));
+    QCOMPARE((*it)->sourceLocation().line(), 6); // zero-based
 }
 
 void BindingInspectorTest::testQtQuickProvider_data()
