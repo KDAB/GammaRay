@@ -209,7 +209,8 @@ void ObjectInspector::scanForThreadAffinityIssues()
         }
 
         const auto objectName = Util::displayString(object);
-        if (object == object->thread()) {
+        // the main thread's object always lives in the main thread
+        if (object == object->thread() && object != QCoreApplication::instance()->thread()) {
             Problem problem;
             problem.severity = Problem::Warning;
             problem.description = QStringLiteral("The thread %1 has affinity with itself.").arg(objectName);

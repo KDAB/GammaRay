@@ -354,6 +354,26 @@ private slots:
         QVERIFY(duplicateProblem2->description.contains("slot o2"));
     }
 
+    static void testThreadAffinityWithItself()
+    {
+        // a thread moved to itself is reported, the main thread always lives in itself
+        QThread thread;
+        thread.moveToThread(&thread);
+        QTest::qWait(1); // let the probe see the thread
+
+        QSignalSpy finished(ProblemCollector::instance(), &ProblemCollector::problemScansFinished);
+        ProblemCollector::instance()->requestScan();
+        QTRY_COMPARE(finished.size(), 1);
+
+        QVector<QObject *> reported;
+        for (const auto &problem : ProblemCollector::instance()->problems()) {
+            if (problem.problemId.startsWith(QLatin1String("com.kdab.GammaRay.ObjectInspector.ThreadAffinityCheck.Self")))
+                reported.push_back(problem.object.asQObject());
+        }
+        QVERIFY(reported.contains(&thread));
+        QVERIFY(!reported.contains(QCoreApplication::instance()->thread()));
+    }
+
     static void testMetaTypeChecks()
     {
         std::unique_ptr<QObject> obj(new FaultyMetaObjectClass);
