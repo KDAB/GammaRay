@@ -27,6 +27,11 @@ MessageModel::MessageModel(QObject *parent)
 
 MessageModel::~MessageModel() = default;
 
+const QVector<DebugMessage> &MessageModel::messages() const
+{
+    return m_messages;
+}
+
 void MessageModel::addMessage(const DebugMessage &message)
 {
     /// WARNING: do not trigger *any* kind of debug output here
