@@ -88,6 +88,33 @@ std::vector<std::unique_ptr<BindingNode>> BindingAggregator::bindingTreeForObjec
     return bindings;
 }
 
+// collects the nodes below @p node that close a loop
+static void collectLoopEnds(const BindingNode *node, std::vector<const BindingNode *> *ends)
+{
+    if (node->hasFoundBindingLoop())
+        ends->push_back(node);
+    for (const auto &dependency : node->dependencies())
+        collectLoopEnds(dependency.get(), ends);
+}
+
+// A cycle whose bindings all hold the same value has settled, nothing is evaluated again, e.g. a
+// TabBar and a SwipeView binding each other's currentIndex. Qt warns about the loops that don't.
+static bool isSettled(const BindingNode *node)
+{
+    std::vector<const BindingNode *> ends;
+    collectLoopEnds(node, &ends);
+    for (auto end : ends) {
+        const auto value = end->cachedValue();
+        for (auto current = end->parent(); current; current = current->parent()) {
+            if (current->cachedValue() != value)
+                return false;
+            if (current->object() == end->object() && current->propertyIndex() == end->propertyIndex())
+                break;
+        }
+    }
+    return !ends.empty();
+}
+
 void BindingAggregator::scanForBindingLoops()
 {
     const QVector<QObject *> &allObjects = Probe::instance()->allQObjects();
@@ -99,7 +126,7 @@ void BindingAggregator::scanForBindingLoops()
 
         auto bindings = bindingTreeForObject(obj);
         for (auto &&bindingNode : bindings) {
-            if (bindingNode->isPartOfBindingLoop()) {
+            if (bindingNode->isPartOfBindingLoop() && !isSettled(bindingNode.get())) {
                 Problem p;
                 p.severity = Problem::Error;
                 p.description = QStringLiteral("Object %1 / Property %2 has a binding loop.").arg(ObjectDataProvider::typeName(bindingNode->object()), bindingNode->canonicalName());

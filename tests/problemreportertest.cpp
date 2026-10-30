@@ -22,6 +22,7 @@
 
 #include <QAbstractItemModelTester>
 #include <QDebug>
+#include <QSignalSpy>
 #include <QTest>
 #include <QObject>
 #include <QThread>
@@ -438,6 +439,30 @@ private slots:
                                [](const Problem &p) { return p.description.contains(QLatin1String("Binding loop")) && p.locations.first().url() == QUrl(QStringLiteral("qrc:/bindingloop.qml")); }),
                  1);
         ProblemCollector::removeProblem(problem.problemId);
+    }
+
+    static void testSettledBindingCycle()
+    {
+        // two bindings reading each other are fine while they agree, like a TabBar and a
+        // SwipeView binding each other's currentIndex
+        QQmlEngine engine;
+        QQmlComponent component(&engine);
+        component.setData("import QtQml\n"
+                          "QtObject {\n"
+                          "    objectName: 'settled'\n"
+                          "    property int first: second\n"
+                          "    property int second: first\n"
+                          "}\n",
+                          QUrl(QStringLiteral("qrc:/settled.qml")));
+        std::unique_ptr<QObject> object(component.create());
+        QVERIFY(object);
+        QTest::qWait(1); // let the probe see the object
+
+        QSignalSpy finished(ProblemCollector::instance(), &ProblemCollector::problemScansFinished);
+        ProblemCollector::instance()->requestScan();
+        QTRY_COMPARE(finished.size(), 1);
+        for (const auto &problem : ProblemCollector::instance()->problems())
+            QVERIFY2(problem.object.type() != ObjectId::QObjectType || problem.object.asQObject() != object.get(), qPrintable(problem.description));
     }
 #endif
 };
