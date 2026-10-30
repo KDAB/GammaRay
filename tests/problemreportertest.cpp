@@ -29,6 +29,8 @@
 #include <QRunnable>
 #include <QUuid>
 
+#include <memory>
+
 #ifdef QT_QML_LIB
 #include <QQmlEngine>
 #include <QQmlComponent>
@@ -397,6 +399,45 @@ private slots:
                                     && p.description.contains(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::NativeText))
                                     && p.problemId.endsWith(QKeySequence(QStringLiteral("Ctrl+K")).toString(QKeySequence::PortableText));
                             }));
+    }
+#endif
+
+#ifdef QT_QML_LIB
+    // last, the QML engine changes the type names of the objects the other tests look at
+    static void testBindingLoopsFoundByQt()
+    {
+        // Qt finds loops while it evaluates bindings and warns about them, they are problems too
+        QQmlEngine engine;
+        QQmlComponent component(&engine);
+        component.setData("import QtQml\n"
+                          "QtObject {\n"
+                          "    property int first: second + 1\n"
+                          "    property int second: first + 1\n"
+                          "}\n",
+                          QUrl(QStringLiteral("qrc:/bindingloop.qml")));
+        std::unique_ptr<QObject> object(component.create());
+        QVERIFY(object);
+
+        const auto findLoop = [] {
+            for (const auto &problem : ProblemCollector::instance()->problems()) {
+                if (problem.description.contains(QLatin1String("Binding loop")) && !problem.locations.isEmpty()
+                    && problem.locations.first().url() == QUrl(QStringLiteral("qrc:/bindingloop.qml")))
+                    return problem;
+            }
+            return Problem();
+        };
+        QTRY_VERIFY(!findLoop().problemId.isEmpty());
+        const auto problem = findLoop();
+        QCOMPARE(problem.severity, Problem::Error);
+        QCOMPARE(problem.locations.first().line(), 1); // zero-based, Qt reports the object declaring the property
+
+        // it's reported once, also when Qt warns again
+        ProblemCollector::instance()->requestScan();
+        QTest::qWait(10);
+        QCOMPARE(std::count_if(ProblemCollector::instance()->problems().begin(), ProblemCollector::instance()->problems().end(),
+                               [](const Problem &p) { return p.description.contains(QLatin1String("Binding loop")) && p.locations.first().url() == QUrl(QStringLiteral("qrc:/bindingloop.qml")); }),
+                 1);
+        ProblemCollector::removeProblem(problem.problemId);
     }
 #endif
 };

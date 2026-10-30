@@ -17,6 +17,7 @@
 
 #include <core/execution.h>
 #include <core/probeguard.h>
+#include <core/problemcollector.h>
 #include <core/remote/serverproxymodel.h>
 #include <core/stacktracemodel.h>
 
@@ -27,6 +28,7 @@
 #include <QDebug>
 #include <QItemSelectionModel>
 #include <QMutex>
+#include <QRegularExpression>
 #include <QSortFilterProxyModel>
 #include <QThread>
 
@@ -112,6 +114,25 @@ static void handleMessage(QtMsgType type, const QMessageLogContext &context, con
                               Q_ARG(GammaRay::DebugMessage, message));
 }
 
+// Qt finds binding loops while evaluating bindings, which GammaRay's own scan can't always see,
+// e.g. through childrenRect
+static void reportBindingLoop(const DebugMessage &message)
+{
+    static const QRegularExpression pattern(QStringLiteral("^(\\S+):(\\d+):(\\d+): QML (.+?): Binding loop detected for property \"([^\"]+)\""));
+    const auto match = pattern.match(message.message);
+    if (!match.hasMatch())
+        return;
+    const auto location = SourceLocation::fromOneBased(QUrl(match.captured(1)), match.captured(2).toInt(), match.captured(3).toInt());
+    Problem problem;
+    problem.severity = Problem::Error;
+    problem.description = QStringLiteral("Binding loop for property \"%1\" of %2, detected by Qt.").arg(match.captured(5), match.captured(4));
+    problem.locations.push_back(location);
+    problem.problemId = QStringLiteral("com.kdab.GammaRay.MessageHandler.BindingLoop:%1:%2").arg(location.displayString(), match.captured(5));
+    problem.reportingTool = QStringLiteral("GammaRay::MessageHandler");
+    problem.findingCategory = Problem::Permanent;
+    ProblemCollector::addProblem(problem);
+}
+
 void MessageHandler::installEarly()
 {
     ensureHandlerInstalled();
@@ -123,6 +144,10 @@ MessageHandler::MessageHandler(Probe *probe, QObject *parent)
     , m_stackTraceModel(new StackTraceModel(this))
 {
     Q_ASSERT(s_model == nullptr);
+    connect(m_messageModel, &QAbstractItemModel::rowsInserted, this, [this](const QModelIndex &, int first, int last) {
+        for (int row = first; row <= last; ++row)
+            reportBindingLoop(m_messageModel->messages().at(row));
+    });
     {
         QMutexLocker lock(s_mutex());
         s_model = m_messageModel;
