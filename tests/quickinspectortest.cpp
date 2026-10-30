@@ -368,9 +368,7 @@ private slots:
 
     void testProblemReporting()
     {
-        // TODO using this qml-file as testcase might stop working if qt decides to be
-        //  smarter with out of view items in ListViews
-        QVERIFY(showSource(QStringLiteral("qrc:/manual/quickitemcreatedestroytest.qml")));
+        QVERIFY(showSource(QStringLiteral("qrc:/manual/outofviewtest.qml")));
 
         QVERIFY(ProblemCollector::instance()->isCheckerRegistered("com.kdab.GammaRay.QuickItemChecker"));
 
@@ -379,14 +377,18 @@ private slots:
             return;
         }
 
-        const auto &problems = ProblemCollector::instance()->problems();
-        QVERIFY(std::any_of(problems.begin(), problems.end(),
-                            [&](const Problem &p) {
-                                return p.problemId.startsWith("com.kdab.GammaRay.QuickItemChecker")
-                                    && !p.object.isNull()
-                                    && p.description.contains("out of view")
-                                    && p.locations.size() > 0;
-                            }));
+        QStringList outOfView;
+        for (const auto &problem : ProblemCollector::instance()->problems()) {
+            if (!problem.problemId.startsWith(QLatin1String("com.kdab.GammaRay.QuickItemChecker")))
+                continue;
+            QVERIFY(problem.description.contains(QLatin1String("out of view")));
+            QVERIFY(!problem.locations.isEmpty());
+            QCOMPARE(problem.object.type(), ObjectId::QObjectType);
+            outOfView.push_back(problem.object.asQObject()->objectName());
+        }
+        // only the topmost item of what is out of view, and only visible ones outside of the
+        // window, not items scrolled out of a view or just outside their parent
+        QCOMPARE(outOfView, QStringList { QStringLiteral("outside") });
     }
 
 private:

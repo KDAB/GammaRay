@@ -863,6 +863,23 @@ ObjectIds QuickInspector::recursiveItemsAt(QQuickItem *parent, const QPointF &po
 }
 
 
+// whether the visible @p item can't be seen because it's outside of its window or of a clipping parent
+static bool isOutOfView(QQuickItem *item)
+{
+    auto window = item->window();
+    if (!window || !item->isVisible() || item->width() <= 0 || item->height() <= 0)
+        return false;
+    QRectF view(0, 0, window->width(), window->height());
+    for (auto ancestor = item->parentItem(); ancestor; ancestor = ancestor->parentItem()) {
+        // items of Flickables and views are scrolled out of view on purpose
+        if (ancestor->inherits("QQuickFlickable"))
+            return false;
+        if (ancestor->clip())
+            view = view.intersected(ancestor->mapRectToScene(QRectF(0, 0, ancestor->width(), ancestor->height())));
+    }
+    return !view.intersects(item->mapRectToScene(QRectF(0, 0, item->width(), item->height())));
+}
+
 void QuickInspector::scanForProblems()
 {
     const QVector<QObject *> &allObjects = Probe::instance()->allQObjects();
@@ -872,28 +889,18 @@ void QuickInspector::scanForProblems()
         QQuickItem *item;
         if (!Probe::instance()->isValidObject(obj) || !(item = qobject_cast<QQuickItem *>(obj)))
             continue;
+        // the children of an item out of view are out of view as well, only report the item
+        if (!isOutOfView(item) || (item->parentItem() && isOutOfView(item->parentItem())))
+            continue;
 
-        QQuickItem *ancestor = item->parentItem();
-        auto rect = item->mapRectToScene(QRectF(0, 0, item->width(), item->height()));
-
-        while (ancestor && item->window() && ancestor != item->window()->contentItem()) {
-            if (ancestor->parentItem() == item->window()->contentItem() || ancestor->clip()) {
-                auto ancestorRect = ancestor->mapRectToScene(QRectF(0, 0, ancestor->width(), ancestor->height()));
-
-                if (!ancestorRect.contains(rect) && !rect.intersects(ancestorRect)) {
-                    Problem p;
-                    p.severity = Problem::Info;
-                    p.description = QStringLiteral("QtQuick: %1 %2 (0x%3) is visible, but out of view.").arg(ObjectDataProvider::typeName(item), ObjectDataProvider::name(item), QString::number(reinterpret_cast<quintptr>(item), 16));
-                    p.object = ObjectId(item);
-                    p.locations.push_back(ObjectDataProvider::creationLocation(item));
-                    p.problemId = QStringLiteral("com.kdab.GammaRay.QuickItemChecker.OutOfView:%1").arg(reinterpret_cast<quintptr>(item));
-                    p.findingCategory = Problem::Scan;
-                    ProblemCollector::addProblem(p);
-                    break;
-                }
-            }
-            ancestor = ancestor->parentItem();
-        }
+        Problem p;
+        p.severity = Problem::Info;
+        p.description = QStringLiteral("QtQuick: %1 %2 (0x%3) is visible, but out of view.").arg(ObjectDataProvider::typeName(item), ObjectDataProvider::name(item), QString::number(reinterpret_cast<quintptr>(item), 16));
+        p.object = ObjectId(item);
+        p.locations.push_back(ObjectDataProvider::creationLocation(item));
+        p.problemId = QStringLiteral("com.kdab.GammaRay.QuickItemChecker.OutOfView:%1").arg(reinterpret_cast<quintptr>(item));
+        p.findingCategory = Problem::Scan;
+        ProblemCollector::addProblem(p);
     }
 }
 
