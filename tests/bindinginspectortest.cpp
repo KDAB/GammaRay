@@ -222,6 +222,7 @@ private slots:
     static void testQmlBindingProvider_data();
     static void testQmlBindingProvider();
     static void testQmlBindingProviderBindable();
+    static void testQmlBindingProviderBindableLoop();
     static void testQtQuickProvider_data();
     static void testQtQuickProvider();
     void testModel();
@@ -461,9 +462,58 @@ void BindingInspectorTest::testQmlBindingProviderBindable()
     QCOMPARE((*it)->object(), child);
     QCOMPARE((*it)->cachedValue().toDouble(), 50.0);
 
-    provider.findDependenciesFor(it->get());
+    const auto dependencies = provider.findDependenciesFor(it->get());
     QCOMPARE((*it)->sourceLocation().url(), QUrl(QStringLiteral("qrc:/bindable.qml")));
     QCOMPARE((*it)->sourceLocation().line(), 6); // zero-based
+    QCOMPARE(dependencies.size(), 1);
+    QCOMPARE(dependencies.at(0)->object(), root.get());
+    QCOMPARE(dependencies.at(0)->canonicalName(), QStringLiteral("root.width"));
+}
+
+void BindingInspectorTest::testQmlBindingProviderBindableLoop()
+{
+    // a cycle through bindable properties only, one of them read through "parent"
+    const QByteArray code("import QtQuick\n"
+                          "Item {\n"
+                          "    id: root\n"
+                          "    width: inner.width + 10\n"
+                          "    Item {\n"
+                          "        id: inner\n"
+                          "        objectName: 'inner'\n"
+                          "        width: parent.width - 10\n"
+                          "    }\n"
+                          "}\n");
+    QQmlEngine engine;
+    QQmlComponent c(&engine);
+    c.setData(code, QUrl(QStringLiteral("qrc:/bindableloop.qml")));
+    std::unique_ptr<QObject> root(c.create());
+    QVERIFY(root);
+    auto inner = root->findChild<QQuickItem *>(QStringLiteral("inner"));
+    QVERIFY(inner);
+
+    QmlBindingProvider provider;
+    auto bindingNodes = provider.findBindingsFor(inner);
+    const auto it = std::find_if(bindingNodes.begin(), bindingNodes.end(), [](const std::unique_ptr<BindingNode> &node) {
+        return qstrcmp(node->property().name(), "width") == 0;
+    });
+    QVERIFY(it != bindingNodes.end());
+    auto innerWidth = it->get();
+
+    // parent itself, read through its notify signal, and root.width
+    const auto dependencies = provider.findDependenciesFor(innerWidth);
+    QCOMPARE(dependencies.size(), 2);
+    const auto widthIt = std::find_if(dependencies.begin(), dependencies.end(), [&root](const std::unique_ptr<BindingNode> &node) {
+        return node->object() == root.get() && qstrcmp(node->property().name(), "width") == 0;
+    });
+    QVERIFY(widthIt != dependencies.end());
+    auto rootWidth = widthIt->get();
+    QCOMPARE(rootWidth->canonicalName(), QStringLiteral("root.width"));
+    QVERIFY(!rootWidth->hasFoundBindingLoop());
+
+    const auto rootDependencies = provider.findDependenciesFor(rootWidth);
+    QCOMPARE(rootDependencies.size(), 1);
+    QCOMPARE(rootDependencies.at(0)->object(), inner);
+    QVERIFY(rootDependencies.at(0)->hasFoundBindingLoop());
 }
 
 void BindingInspectorTest::testQtQuickProvider_data()
