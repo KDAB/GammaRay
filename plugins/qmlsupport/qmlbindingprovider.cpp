@@ -28,6 +28,9 @@
 #include <private/qmetaobject_p.h>
 #include <private/qproperty_p.h>
 
+#include <QSet>
+
+#include <functional>
 using namespace GammaRay;
 
 // Bindings of bindable properties, which most QtQuick properties are in Qt 6, aren't in QQmlData's
@@ -64,6 +67,103 @@ static void setCanonicalNameFromId(BindingNode *node, QObject *obj)
         const QString id = ctx->nameForObject(obj);
         if (!id.isEmpty())
             node->setCanonicalName(QStringLiteral("%1.%2").arg(id, node->canonicalName()));
+    }
+}
+
+namespace {
+struct ReachableObjects
+{
+    QList<QObject *> objects;
+    QSet<QObject *> seen;
+    QSet<QObject *> expanded;
+
+    void add(QObject *obj)
+    {
+        if (obj && !seen.contains(obj)) {
+            seen.insert(obj);
+            objects.push_back(obj);
+        }
+    }
+    void addWithChildren(QObject *obj)
+    {
+        if (!obj || expanded.contains(obj))
+            return;
+        expanded.insert(obj);
+        add(obj);
+        for (QObject *child : obj->children())
+            add(child);
+    }
+};
+}
+
+// the visual parent of QtQuick items, without linking QtQuick
+static QObject *parentProperty(QObject *obj)
+{
+    const int index = obj->metaObject()->indexOfProperty("parent");
+    if (index < 0 || !(obj->metaObject()->property(index).metaType().flags() & QMetaType::PointerToQObject))
+        return nullptr;
+    return obj->metaObject()->property(index).read(obj).value<QObject *>();
+}
+
+// The objects a binding can reach without going through a property: its scope object, the
+// ancestors, children and siblings of it, and the objects with an id in its contexts.
+static QList<QObject *> reachableObjects(QQmlJavaScriptExpression *expression)
+{
+    ReachableObjects reachable;
+    QObject *scope = expression->scopeObject();
+    for (QObject *obj = scope; obj; obj = obj->parent())
+        reachable.addWithChildren(obj);
+    for (QObject *obj = scope; obj; obj = parentProperty(obj))
+        reachable.addWithChildren(obj);
+    for (auto context = expression->context(); context; context = context->parent()) {
+        for (int i = 0; i < context->numIdValues(); ++i)
+            reachable.add(context->idValue(i));
+    }
+    return reachable.objects;
+}
+
+// What kind of observer a QPropertyObserver is, is private. Access checks don't apply to the
+// arguments of explicit template instantiations, a friend function defined there hands it out.
+template<typename Tag, typename Tag::type Member>
+struct PrivateMember
+{
+    friend typename Tag::type get(Tag)
+    {
+        return Member;
+    }
+};
+struct ObserverNext
+{
+    using type = QTaggedPointer<QPropertyObserver, QPropertyObserverBase::ObserverTag> QPropertyObserverBase::*;
+    friend type get(ObserverNext);
+};
+template struct PrivateMember<ObserverNext, &QPropertyObserverBase::next>;
+
+// A binding reads bindable properties through QPropertyObservers it puts into the observer list of
+// each such property, without telling which property. Find these lists among the properties of the
+// objects the binding can reach.
+static void findBindableDependencies(QQmlPropertyBinding *binding, const std::function<void(QObject *, int)> &found)
+{
+    const auto objects = reachableObjects(binding->jsExpression());
+    for (QObject *obj : objects) {
+        const QMetaObject *meta = obj->metaObject();
+        for (int i = 0; i < meta->propertyCount(); ++i) {
+            const auto property = meta->property(i);
+            if (!property.isBindable())
+                continue;
+            const auto data = QUntypedBindablePrivate::getPropertyData(property.bindable(obj));
+            // the properties of QObjects keep their binding data in the binding storage, only
+            // when something observes them or binds them
+            const auto bindingData = obj->bindingStorage()->bindingData(data);
+            if (!bindingData)
+                continue;
+            for (auto observer = QPropertyBindingDataPointer { bindingData }.firstObserver(); observer; observer = observer.nextObserver()) {
+                if ((observer.ptr->*get(ObserverNext())).tag() == QPropertyObserver::ObserverNotifiesBinding && observer.binding() == binding) {
+                    found(obj, i);
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -112,13 +212,21 @@ std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFo
         auto propertyBinding = qmlPropertyBinding(node->object(), node->propertyIndex());
         if (!propertyBinding)
             return dependencies;
-        // only what is read through notify signals, reads of other bindable properties are
-        // tracked by QPropertyBindingPrivate without telling which property
         auto expression = propertyBinding->jsExpression();
         if (QV4::Function *function = expression->function()) {
             const QQmlSourceLocation loc = function->sourceLocation();
             node->setSourceLocation(SourceLocation::fromOneBased(QUrl(loc.sourceFile), loc.line, loc.column));
         }
+        QSet<std::pair<QObject *, int>> seen;
+        const auto addDependency = [&](QObject *obj, int propertyIndex) {
+            if (seen.contains({ obj, propertyIndex }))
+                return;
+            seen.insert({ obj, propertyIndex });
+            auto childNode = new BindingNode(obj, propertyIndex, node);
+            setCanonicalNameFromId(childNode, obj);
+            dependencies.push_back(std::unique_ptr<BindingNode>(childNode));
+        };
+        // properties without bindable storage are read through their notify signals
         for (auto guard = ExpressionGuards::first(expression); guard; guard = ExpressionGuards::next(expression, guard)) {
             QObject *sender = guard->signalIndex() == -1 ? nullptr : guard->senderAsObject();
             if (!sender)
@@ -126,13 +234,11 @@ std::vector<std::unique_ptr<BindingNode>> QmlBindingProvider::findDependenciesFo
             const QMetaObject *meta = sender->metaObject();
             const int notifyIndex = QMetaObjectPrivate::signal(meta, guard->signalIndex()).methodIndex();
             for (int i = 0; i < meta->propertyCount(); ++i) {
-                if (meta->property(i).notifySignalIndex() != notifyIndex)
-                    continue;
-                auto childNode = new BindingNode(sender, i, node);
-                setCanonicalNameFromId(childNode, sender);
-                dependencies.push_back(std::unique_ptr<BindingNode>(childNode));
+                if (meta->property(i).notifySignalIndex() == notifyIndex)
+                    addDependency(sender, i);
             }
         }
+        findBindableDependencies(propertyBinding, addDependency);
         return dependencies;
     }
 
