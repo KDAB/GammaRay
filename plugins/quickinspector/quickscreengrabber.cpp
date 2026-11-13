@@ -1051,7 +1051,7 @@ void RhiScreenGrabber::windowBeforeRendering()
     if (!rhi)
         return;
 
-    if (!m_pipeline) {
+    if (!m_pipeline && !m_pipelineFailed) {
         // A window driven by a QQuickRenderControl may not have its render target yet; retry next frame.
         QRhiRenderTarget *rt = currentRenderTarget();
         QRhiRenderPassDescriptor *rpDesc = rt ? rt->renderPassDescriptor() : nullptr;
@@ -1096,14 +1096,20 @@ void RhiScreenGrabber::windowBeforeRendering()
 
         m_pipeline->setShaderResourceBindings(m_srb);
         m_pipeline->setRenderPassDescriptor(rpDesc);
-        m_pipeline->create();
-    } else {
+        if (!m_pipeline->create()) {
+            // Don't retry every frame. Grabbing still works, only the decorations are missing.
+            qWarning() << "GammaRay: failed to create the QRhi pipeline for drawing decorations";
+            releaseRhiResources();
+            m_pipelineFailed = true;
+            return;
+        }
+    } else if (m_pipeline) {
         // Follow window size changes. QRhi resources must only be touched on the render thread,
         // so this is done here rather than from updateOverlay() (GUI thread).
         recreateDecorationTexture();
     }
 
-    if (m_decorationsEnabled) {
+    if (m_decorationsEnabled && m_pipeline) {
         QRhiCommandBuffer *cb = nextCommandBuffer();
         if (!cb)
             return;
@@ -1132,7 +1138,7 @@ void RhiScreenGrabber::windowAfterRenderPassRecording()
 
     QMutexLocker locker(&m_mutex);
 
-    if (m_decorationsEnabled) {
+    if (m_decorationsEnabled && m_pipeline) {
         QRhiCommandBuffer *cb = nextCommandBuffer();
         if (!cb)
             return;
@@ -1280,9 +1286,10 @@ void RhiScreenGrabber::recreateDecorationTexture()
 void RhiScreenGrabber::invalidateRhiResources()
 {
     // Emitted on the render thread while the QRhi still exists.
-    // Recreate these when RHI is available again.
+    // Recreate these (and retry a failed pipeline) when RHI is available again.
     QMutexLocker locker(&m_mutex);
     releaseRhiResources();
+    m_pipelineFailed = false;
 }
 
 void RhiScreenGrabber::releaseRhiResources()
