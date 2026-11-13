@@ -58,7 +58,7 @@ private:
     TransferImage m_image;
     QRectF m_viewRect;
     QRectF m_sceneRect;
-    int m_graphicsApi; // Only relevant and used in QtQuick preview.
+    int m_graphicsApi = 0; // QSGRendererInterface::GraphicsApi, only set and used by the QtQuick preview. 0 is Unknown.
 };
 }
 
