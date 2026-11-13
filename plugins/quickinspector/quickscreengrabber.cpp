@@ -40,11 +40,14 @@
 #include <private/qsgsoftwarerenderer_p.h>
 
 #include <algorithm>
+#include <array>
 #include <functional>
 #include <cmath>
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
 #include <rhi/qrhi.h>
+#include <QRunnable>
+
 #endif
 
 namespace GammaRay {
@@ -878,6 +881,14 @@ void UnsupportedScreenGrabber::updateOverlay()
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+struct RhiScreenGrabber::ReadbackState
+{
+    QMutex mutex;
+    RhiScreenGrabber *grabber = nullptr; // reset when the grabber is destroyed
+    bool pending = false; // QRhi holds a pointer to result
+    QRhiReadbackResult result;
+};
+
 RhiScreenGrabber::RhiScreenGrabber(QQuickWindow *window)
     : AbstractScreenGrabber(window)
 {
@@ -888,67 +899,112 @@ RhiScreenGrabber::RhiScreenGrabber(QQuickWindow *window)
     connect(m_window.data(), &QQuickWindow::beforeRendering, this, &RhiScreenGrabber::windowBeforeRendering, Qt::DirectConnection);
     connect(m_window.data(), &QQuickWindow::sceneGraphInvalidated, this, &RhiScreenGrabber::invalidateRhiResources, Qt::DirectConnection);
 
-    result = new QRhiReadbackResult();
-    result->completed = [this] {
-        const auto rhi = m_window->rhi();
-
-        const QImage::Format imageFormat = [this] {
-            // Can't handle all the possible formats, but any missing ones will be displayed to the user so they can file a bugreport.
-            switch (result->format) {
-            case QRhiTexture::BGRA8:
-                return QImage::Format_ARGB32_Premultiplied;
-            case QRhiTexture::RGBA8:
-                return QImage::Format_RGBA8888_Premultiplied;
-            case QRhiTexture::RGB10A2:
-                return QImage::Format_BGR30;
-            case QRhiTexture::RGBA16F:
-                return QImage::Format_RGBA16FPx4;
-            default:
-                return QImage::Format_Invalid;
-            }
-        }();
-
-        if (imageFormat != QImage::Format_Invalid) {
-            // QRhi reuses result.data for the next readback (resized/overwritten in place), but the image
-            // outlives this callback (queued to the GUI thread, kept by the remote view). Keep a shared
-            // reference to the current buffer alive for as long as the image exists; QRhi then detaches.
-            auto *bytes = new QByteArray(result->data);
-            m_grabbedFrame.image = QImage(
-                reinterpret_cast<const uchar *>(bytes->constData()),
-                result->pixelSize.width(),
-                result->pixelSize.height(),
-                imageFormat,
-                [](void *p) { delete static_cast<QByteArray *>(p); },
-                bytes);
-            m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
-
-            m_grabbedFrame.transform.reset();
-            if (rhi->isYUpInFramebuffer()) {
-                m_grabbedFrame.transform.scale(1.0, -1.0);
-                m_grabbedFrame.transform.translate(0, -result->pixelSize.height() / m_renderInfo.dpr);
-            }
-        } else {
-            m_grabbedFrame.image = QImage(m_window->size() * m_window->effectiveDevicePixelRatio(), QImage::Format_ARGB32);
-            m_grabbedFrame.image.fill(Qt::black);
-            m_grabbedFrame.image.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
-
-            QPainter p(&m_grabbedFrame.image);
-            p.setRenderHint(QPainter::TextAntialiasing);
-            QColor gray(Qt::black);
-            gray.setAlpha(200);
-            p.fillRect(QRect(QPoint {}, m_window->size()), gray);
-            p.setPen(Qt::white);
-            auto font = qApp->font();
-            font.setPointSize(font.pointSize() + 1);
-            p.setFont(font);
-            QString txt = QLatin1String("RHI texture format %1 is not supported yet").arg(VariantHandler::displayString(result->format));
-            p.drawText(QRect { QPoint(0, 0), m_window->size() }, Qt::AlignCenter | Qt::TextWordWrap, txt);
+    m_readback = new ReadbackState;
+    m_readback->grabber = this;
+    m_readback->result.completed = [state = m_readback] {
+        QMutexLocker locker(&state->mutex);
+        state->pending = false;
+        if (!state->grabber) {
+            // The grabber was destroyed while QRhi still had this readback queued and left the
+            // state to us. QRhi may be running this very callback object, so free it later.
+            locker.unlock();
+            QMetaObject::invokeMethod(qApp, [state] { delete state; }, Qt::QueuedConnection);
+            return;
         }
-        emit sceneGrabbed(m_grabbedFrame);
+        state->grabber->readbackCompleted(state->result);
     };
 }
 
-RhiScreenGrabber::~RhiScreenGrabber() = default;
+RhiScreenGrabber::~RhiScreenGrabber()
+{
+    // Stop the render thread from calling into us, and wait for a call that is in progress.
+    if (m_window)
+        disconnect(m_window.data(), nullptr, this, nullptr);
+    // Same lock order as windowAfterRendering(): m_mutex, then the readback mutex.
+    QMutexLocker locker(&m_mutex);
+
+    bool readbackPending = false;
+    {
+        QMutexLocker readbackLocker(&m_readback->mutex);
+        m_readback->grabber = nullptr;
+        readbackPending = m_readback->pending;
+    }
+    // Otherwise QRhi still references it, and its completion callback deletes it.
+    if (!readbackPending)
+        delete m_readback;
+
+    const std::array<QRhiResource *, 4> resources = { m_pipeline, m_srb, m_texture, m_sampler };
+    if (m_window && std::any_of(resources.begin(), resources.end(), [](QRhiResource *r) { return r != nullptr; })) {
+        // The resources belong to the render thread, release them there. If the window is not
+        // exposed the job is dropped and they are left to the QRhi.
+        m_window->scheduleRenderJob(QRunnable::create([resources] {
+                                        for (auto *resource : resources) {
+                                            if (resource)
+                                                resource->deleteLater();
+                                        }
+                                    }),
+                                    QQuickWindow::NoStage);
+    }
+}
+
+void RhiScreenGrabber::readbackCompleted(const QRhiReadbackResult &result)
+{
+    const auto rhi = m_window->rhi();
+
+    const QImage::Format imageFormat = [&result] {
+        // Can't handle all the possible formats, but any missing ones will be displayed to the user so they can file a bugreport.
+        switch (result.format) {
+        case QRhiTexture::BGRA8:
+            return QImage::Format_ARGB32_Premultiplied;
+        case QRhiTexture::RGBA8:
+            return QImage::Format_RGBA8888_Premultiplied;
+        case QRhiTexture::RGB10A2:
+            return QImage::Format_BGR30;
+        case QRhiTexture::RGBA16F:
+            return QImage::Format_RGBA16FPx4;
+        default:
+            return QImage::Format_Invalid;
+        }
+    }();
+
+    if (imageFormat != QImage::Format_Invalid) {
+        // QRhi reuses result.data for the next readback (resized/overwritten in place), but the image
+        // outlives this callback (queued to the GUI thread, kept by the remote view). Keep a shared
+        // reference to the current buffer alive for as long as the image exists; QRhi then detaches.
+        auto *bytes = new QByteArray(result.data);
+        m_grabbedFrame.image = QImage(
+            reinterpret_cast<const uchar *>(bytes->constData()),
+            result.pixelSize.width(),
+            result.pixelSize.height(),
+            imageFormat,
+            [](void *p) { delete static_cast<QByteArray *>(p); },
+            bytes);
+        m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
+
+        m_grabbedFrame.transform.reset();
+        if (rhi->isYUpInFramebuffer()) {
+            m_grabbedFrame.transform.scale(1.0, -1.0);
+            m_grabbedFrame.transform.translate(0, -result.pixelSize.height() / m_renderInfo.dpr);
+        }
+    } else {
+        m_grabbedFrame.image = QImage(m_window->size() * m_window->effectiveDevicePixelRatio(), QImage::Format_ARGB32);
+        m_grabbedFrame.image.fill(Qt::black);
+        m_grabbedFrame.image.setDevicePixelRatio(m_window->effectiveDevicePixelRatio());
+
+        QPainter p(&m_grabbedFrame.image);
+        p.setRenderHint(QPainter::TextAntialiasing);
+        QColor gray(Qt::black);
+        gray.setAlpha(200);
+        p.fillRect(QRect(QPoint {}, m_window->size()), gray);
+        p.setPen(Qt::white);
+        auto font = qApp->font();
+        font.setPointSize(font.pointSize() + 1);
+        p.setFont(font);
+        QString txt = QLatin1String("RHI texture format %1 is not supported yet").arg(VariantHandler::displayString(result.format));
+        p.drawText(QRect { QPoint(0, 0), m_window->size() }, Qt::AlignCenter | Qt::TextWordWrap, txt);
+    }
+    emit sceneGrabbed(m_grabbedFrame);
+}
 
 void RhiScreenGrabber::requestGrabWindow(const QRectF &userViewport)
 {
@@ -1101,21 +1157,29 @@ void RhiScreenGrabber::windowAfterRendering()
     QRhi *rhi = m_window->rhi();
     if (m_isGrabbing && rhi) {
         QRhiResourceUpdateBatch *resourceUpdates = rhi->nextResourceUpdateBatch();
+        bool readbackQueued = false;
         if (resourceUpdates) {
             if (m_window->swapChain()) {
                 // Read from the swapchain's back-buffer.
                 constexpr QRhiReadbackDescription readbackDesc;
-                resourceUpdates->readBackTexture(readbackDesc, result);
+                resourceUpdates->readBackTexture(readbackDesc, &m_readback->result);
+                readbackQueued = true;
             } else if (auto p = widgetPrivate()) {
                 // Read from the intermediary texture of this widget.
                 const QRhiReadbackDescription readbackDesc(p->outputTexture);
-                resourceUpdates->readBackTexture(readbackDesc, result);
+                resourceUpdates->readBackTexture(readbackDesc, &m_readback->result);
+                readbackQueued = true;
             }
         }
 
         const auto cb = nextCommandBuffer();
-        if (cb)
+        if (cb) {
+            if (readbackQueued) {
+                QMutexLocker readbackLocker(&m_readback->mutex);
+                m_readback->pending = true;
+            }
             cb->resourceUpdate(resourceUpdates);
+        }
     }
 
     if (m_isGrabbing) {
@@ -1188,7 +1252,18 @@ void RhiScreenGrabber::recreateDecorationTexture()
 
 void RhiScreenGrabber::invalidateRhiResources()
 {
-    // Recreate these when RHI is available again
+    // Emitted on the render thread while the QRhi still exists.
+    // Recreate these when RHI is available again.
+    QMutexLocker locker(&m_mutex);
+    releaseRhiResources();
+}
+
+void RhiScreenGrabber::releaseRhiResources()
+{
+    for (QRhiResource *resource : std::initializer_list<QRhiResource *> { m_pipeline, m_srb, m_texture, m_sampler }) {
+        if (resource)
+            resource->deleteLater();
+    }
     m_texture = nullptr;
     m_srb = nullptr;
     m_pipeline = nullptr;
