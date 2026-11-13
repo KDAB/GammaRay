@@ -909,11 +909,17 @@ RhiScreenGrabber::RhiScreenGrabber(QQuickWindow *window)
         }();
 
         if (imageFormat != QImage::Format_Invalid) {
+            // QRhi reuses result.data for the next readback (resized/overwritten in place), but the image
+            // outlives this callback (queued to the GUI thread, kept by the remote view). Keep a shared
+            // reference to the current buffer alive for as long as the image exists; QRhi then detaches.
+            auto *bytes = new QByteArray(result->data);
             m_grabbedFrame.image = QImage(
-                reinterpret_cast<const uchar *>(result->data.constData()),
+                reinterpret_cast<const uchar *>(bytes->constData()),
                 result->pixelSize.width(),
                 result->pixelSize.height(),
-                imageFormat);
+                imageFormat,
+                [](void *p) { delete static_cast<QByteArray *>(p); },
+                bytes);
             m_grabbedFrame.image.setDevicePixelRatio(m_renderInfo.dpr);
 
             m_grabbedFrame.transform.reset();
