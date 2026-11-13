@@ -303,9 +303,18 @@ private:
      */
     void recreateDecorationTexture();
     void invalidateRhiResources();
+    /// Releases the pipeline, SRB, texture and sampler. Render thread only, m_mutex held.
+    void releaseRhiResources();
+    void readbackCompleted(const QRhiReadbackResult &result);
+
+    /**
+     * Readback target handed to QRhi. QRhi may still hold it and call its completion
+     * callback after this grabber is gone, so it is owned separately (see the destructor).
+     */
+    struct ReadbackState;
 
     bool m_isGrabbing = false;
-    QRhiReadbackResult *result = nullptr;
+    ReadbackState *m_readback = nullptr;
     QMutex m_mutex;
     QRhiGraphicsPipeline *m_pipeline = nullptr;
     QRhiShaderResourceBindings *m_srb = nullptr;
