@@ -235,9 +235,7 @@ private slots:
         m_remoteView->setViewActive(true);
 
         const QSize expected = QSize(120, 90) * widget.devicePixelRatioF();
-        const auto frame = waitForFrame([window] { window->update(); }, [&](const RemoteViewFrame &f) {
-            return displayedImage(f).size() == expected;
-        });
+        const auto frame = waitForFrame([window] { window->update(); }, [&](const RemoteViewFrame &f) { return displayedImage(f).size() == expected; });
         QVERIFY2(frame.isValid(), "no frame from the QQuickWidget");
         QVERIFY(hasQuadrants(displayedImage(frame)));
     }
