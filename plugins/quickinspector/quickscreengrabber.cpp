@@ -1097,6 +1097,10 @@ void RhiScreenGrabber::windowBeforeRendering()
             m_pipeline->setRenderPassDescriptor(p->rtRp);
         }
         m_pipeline->create();
+    } else {
+        // Follow window size changes. QRhi resources must only be touched on the render thread,
+        // so this is done here rather than from updateOverlay() (GUI thread).
+        recreateDecorationTexture();
     }
 
     if (m_decorationsEnabled) {
@@ -1190,17 +1194,6 @@ void RhiScreenGrabber::windowAfterRendering()
     }
 }
 
-void RhiScreenGrabber::updateOverlay()
-{
-    Q_ASSERT(m_window != nullptr);
-
-    // Re-create texture on window size changes
-    if (m_texture)
-        recreateDecorationTexture();
-
-    AbstractScreenGrabber::updateOverlay();
-}
-
 QRhiCommandBuffer *RhiScreenGrabber::nextCommandBuffer() const
 {
     Q_ASSERT(m_window != nullptr);
@@ -1235,6 +1228,12 @@ void RhiScreenGrabber::recreateDecorationTexture()
 
     if (m_texture && m_texture->pixelSize() == m_renderInfo.windowSize)
         return;
+
+    // Frames in flight may still use the old ones.
+    if (m_srb)
+        m_srb->deleteLater();
+    if (m_texture)
+        m_texture->deleteLater();
 
     m_texture = rhi->newTexture(QRhiTexture::BGRA8, m_renderInfo.windowSize);
     m_texture->create();

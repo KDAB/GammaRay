@@ -287,7 +287,6 @@ private:
     void windowBeforeRendering();
     void windowAfterRenderPassRecording();
     void windowAfterRendering();
-    void updateOverlay() override;
     /**
      * @brief Takes care of grabbing the next command buffer, either from the swapchain or the render control.
      *
