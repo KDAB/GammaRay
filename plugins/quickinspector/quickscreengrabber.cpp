@@ -1105,7 +1105,11 @@ void RhiScreenGrabber::windowBeforeRendering()
 
     if (m_decorationsEnabled) {
         QRhiCommandBuffer *cb = nextCommandBuffer();
+        if (!cb)
+            return;
         QRhiResourceUpdateBatch *resourceUpdates = rhi->nextResourceUpdateBatch();
+        if (!resourceUpdates)
+            return;
 
         QImage decorations(m_renderInfo.windowSize, QImage::Format_ARGB32_Premultiplied);
         decorations.fill(Qt::transparent);
@@ -1130,6 +1134,8 @@ void RhiScreenGrabber::windowAfterRenderPassRecording()
 
     if (m_decorationsEnabled) {
         QRhiCommandBuffer *cb = nextCommandBuffer();
+        if (!cb)
+            return;
 
         QSize outputPixelSize;
         if (const auto swapChain = m_window->swapChain()) {
@@ -1183,6 +1189,8 @@ void RhiScreenGrabber::windowAfterRendering()
                 m_readback->pending = true;
             }
             cb->resourceUpdate(resourceUpdates);
+        } else if (resourceUpdates) {
+            resourceUpdates->release();
         }
     }
 
