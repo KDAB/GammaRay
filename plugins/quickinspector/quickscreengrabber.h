@@ -23,8 +23,8 @@
 
 #include <memory>
 
-class QQuickWidgetPrivate;
 class QRhiCommandBuffer;
+class QRhiRenderTarget;
 class QRhiSampler;
 class QRhiTexture;
 class QRhiShaderResourceBindings;
@@ -294,9 +294,15 @@ private:
      */
     QRhiCommandBuffer *nextCommandBuffer() const;
     /**
-     * @brief Returns the QQuickWidgetPrivate, if this window is backed by a QQuickWidget.
+     * @brief The texture behind the render target set through QQuickRenderControl (QQuickWidget
+     * included), if it can be read back. Null otherwise.
      */
-    QQuickWidgetPrivate *widgetPrivate() const;
+    QRhiTexture *redirectTexture() const;
+    /**
+     * @brief The render target the window renders into this frame: the swapchain's, or the one
+     * set through QQuickRenderControl (QQuickWidget included). May be null.
+     */
+    QRhiRenderTarget *currentRenderTarget() const;
     /**
      * @brief Re-creates the off-screen decoration texture as needed.
      */
