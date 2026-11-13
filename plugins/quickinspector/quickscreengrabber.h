@@ -99,6 +99,9 @@ public:
     QTransform transform;
     QRectF itemsGeometryRect;
     QVector<QuickItemGeometry> itemsGeometry;
+    /// QSGRendererInterface::GraphicsApi of the window. Carried here so receivers don't have to
+    /// query the window, which may be half destroyed when the last (empty) frame is sent.
+    int graphicsApi = 0;
 };
 
 /**
