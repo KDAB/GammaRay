@@ -1120,7 +1120,9 @@ void RhiScreenGrabber::windowBeforeRendering()
         if (!resourceUpdates)
             return;
 
-        QImage decorations(m_renderInfo.windowSize, QImage::Format_ARGB32_Premultiplied);
+        // Paint at device pixels like the OpenGL grabber, so decorations stay sharp on high-DPI screens.
+        QImage decorations(decorationPixelSize(), QImage::Format_ARGB32_Premultiplied);
+        decorations.setDevicePixelRatio(m_renderInfo.dpr);
         decorations.fill(Qt::transparent);
 
         QPainter p(&decorations);
@@ -1257,13 +1259,19 @@ QRhiTexture *RhiScreenGrabber::redirectTexture() const
     return texture;
 }
 
+QSize RhiScreenGrabber::decorationPixelSize() const
+{
+    return m_renderInfo.windowSize * m_renderInfo.dpr;
+}
+
 void RhiScreenGrabber::recreateDecorationTexture()
 {
     const auto rhi = m_window->rhi();
     if (!rhi)
         return;
 
-    if (m_texture && m_texture->pixelSize() == m_renderInfo.windowSize)
+    const QSize pixelSize = decorationPixelSize();
+    if (m_texture && m_texture->pixelSize() == pixelSize)
         return;
 
     // Frames in flight may still use the old ones.
@@ -1272,7 +1280,7 @@ void RhiScreenGrabber::recreateDecorationTexture()
     if (m_texture)
         m_texture->deleteLater();
 
-    m_texture = rhi->newTexture(QRhiTexture::BGRA8, m_renderInfo.windowSize);
+    m_texture = rhi->newTexture(QRhiTexture::BGRA8, pixelSize);
     m_texture->create();
 
     m_srb = rhi->newShaderResourceBindings();

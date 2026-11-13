@@ -310,6 +310,8 @@ private:
      * @brief Re-creates the off-screen decoration texture as needed.
      */
     void recreateDecorationTexture();
+    /// Size of the decoration texture: the window size in device pixels.
+    QSize decorationPixelSize() const;
     void invalidateRhiResources();
     /// Releases the pipeline, SRB, texture and sampler. Render thread only, m_mutex held.
     void releaseRhiResources();
