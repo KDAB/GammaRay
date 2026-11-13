@@ -93,6 +93,13 @@ protected:
     {
         return m_view.get();
     }
+
+    /// Destroys the view in the middle of a test, e.g. to test what happens while it is in use.
+    void destroyView()
+    {
+        m_exposed = false;
+        m_view.reset();
+    }
 };
 
 #endif // BASEQUICKTEST_H
