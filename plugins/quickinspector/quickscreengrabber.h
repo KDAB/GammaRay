@@ -325,6 +325,7 @@ private:
     QRhiShaderResourceBindings *m_srb = nullptr;
     QRhiTexture *m_texture = nullptr;
     QRhiSampler *m_sampler = nullptr;
+    bool m_pipelineFailed = false;
 };
 #endif
 
