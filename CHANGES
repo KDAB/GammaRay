@@ -27,6 +27,7 @@ Unreleased
  * Report failed debugger attaches, server startup errors and Windows injection failures right away instead of timing out
  * Don't time out in in-process mode when remote access is disabled
  * Fix process names with spaces or parentheses in the attach dialog
+ * Show QtQuick windows that use Vulkan, Metal or Direct3D in the remote view, including decorations (Qt 6.6 or newer)
 
 Version 3.4.1
 -------------
