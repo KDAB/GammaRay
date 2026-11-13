@@ -80,7 +80,7 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
     endif()
 
     # Only needed for the RHI screen grabber for >=6.6
-    if(QT_VERSION_MAJOR EQUAL 6 AND Qt${QT_VERSION_MAJOR}Core_VERSION_MINOR GREATER_EQUAL 6)
+    if(Qt6Core_VERSION VERSION_GREATER_EQUAL "6.6.0")
         find_package(Qt${QT_VERSION_MAJOR}ShaderTools REQUIRED)
         qt_add_shaders(
             gammaray_quickinspector
