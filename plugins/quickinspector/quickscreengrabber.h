@@ -23,15 +23,15 @@
 
 #include <memory>
 
-class QRhiCommandBuffer;
-class QRhiRenderTarget;
-class QRhiSampler;
-class QRhiTexture;
-class QRhiShaderResourceBindings;
-class QRhiGraphicsPipeline;
-struct QRhiReadbackResult;
 QT_BEGIN_NAMESPACE
 class QQuickWindow;
+class QRhiCommandBuffer;
+class QRhiGraphicsPipeline;
+class QRhiRenderTarget;
+class QRhiSampler;
+class QRhiShaderResourceBindings;
+class QRhiTexture;
+struct QRhiReadbackResult;
 #ifndef QT_NO_OPENGL
 class QOpenGLPaintDevice;
 #endif
@@ -285,7 +285,7 @@ protected:
 
 private:
     void setGrabbingMode(bool isGrabbingMode, const QRectF &userViewport);
-    // TODO: ensure these are in the same order as in QQuickWindow
+    // In the order QQuickWindow emits the signals they are connected to.
     void windowAfterSynchronizing();
     void windowBeforeRendering();
     void windowAfterRenderPassRecording();

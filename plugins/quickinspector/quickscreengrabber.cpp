@@ -22,7 +22,6 @@
 #include <QPainter>
 #include <QQuickWindow>
 #include <QQuickRenderControl>
-#include <QQuickOpenGLUtils>
 
 #ifndef QT_NO_OPENGL
 #include <QOpenGLContext>
@@ -894,10 +893,11 @@ RhiScreenGrabber::RhiScreenGrabber(QQuickWindow *window)
     : AbstractScreenGrabber(window)
 {
     // Force DirectConnection else Auto lead to Queued which is not good.
+    // In the order QQuickWindow emits these signals.
     connect(m_window.data(), &QQuickWindow::afterSynchronizing, this, &RhiScreenGrabber::windowAfterSynchronizing, Qt::DirectConnection);
-    connect(m_window.data(), &QQuickWindow::afterRendering, this, &RhiScreenGrabber::windowAfterRendering, Qt::DirectConnection);
-    connect(m_window.data(), &QQuickWindow::afterRenderPassRecording, this, &RhiScreenGrabber::windowAfterRenderPassRecording, Qt::DirectConnection);
     connect(m_window.data(), &QQuickWindow::beforeRendering, this, &RhiScreenGrabber::windowBeforeRendering, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::afterRenderPassRecording, this, &RhiScreenGrabber::windowAfterRenderPassRecording, Qt::DirectConnection);
+    connect(m_window.data(), &QQuickWindow::afterRendering, this, &RhiScreenGrabber::windowAfterRendering, Qt::DirectConnection);
     connect(m_window.data(), &QQuickWindow::sceneGraphInvalidated, this, &RhiScreenGrabber::invalidateRhiResources, Qt::DirectConnection);
 
     m_readback = new ReadbackState;
