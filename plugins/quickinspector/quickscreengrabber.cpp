@@ -23,7 +23,6 @@
 #include <QQuickWindow>
 #include <QQuickRenderControl>
 #include <QQuickOpenGLUtils>
-#include <QQuickWidget>
 
 #ifndef QT_NO_OPENGL
 #include <QOpenGLContext>
@@ -35,7 +34,6 @@
 #include <private/qquickanchors_p.h>
 #include <private/qquickitem_p.h>
 #include <private/qquickwindow_p.h>
-#include <private/qquickwidget_p.h>
 
 #include <private/qsgsoftwarerenderer_p.h>
 
@@ -1054,6 +1052,12 @@ void RhiScreenGrabber::windowBeforeRendering()
         return;
 
     if (!m_pipeline) {
+        // A window driven by a QQuickRenderControl may not have its render target yet; retry next frame.
+        QRhiRenderTarget *rt = currentRenderTarget();
+        QRhiRenderPassDescriptor *rpDesc = rt ? rt->renderPassDescriptor() : nullptr;
+        if (!rpDesc)
+            return;
+
         const auto getShader = [](const QString &fileName) -> QShader {
             QFile file(fileName);
             if (file.open(QIODevice::ReadOnly))
@@ -1091,11 +1095,7 @@ void RhiScreenGrabber::windowBeforeRendering()
                                       { QRhiShaderStage::Fragment, fragmentShader } });
 
         m_pipeline->setShaderResourceBindings(m_srb);
-        if (const auto swapChain = m_window->swapChain()) {
-            m_pipeline->setRenderPassDescriptor(swapChain->currentFrameRenderTarget()->renderPassDescriptor());
-        } else if (const auto p = widgetPrivate()) {
-            m_pipeline->setRenderPassDescriptor(p->rtRp);
-        }
+        m_pipeline->setRenderPassDescriptor(rpDesc);
         m_pipeline->create();
     } else {
         // Follow window size changes. QRhi resources must only be touched on the render thread,
@@ -1137,13 +1137,8 @@ void RhiScreenGrabber::windowAfterRenderPassRecording()
         if (!cb)
             return;
 
-        QSize outputPixelSize;
-        if (const auto swapChain = m_window->swapChain()) {
-            outputPixelSize = swapChain->currentFrameRenderTarget()->pixelSize();
-        } else if (const auto p = widgetPrivate()) {
-            if (p->rt)
-                outputPixelSize = p->rt->pixelSize();
-        }
+        const QRhiRenderTarget *rt = currentRenderTarget();
+        const QSize outputPixelSize = rt ? rt->pixelSize() : QSize();
         if (outputPixelSize.isEmpty())
             return;
 
@@ -1174,9 +1169,9 @@ void RhiScreenGrabber::windowAfterRendering()
                 constexpr QRhiReadbackDescription readbackDesc;
                 resourceUpdates->readBackTexture(readbackDesc, &m_readback->result);
                 readbackQueued = true;
-            } else if (auto p = widgetPrivate()) {
-                // Read from the intermediary texture of this widget.
-                const QRhiReadbackDescription readbackDesc(p->outputTexture);
+            } else if (QRhiTexture *texture = redirectTexture()) {
+                // Read from the texture a QQuickRenderControl user (e.g. QQuickWidget) renders into.
+                const QRhiReadbackDescription readbackDesc(texture);
                 resourceUpdates->readBackTexture(readbackDesc, &m_readback->result);
                 readbackQueued = true;
             }
@@ -1217,15 +1212,40 @@ QRhiCommandBuffer *RhiScreenGrabber::nextCommandBuffer() const
     return nullptr;
 }
 
-QQuickWidgetPrivate *RhiScreenGrabber::widgetPrivate() const
+QRhiRenderTarget *RhiScreenGrabber::currentRenderTarget() const
 {
     Q_ASSERT(m_window != nullptr);
 
-    const auto widget = m_window->property("_q_parentWidget").value<QQuickWidget *>();
-    if (widget)
-        return QQuickWidgetPrivate::get(widget);
+    if (QRhiSwapChain *swapChain = m_window->swapChain())
+        return swapChain->currentFrameRenderTarget();
 
-    return nullptr;
+    // Set by QQuickRenderControl users, including QQuickWidget.
+    return static_cast<QRhiRenderTarget *>(m_window->rendererInterface()->getResource(m_window, QSGRendererInterface::RhiRedirectRenderTarget));
+}
+
+QRhiTexture *RhiScreenGrabber::redirectTexture() const
+{
+    Q_ASSERT(m_window != nullptr);
+
+    auto *rt = static_cast<QRhiRenderTarget *>(m_window->rendererInterface()->getResource(m_window, QSGRendererInterface::RhiRedirectRenderTarget));
+    if (!rt || rt->resourceType() != QRhiResource::TextureRenderTarget)
+        return nullptr;
+
+    const QRhiTextureRenderTargetDescription desc = static_cast<QRhiTextureRenderTarget *>(rt)->description();
+    if (desc.colorAttachmentCount() == 0)
+        return nullptr;
+
+    // With MSAA the content ends up in the resolve texture; a multisample texture or
+    // renderbuffer cannot be read back.
+    const QRhiColorAttachment *attachment = desc.colorAttachmentAt(0);
+    QRhiTexture *texture = attachment->resolveTexture() ? attachment->resolveTexture() : attachment->texture();
+    if (!texture || texture->sampleCount() > 1)
+        return nullptr;
+
+    // QRhi can only read back textures created with UsedAsTransferSource (QQuickWidget sets it).
+    if (!texture->flags().testFlag(QRhiTexture::UsedAsTransferSource))
+        return nullptr;
+    return texture;
 }
 
 void RhiScreenGrabber::recreateDecorationTexture()
