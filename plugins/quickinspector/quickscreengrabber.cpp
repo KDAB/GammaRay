@@ -267,8 +267,11 @@ AbstractScreenGrabber::AbstractScreenGrabber(QQuickWindow *window)
     placeOn(ItemOrLayoutFacade());
 
     // Install an event filter to pick up on expose events
-    if (m_window)
+    if (m_window) {
+        // A window's graphics API doesn't change, and a grabber is created per window.
+        m_grabbedFrame.graphicsApi = graphicsApiFor(m_window);
         m_window->installEventFilter(this);
+    }
 }
 
 GammaRay::AbstractScreenGrabber::~AbstractScreenGrabber()

@@ -574,7 +574,10 @@ void QuickInspector::sendRenderedScene(const GammaRay::GrabbedFrame &grabbedFram
         frame.data = QVariant::fromValue(grabbedFrame.itemsGeometry);
     else if (!grabbedFrame.itemsGeometry.isEmpty())
         frame.data = QVariant::fromValue(grabbedFrame.itemsGeometry.at(0));
-    frame.setGraphicsApi(m_window->rendererInterface()->graphicsApi());
+    // Not m_window->rendererInterface(): this also runs for the empty frame sent from
+    // AbstractScreenGrabber::eventFilter() while ~QWindow hides the window, when the QQuickWindow
+    // part is already destroyed.
+    frame.setGraphicsApi(grabbedFrame.graphicsApi);
     m_remoteView->sendFrame(frame);
 }
 
