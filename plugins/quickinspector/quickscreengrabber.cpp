@@ -934,7 +934,7 @@ RhiScreenGrabber::~RhiScreenGrabber()
     if (!readbackPending)
         delete m_readback;
 
-    const std::array<QRhiResource *, 4> resources = { m_pipeline, m_srb, m_texture, m_sampler };
+    const std::array<QRhiResource *, 5> resources = { m_pipeline, m_srb, m_texture, m_sampler, m_vertexBuffer };
     if (m_window && std::any_of(resources.begin(), resources.end(), [](QRhiResource *r) { return r != nullptr; })) {
         // The resources belong to the render thread, release them there. If the window is not
         // exposed the job is dropped and they are left to the QRhi.
@@ -1041,6 +1041,16 @@ void RhiScreenGrabber::windowAfterSynchronizing()
     gatherRenderInfo();
 }
 
+namespace {
+// position, texture coordinates
+const float s_decorationQuad[] = {
+    -1.0f, -1.0f, 0.0f, 0.0f,
+    1.0f, -1.0f, 1.0f, 0.0f,
+    -1.0f, 1.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 1.0f, 1.0f
+};
+}
+
 void RhiScreenGrabber::windowBeforeRendering()
 {
     Q_ASSERT(m_window != nullptr);
@@ -1085,8 +1095,19 @@ void RhiScreenGrabber::windowBeforeRendering()
             QRhiSampler::Repeat);
         m_sampler->create();
 
+        // A full screen quad. Not generated from gl_VertexIndex in the shader, GLSL 120 and
+        // GLSL ES 100 (OpenGL 2.1 and OpenGL ES 2 contexts) don't have gl_VertexID.
+        m_vertexBuffer = rhi->newBuffer(QRhiBuffer::Immutable, QRhiBuffer::VertexBuffer, sizeof(s_decorationQuad));
+        m_vertexBuffer->create();
+
         m_pipeline = rhi->newGraphicsPipeline();
         m_pipeline->setTopology(QRhiGraphicsPipeline::TriangleStrip);
+
+        QRhiVertexInputLayout inputLayout;
+        inputLayout.setBindings({ { 4 * sizeof(float) } });
+        inputLayout.setAttributes({ { 0, 0, QRhiVertexInputAttribute::Float2, 0 },
+                                    { 0, 1, QRhiVertexInputAttribute::Float2, 2 * sizeof(float) } });
+        m_pipeline->setVertexInputLayout(inputLayout);
 
         recreateDecorationTexture();
 
@@ -1131,6 +1152,10 @@ void RhiScreenGrabber::windowBeforeRendering()
         p.end();
 
         resourceUpdates->uploadTexture(m_texture, decorations);
+        if (!m_vertexBufferUploaded) {
+            resourceUpdates->uploadStaticBuffer(m_vertexBuffer, s_decorationQuad);
+            m_vertexBufferUploaded = true;
+        }
         cb->resourceUpdate(resourceUpdates);
     }
 }
@@ -1144,7 +1169,8 @@ void RhiScreenGrabber::windowAfterRenderPassRecording()
 
     QMutexLocker locker(&m_mutex);
 
-    if (m_decorationsEnabled && m_pipeline) {
+    // m_decorationsEnabled may have been switched on since windowBeforeRendering(), then nothing is uploaded yet.
+    if (m_decorationsEnabled && m_pipeline && m_vertexBufferUploaded) {
         QRhiCommandBuffer *cb = nextCommandBuffer();
         if (!cb)
             return;
@@ -1158,6 +1184,8 @@ void RhiScreenGrabber::windowAfterRenderPassRecording()
 
         cb->setGraphicsPipeline(m_pipeline);
         cb->setShaderResources();
+        const QRhiCommandBuffer::VertexInput vertexInput(m_vertexBuffer, 0);
+        cb->setVertexInput(0, 1, &vertexInput);
         cb->draw(4);
     }
 }
@@ -1306,7 +1334,7 @@ void RhiScreenGrabber::invalidateRhiResources()
 
 void RhiScreenGrabber::releaseRhiResources()
 {
-    for (QRhiResource *resource : std::initializer_list<QRhiResource *> { m_pipeline, m_srb, m_texture, m_sampler }) {
+    for (QRhiResource *resource : std::initializer_list<QRhiResource *> { m_pipeline, m_srb, m_texture, m_sampler, m_vertexBuffer }) {
         if (resource)
             resource->deleteLater();
     }
@@ -1314,5 +1342,7 @@ void RhiScreenGrabber::releaseRhiResources()
     m_srb = nullptr;
     m_pipeline = nullptr;
     m_sampler = nullptr;
+    m_vertexBuffer = nullptr;
+    m_vertexBufferUploaded = false;
 }
 #endif
