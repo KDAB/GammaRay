@@ -561,6 +561,25 @@ if(NOT GAMMARAY_CLIENT_ONLY_BUILD)
             )
         endif()
 
+        # The QRhi screen grabber. Needs a GPU; the tests skip themselves when Qt Quick doesn't use QRhi,
+        # e.g. with QT_QUICK_BACKEND=software as on the Linux CI.
+        if(Qt6Core_VERSION VERSION_GREATER_EQUAL "6.6.0" AND TARGET Qt::QuickWidgets)
+            gammaray_add_quick_test(quickrhigrabbertest quickrhigrabbertest.cpp quickinspectortest.qrc)
+            target_link_libraries(
+                quickrhigrabbertest
+                gammaray_core
+                gammaray_quickinspector_shared
+                Qt::Quick
+                Qt::QuickWidgets
+                Qt::GuiPrivate
+            )
+            # the default backend is OpenGL on Linux, also run with Vulkan
+            if(UNIX AND NOT APPLE)
+                add_test(NAME quickrhigrabbertest-vulkan COMMAND quickrhigrabbertest)
+                set_tests_properties(quickrhigrabbertest-vulkan PROPERTIES ENVIRONMENT "QSG_RHI_BACKEND=vulkan")
+            endif()
+        endif()
+
         gammaray_add_test(
             quickscenegraphmodeltest
             quickscenegraphmodeltest.cpp

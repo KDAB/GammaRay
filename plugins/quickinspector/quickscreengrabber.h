@@ -25,6 +25,13 @@
 
 QT_BEGIN_NAMESPACE
 class QQuickWindow;
+class QRhiCommandBuffer;
+class QRhiGraphicsPipeline;
+class QRhiRenderTarget;
+class QRhiSampler;
+class QRhiShaderResourceBindings;
+class QRhiTexture;
+struct QRhiReadbackResult;
 #ifndef QT_NO_OPENGL
 class QOpenGLPaintDevice;
 #endif
@@ -92,6 +99,9 @@ public:
     QTransform transform;
     QRectF itemsGeometryRect;
     QVector<QuickItemGeometry> itemsGeometry;
+    /// QSGRendererInterface::GraphicsApi of the window. Carried here so receivers don't have to
+    /// query the window, which may be half destroyed when the last (empty) frame is sent.
+    int graphicsApi = 0;
 };
 
 /**
@@ -256,6 +266,73 @@ private:
 
     QPointF m_lastItemPosition;
 };
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+/**
+ * @brief Screen grabber that uses QRhi instead of a specific graphics interface.
+ */
+class RhiScreenGrabber : public AbstractScreenGrabber
+{
+    Q_OBJECT
+public:
+    explicit RhiScreenGrabber(QQuickWindow *window);
+    ~RhiScreenGrabber() override;
+
+    void requestGrabWindow(const QRectF &userViewport) override;
+
+protected:
+    void drawDecorations() override;
+
+private:
+    void setGrabbingMode(bool isGrabbingMode, const QRectF &userViewport);
+    // In the order QQuickWindow emits the signals they are connected to.
+    void windowAfterSynchronizing();
+    void windowBeforeRendering();
+    void windowAfterRenderPassRecording();
+    void windowAfterRendering();
+    /**
+     * @brief Takes care of grabbing the next command buffer, either from the swapchain or the render control.
+     *
+     * @note The returned value may be null in some rare circumstances.
+     */
+    QRhiCommandBuffer *nextCommandBuffer() const;
+    /**
+     * @brief The texture behind the render target set through QQuickRenderControl (QQuickWidget
+     * included), if it can be read back. Null otherwise.
+     */
+    QRhiTexture *redirectTexture() const;
+    /**
+     * @brief The render target the window renders into this frame: the swapchain's, or the one
+     * set through QQuickRenderControl (QQuickWidget included). May be null.
+     */
+    QRhiRenderTarget *currentRenderTarget() const;
+    /**
+     * @brief Re-creates the off-screen decoration texture as needed.
+     */
+    void recreateDecorationTexture();
+    /// Size of the decoration texture: the window size in device pixels.
+    QSize decorationPixelSize() const;
+    void invalidateRhiResources();
+    /// Releases the pipeline, SRB, texture and sampler. Render thread only, m_mutex held.
+    void releaseRhiResources();
+    void readbackCompleted(const QRhiReadbackResult &result);
+
+    /**
+     * Readback target handed to QRhi. QRhi may still hold it and call its completion
+     * callback after this grabber is gone, so it is owned separately (see the destructor).
+     */
+    struct ReadbackState;
+
+    bool m_isGrabbing = false;
+    ReadbackState *m_readback = nullptr;
+    QMutex m_mutex;
+    QRhiGraphicsPipeline *m_pipeline = nullptr;
+    QRhiShaderResourceBindings *m_srb = nullptr;
+    QRhiTexture *m_texture = nullptr;
+    QRhiSampler *m_sampler = nullptr;
+    bool m_pipelineFailed = false;
+};
+#endif
 
 }
 
