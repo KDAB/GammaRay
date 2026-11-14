@@ -25,6 +25,7 @@
 
 QT_BEGIN_NAMESPACE
 class QQuickWindow;
+class QRhiBuffer;
 class QRhiCommandBuffer;
 class QRhiGraphicsPipeline;
 class QRhiRenderTarget;
@@ -330,6 +331,8 @@ private:
     QRhiShaderResourceBindings *m_srb = nullptr;
     QRhiTexture *m_texture = nullptr;
     QRhiSampler *m_sampler = nullptr;
+    QRhiBuffer *m_vertexBuffer = nullptr;
+    bool m_vertexBufferUploaded = false;
     bool m_pipelineFailed = false;
 };
 #endif
