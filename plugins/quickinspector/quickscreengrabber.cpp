@@ -960,7 +960,7 @@ void RhiScreenGrabber::readbackCompleted(const QRhiReadbackResult &result)
         case QRhiTexture::RGBA8:
             return QImage::Format_RGBA8888_Premultiplied;
         case QRhiTexture::RGB10A2:
-            return QImage::Format_BGR30;
+            return QImage::Format_A2BGR30_Premultiplied;
         case QRhiTexture::RGBA16F:
             return QImage::Format_RGBA16FPx4;
         default:
