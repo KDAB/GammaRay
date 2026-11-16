@@ -33,6 +33,7 @@
 #include <QQuickWidget>
 #include <QRegularExpression>
 #include <QSGRendererInterface>
+#include <QSurfaceFormat>
 #include <QtGui/qtgui-config.h>
 // QVulkanInstance is only defined when vulkan.h is available when building the application,
 // a Vulkan enabled Qt alone is not enough
@@ -214,10 +215,26 @@ private slots:
 
     // With server side decorations the RHI grabber draws them into the frame; they go away again
     // when disabled.
+    void testDecorations_data()
+    {
+        QTest::addColumn<int>("samples");
+        QTest::newRow("single sample") << 1;
+        // The decoration pipeline must match the sample count of the render target.
+        QTest::newRow("multisampled") << 4;
+    }
+
     void testDecorations()
     {
+        QFETCH(int, samples);
+        if (samples > 1) {
+            QSurfaceFormat format = view()->format();
+            format.setSamples(samples);
+            view()->setFormat(format);
+        }
         if (!showRhiView())
             QSKIP("The view is not exposed or not rendered through QRhi");
+        if (samples > 1 && (!view()->swapChain() || view()->swapChain()->sampleCount() < 2))
+            QSKIP("No multisampled swapchain");
 
         const QImage plain = displayedImage(waitForViewFrame([](const RemoteViewFrame &) { return true; }));
         QVERIFY(!plain.isNull());
