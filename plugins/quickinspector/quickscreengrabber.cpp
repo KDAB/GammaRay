@@ -1042,13 +1042,24 @@ void RhiScreenGrabber::windowAfterSynchronizing()
 }
 
 namespace {
-// position, texture coordinates
-const float s_decorationQuad[] = {
+// position, texture coordinates. The top row of an uploaded QImage is at v = 0 on all backends,
+// while NDC y = -1 is the top only where Y points down in NDC (Vulkan).
+constexpr std::array<float, 16> s_decorationQuad = {
     -1.0f, -1.0f, 0.0f, 0.0f,
     1.0f, -1.0f, 1.0f, 0.0f,
     -1.0f, 1.0f, 0.0f, 1.0f,
     1.0f, 1.0f, 1.0f, 1.0f
 };
+
+std::array<float, 16> decorationQuad(QRhi *rhi)
+{
+    auto quad = s_decorationQuad;
+    if (rhi->isYUpInNDC()) {
+        for (std::size_t v = 3; v < quad.size(); v += 4)
+            quad[v] = 1.0f - quad[v];
+    }
+    return quad;
+}
 }
 
 void RhiScreenGrabber::windowBeforeRendering()
@@ -1153,7 +1164,8 @@ void RhiScreenGrabber::windowBeforeRendering()
 
         resourceUpdates->uploadTexture(m_texture, decorations);
         if (!m_vertexBufferUploaded) {
-            resourceUpdates->uploadStaticBuffer(m_vertexBuffer, s_decorationQuad);
+            const auto quad = decorationQuad(rhi);
+            resourceUpdates->uploadStaticBuffer(m_vertexBuffer, quad.data());
             m_vertexBufferUploaded = true;
         }
         cb->resourceUpdate(resourceUpdates);

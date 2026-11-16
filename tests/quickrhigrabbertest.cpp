@@ -78,6 +78,26 @@ bool hasQuadrants(const QImage &image)
         && QColor(image.pixel(2, b)) == QColor(0, 0, 255)
         && QColor(image.pixel(r, b)) == QColor(255, 255, 0);
 }
+/// The decorations of the selected top left quadrant cover all of it, and only it: they are
+/// neither mirrored nor scaled.
+bool decorationsOnTopLeftQuadrant(const QImage &plain, const QImage &decorated)
+{
+    const int w = plain.width();
+    const int h = plain.height();
+    for (const QPoint &p : { QPoint(w / 8, h / 8), QPoint(3 * w / 8, h / 8), QPoint(w / 8, 3 * h / 8), QPoint(3 * w / 8, 3 * h / 8) }) {
+        if (plain.pixel(p) == decorated.pixel(p)) {
+            qWarning() << "not decorated inside the selected item at" << p;
+            return false;
+        }
+    }
+    for (const QPoint &p : { QPoint(3 * w / 4, h / 4), QPoint(w / 4, 3 * h / 4), QPoint(3 * w / 4, 3 * h / 4) }) {
+        if (plain.pixel(p) != decorated.pixel(p)) {
+            qWarning() << "decorated outside the selected item at" << p;
+            return false;
+        }
+    }
+    return true;
+}
 }
 
 class QuickRhiGrabberTest : public BaseQuickTest
@@ -213,6 +233,7 @@ private slots:
             return image.size() == plain.size() && image != plain;
         });
         QVERIFY2(decorated.isValid(), "no frame with decorations");
+        QVERIFY(decorationsOnTopLeftQuadrant(plain, displayedImage(decorated)));
 
         m_inspector->setServerSideDecorationsEnabled(false);
         const auto plainAgain = waitForViewFrame([&](const RemoteViewFrame &f) {
