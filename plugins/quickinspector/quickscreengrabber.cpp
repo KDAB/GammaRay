@@ -1131,6 +1131,7 @@ void RhiScreenGrabber::windowBeforeRendering()
 
         m_pipeline->setShaderResourceBindings(m_srb);
         m_pipeline->setRenderPassDescriptor(rpDesc);
+        m_pipeline->setSampleCount(rt->sampleCount());
         if (!m_pipeline->create()) {
             // Don't retry every frame. Grabbing still works, only the decorations are missing.
             qWarning() << "GammaRay: failed to create the QRhi pipeline for drawing decorations with" << rhi->backendName()
