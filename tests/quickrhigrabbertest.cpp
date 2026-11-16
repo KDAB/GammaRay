@@ -213,6 +213,36 @@ private slots:
         QVERIFY(hasQuadrants(displayedImage(frame)));
     }
 
+    // A single change in an otherwise static scene must still reach the client. Backends like
+    // Vulkan complete readbacks only a few frames later, which never come without further changes.
+    void testStaticScene()
+    {
+        if (!showRhiView())
+            QSKIP("The view is not exposed or not rendered through QRhi");
+        QVERIFY(waitForViewFrame([](const RemoteViewFrame &) { return true; }).isValid());
+
+        auto rootItem = view()->rootObject();
+        QVERIFY(rootItem);
+        QVERIFY(!rootItem->childItems().isEmpty());
+        QSignalSpy frameSpy(m_remoteView, &RemoteViewInterface::frameUpdated);
+        rootItem->childItems().first()->setVisible(false); // the red top left quadrant
+
+        // Acknowledge frames like the client, but don't render: no update() calls.
+        bool redGone = false;
+        QElapsedTimer timer;
+        timer.start();
+        while (!redGone && timer.elapsed() < 3000) {
+            m_remoteView->clientViewUpdated();
+            QTest::qWait(20);
+            for (const auto &args : std::as_const(frameSpy)) {
+                const QImage image = displayedImage(args.at(0).value<RemoteViewFrame>());
+                redGone = redGone || (!image.isNull() && QColor(image.pixel(2, 2)) != QColor(255, 0, 0));
+            }
+            frameSpy.clear();
+        }
+        QVERIFY2(redGone, "the change was not grabbed");
+    }
+
     // With server side decorations the RHI grabber draws them into the frame; they go away again
     // when disabled.
     void testDecorations_data()
@@ -360,8 +390,8 @@ private slots:
         rootItem.reset();
     }
 
-    // Destroying the window right after a grab was rendered: on Vulkan the readback is then still
-    // pending in QRhi. Must not crash or leak RHI resources (leaks fail through failOnWarning).
+    // Destroying the window right after a grab was rendered must not crash or leak RHI resources
+    // (leaks fail through failOnWarning).
     void testDestroyWhileGrabbing()
     {
         if (!showRhiView())
