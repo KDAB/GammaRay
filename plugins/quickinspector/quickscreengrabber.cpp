@@ -1237,6 +1237,13 @@ void RhiScreenGrabber::windowAfterRendering()
                 m_readback->pending = true;
             }
             cb->resourceUpdate(resourceUpdates);
+            if (readbackQueued) {
+                // Wait for the readback, like QQuickWindow::grabWindow(). Backends like Vulkan
+                // otherwise complete it only a few frames later, which never come in a static
+                // scene. It also keeps the frame ahead of grabberReadyChanged(), so the next grab
+                // can't queue a second readback into the same result.
+                rhi->finish();
+            }
         } else if (resourceUpdates) {
             resourceUpdates->release();
         }
