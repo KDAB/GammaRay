@@ -14,15 +14,19 @@
 
 #include <common/objectid.h>
 #include <common/objectmodel.h>
+#include <core/objecttypefilterproxymodel.h>
 #include <core/probe.h>
 
 #include <QAbstractItemModelTester>
+#include <QRegularExpression>
+#include <QScopeGuard>
 #include <QSignalSpy>
 #include <QSortFilterProxyModel>
 #include <QThread>
 
 #include <functional>
 #include <memory>
+#include <utility>
 
 using namespace GammaRay;
 
@@ -266,6 +270,158 @@ private slots:
         thread.wait();
         processQueue();
         QVERIFY(!find(treeModel(), root).isValid());
+    }
+
+    // another thread can reparent its objects any time, also while the tree adds or moves them
+    void testReparentedInOtherThreadMeanwhile()
+    {
+        QThread thread;
+        thread.start();
+        // also when a check fails
+        const auto stopThread = qScopeGuard([&thread] {
+            thread.quit();
+            thread.wait();
+        });
+        auto context = new QObject;
+        context->moveToThread(&thread);
+        const auto inThread = [context](const std::function<void()> &f) {
+            QMetaObject::invokeMethod(context, f, Qt::BlockingQueuedConnection);
+        };
+
+        QObject *a = nullptr;
+        QObject *b = nullptr;
+        QObject *c = nullptr;
+        inThread([&] {
+            a = new QObject;
+            b = new QObject;
+            c = new QObject;
+        });
+        processQueue();
+
+        // moves obj to the next parent in the thread, as soon as the tree adds or moves it. This waits
+        // for the thread while the probe holds its lock, which the thread mustn't need meanwhile
+        QObject *obj = nullptr;
+        QObject *nextParent = nullptr;
+        const auto objectOf = [](const QModelIndex &index) {
+            return index.data(ObjectModel::ObjectRole).value<QObject *>();
+        };
+        const auto moveObj = [&] {
+            auto parent = std::exchange(nextParent, nullptr);
+            inThread([&] { obj->setParent(parent); });
+        };
+        QObject hookContext;
+        connect(treeModel(), &QAbstractItemModel::rowsAboutToBeInserted, &hookContext,
+                [&](const QModelIndex &parent) {
+                    if (nextParent && objectOf(parent) == a)
+                        moveObj();
+                });
+        connect(treeModel(), &QAbstractItemModel::rowsAboutToBeMoved, &hookContext,
+                [&](const QModelIndex &sourceParent, int sourceRow) {
+                    if (nextParent && objectOf(treeModel()->index(sourceRow, 0, sourceParent)) == obj)
+                        moveObj();
+                });
+        // the row of obj is where the model says it is
+        const auto treeIsConsistent = [&] {
+            const auto index = find(treeModel(), obj);
+            return index.isValid() && treeModel()->index(index.row(), 0, index.parent()) == index;
+        };
+
+        // moved to b while the tree adds it below a
+        nextParent = b;
+        inThread([&] { obj = new QObject(a); });
+        processQueue();
+        QVERIFY(!nextParent);
+        QVERIFY(treeIsConsistent());
+
+        // the tree only notices the move to b when a goes away, then obj moves to c meanwhile
+        nextParent = c;
+        inThread([&] { delete a; });
+        processQueue();
+        QVERIFY(!nextParent);
+        QVERIFY(treeIsConsistent());
+        QVERIFY(filteredProxyIsCorrect());
+
+        inThread([&] {
+            delete b;
+            delete c;
+            delete context;
+        });
+        processQueue();
+    }
+
+    // another thread destroys an object and creates a new one at the same address, which a child of
+    // the old one moves to, before the probe processes any of that
+    void testDestroyedParentAddressReused()
+    {
+        QThread thread;
+        thread.start();
+        const auto stopThread = qScopeGuard([&thread] {
+            thread.quit();
+            thread.wait();
+        });
+        auto context = new QObject;
+        context->moveToThread(&thread);
+        connect(&thread, &QThread::finished, context, &QObject::deleteLater);
+        const auto inThread = [context](const std::function<void()> &f) {
+            QMetaObject::invokeMethod(context, f, Qt::BlockingQueuedConnection);
+        };
+
+        QObject *oldParent = nullptr;
+        QObject *child = nullptr;
+        inThread([&] {
+            oldParent = new QObject;
+            child = new QObject(oldParent);
+        });
+        processQueue();
+        QCOMPARE(find(treeModel(), child).parent(), find(treeModel(), oldParent));
+
+        QObject *newParent = nullptr;
+        inThread([&] {
+            child->setParent(nullptr);
+            delete oldParent;
+            newParent = new QObject;
+            child->setParent(newParent);
+        });
+        const auto cleanup = qScopeGuard([&] {
+            inThread([&] { delete newParent; });
+            processQueue();
+        });
+        if (newParent != oldParent)
+            QSKIP("the new object didn't get the address of the old one");
+
+        processQueue();
+        const auto index = find(treeModel(), child);
+        QVERIFY(index.isValid());
+        QCOMPARE(index.parent(), find(treeModel(), newParent));
+        QCOMPARE(treeModel()->index(index.row(), 0, index.parent()), index);
+    }
+
+    // a proxy that hides objects follows moves between hidden parents, QTBUG-76976
+    void testTypeFilterProxyMovesBelowHiddenParents()
+    {
+        ObjectTypeFilterProxyModel<DerivedObject> proxy;
+        proxy.setSourceModel(treeModel());
+        QAbstractItemModelTester tester(&proxy);
+        QTest::failOnWarning(QRegularExpression(QStringLiteral("QSortFilterProxyModel: invalid .* reported by source model")));
+
+        auto root = std::make_unique<QObject>(); // hidden, like all of these
+        auto a = new QObject(root.get());
+        auto b = new QObject(root.get());
+        auto child = new QObject(a);
+        auto other = new QObject(a);
+        processQueue();
+
+        // before Qt 6.9.1, the proxy created a mapping for root here, which it didn't update below
+        child->setParent(b);
+        processQueue();
+        other->setParent(root.get());
+        processQueue();
+        for (int i = 0; i < 10; ++i)
+            new QObject(root.get());
+        processQueue();
+        QVERIFY(find(treeModel(), other).isValid());
+        root.reset();
+        processQueue();
     }
 
     // a recursively filtering proxy follows all of these changes

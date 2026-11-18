@@ -97,6 +97,19 @@ public:
         return BaseProxy::index(row, column, parent);
     }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 1)
+    // Before Qt 6.9.1, mapping a row whose parent is filtered out made QSortFilterProxyModel
+    // create a mapping for that parent, which then got corrupted once the parent became visible,
+    // QTBUG-76976. QSortFilterProxyModel does that itself when the source moves rows.
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const override
+    {
+        const QModelIndex sourceParent = sourceIndex.parent();
+        if (sourceParent.isValid() && !mapFromSource(sourceParent).isValid())
+            return {};
+        return BaseProxy::mapFromSource(sourceIndex);
+    }
+#endif
+
 protected:
     void customEvent(QEvent *event) override
     {

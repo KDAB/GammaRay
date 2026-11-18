@@ -44,6 +44,9 @@ public:
     explicit ObjectFilterProxyModelBase(QObject *parent = nullptr);
 
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 1)
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const override;
+#endif
 
 protected:
     /**

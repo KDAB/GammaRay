@@ -137,6 +137,9 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
 
     QMap<int, QVariant> itemData(const QModelIndex &index) const override;
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 1)
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const override;
+#endif
 
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;

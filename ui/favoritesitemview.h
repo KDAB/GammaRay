@@ -42,6 +42,18 @@ public:
         auto idx = sourceModel()->index(source_row, filterKeyColumn(), source_parent);
         return idx.data(ObjectModel::IsFavoriteRole).toBool();
     }
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 1)
+    // see ServerProxyModel::mapFromSource(), QTBUG-76976. This filters recursively, and hides almost
+    // all of the object tree
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const override
+    {
+        const QModelIndex sourceParent = sourceIndex.parent();
+        if (sourceParent.isValid() && !mapFromSource(sourceParent).isValid())
+            return {};
+        return QSortFilterProxyModel::mapFromSource(sourceIndex);
+    }
+#endif
 };
 
 template<typename Base>
